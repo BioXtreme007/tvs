@@ -304,6 +304,32 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
                     </>
                   )}
                 </button>
+
+                {/* Credit Team / Admin Quick Login */}
+                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-[#0B2545] to-[#1e3a5f] text-white border border-slate-600/40 shadow-sm flex items-center justify-between gap-3 mb-2">
+                  <div className="min-w-0 text-left">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-xs font-extrabold text-white tracking-wide">Credit Team Login</span>
+                      <span className="text-[9.5px] font-bold px-1.5 py-0.2 rounded bg-purple-500/40 text-purple-200">Admin</span>
+                    </div>
+                    <div className="text-[11px] text-slate-200 truncate mt-0.5">
+                      Rajeshwar Sharma · Agri Underwriter
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSignInEmail('rajeshwar.sharma@tvscredit.com');
+                      setSignInPassword('Underwrite@2026');
+                      submitAuth(null, false, 'rajeshwar.sharma@tvscredit.com', 'Underwrite@2026');
+                    }}
+                    disabled={isLoading || isSuccess}
+                    className="px-3.5 py-2 rounded-xl bg-[#7342E2] hover:bg-[#5B32E5] text-white text-xs font-extrabold transition-all shadow-xs shrink-0 cursor-pointer active:scale-95"
+                  >
+                    Open Dashboard ➔
+                  </button>
+                </div>
               </form>
 
               {/* Centered OR Divider */}

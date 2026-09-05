@@ -43,32 +43,32 @@ export const Footer: React.FC = () => {
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             {/* Left Column: Team Info, Classic Cool Typography, and Contact Us */}
-            <div className="lg:col-span-7 flex flex-col items-start gap-4">
+            <div className="lg:col-span-7 flex flex-col items-start gap-6 sm:gap-7">
               {/* Eyebrow badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100/80 border border-slate-200/80 text-[11px] font-semibold tracking-wider uppercase text-slate-600">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-[11px] font-semibold tracking-wider uppercase text-slate-600 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>TVS Credit E.P.I.C 8 · Hackathon Innovation</span>
               </div>
 
               {/* Main Heading with Classic Cool Standout Professional Font */}
-              <div className="flex flex-col gap-1">
-                <h2 className="font-bioxtreme text-4xl sm:text-5xl lg:text-[52px] font-black tracking-tight text-[#0B2545] leading-[1.08]">
+              <div className="flex flex-col gap-2.5 sm:gap-3">
+                <h2 className="font-bioxtreme text-4xl sm:text-5xl lg:text-[52px] font-black tracking-tight text-[#0B2545] leading-[1.12]">
                   Team BioXtreme
                 </h2>
-                <div className="text-xs sm:text-sm font-semibold tracking-wide text-emerald-700 uppercase mt-0.5">
+                <div className="text-xs sm:text-[13px] font-bold tracking-wider text-emerald-700 uppercase leading-snug">
                   Autonomous Multimodal Agri-Credit Decision Engine & Space-Agri AI
                 </div>
               </div>
 
-              {/* Project description aligned to hackathon */}
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl font-normal mt-1">
+              {/* Project description aligned to hackathon with relaxed, breathable line height */}
+              <p className="text-slate-600/90 text-sm sm:text-base leading-[1.85] max-w-xl font-normal tracking-normal">
                 Engineered for TVS Credit E.P.I.C 8. Uniting Sentinel-2 10m multispectral satellite remote sensing,
                 CloudGap-CG monsoon inpainting, Two-Tier cadastral anti-fraud defense, and grounded vernacular
                 voice AI for rural India&apos;s next-generation agricultural lending.
               </p>
 
               {/* Contact Us button routing to sudheesh.singh02@gmail.com */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-4 pt-3 sm:pt-4">
                 <a
                   href="mailto:sudheesh.singh02@gmail.com?subject=TVS%20Credit%20EPIC%208%20-%20Team%20BioXtreme%20Inquiry"
                   className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#0B2545] text-white hover:bg-[#133863] text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"

@@ -17,8 +17,8 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onFarmerPortalClick,
 }) => {
   const navLinks = [
-    { name: 'Decision Cockpit', href: '#underwriting' },
     { name: '4 Pillars', href: '#innovations' },
+    { name: 'How it Works', href: '#lending-pipeline' },
     { name: 'Portfolio Risk', href: '#portfolio' },
     { name: 'Krishi Saathi AI', href: '#krishi-saathi' },
   ];
@@ -34,6 +34,26 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       el.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const [authUser, setAuthUser] = React.useState<{ name: string; role?: string } | null>(null);
+
+  React.useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const stored = localStorage.getItem('tvs_credit_user');
+        setAuthUser(stored ? JSON.parse(stored) : null);
+      } catch (e) {
+        setAuthUser(null);
+      }
+    };
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    window.addEventListener('tvs-auth-change', checkAuth);
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('tvs-auth-change', checkAuth);
+    };
+  }, []);
 
   return (
     <AnimatePresence>
@@ -119,6 +139,17 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
             {/* CTA Buttons at bottom */}
             <div className="flex flex-col gap-3 pt-6 border-t border-[#192837]/12">
+              {authUser && (authUser.role === 'Agri Underwriter' || authUser.role === 'Risk Operations Officer' || /underwriter|officer|admin/i.test(authUser.role || '')) && (
+                <button
+                  onClick={() => {
+                    window.location.hash = '#dashboard';
+                    onClose();
+                  }}
+                  className="w-full py-3.5 rounded-full text-white font-bold text-[0.95rem] shadow-sm active:scale-95 transition-all cursor-pointer bg-[#0B2545] hover:bg-[#133863] flex items-center justify-center gap-2"
+                >
+                  <span>⚡ Admin Dashboard</span>
+                </button>
+              )}
               {onFarmerPortalClick && (
                 <button
                   onClick={() => {
@@ -131,17 +162,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   <span>Farmer Portal</span>
                 </button>
               )}
-              <button
-                onClick={() => {
-                  const el = document.getElementById('underwriting');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  onClose();
-                }}
-                className="w-full py-3.5 rounded-full text-white font-semibold text-[0.95rem] shadow hover:shadow-md active:scale-95 transition-all cursor-pointer"
-                style={{ backgroundColor: '#7342E2' }}
-              >
-                Launch Cockpit
-              </button>
               <button
                 onClick={() => {
                   if (onSignInClick) {

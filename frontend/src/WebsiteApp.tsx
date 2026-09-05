@@ -8,7 +8,6 @@ import Hero from './components/Hero';
 import InnovationPillars from './components/InnovationPillars';
 import LendingPipelineSection from './components/LendingPipelineSection';
 import FieldScenariosCarousel, { FieldScenario } from './components/FieldScenariosCarousel';
-import UnderwritingSection from './components/UnderwritingSection';
 import PortfolioSection from './components/PortfolioSection';
 import WhatIfSection from './components/WhatIfSection';
 import EWSSection from './components/EWSSection';
@@ -18,11 +17,13 @@ import DeliberationModal from './components/DeliberationModal';
 import Assistant from './components/Assistant';
 import FarmerServicesPage from './components/FarmerServicesPage';
 import PrecisionSectionPreview from './components/PrecisionSectionPreview';
+import AdminDashboard from './components/AdminDashboard';
 
 const viewFromHash = () =>
   window.location.hash === '#signin' ? 'signin' :
   window.location.hash === '#farmer' ? 'farmer' :
   window.location.hash === '#precision-preview' ? 'precision-preview' :
+  window.location.hash === '#dashboard' ? 'dashboard' :
   'landing';
 function Reveal({ children }: { children: React.ReactNode }) {
   const reduced = useReducedMotion();
@@ -37,6 +38,7 @@ export default function WebsiteApp() {
   const [context, setContext] = useState<Record<string, any> | null>(null);
   const [scenario, setScenario] = useState<FieldScenario | null>(null);
   const [deliberation, setDeliberation] = useState<any>(null);
+  const [dashboardUser, setDashboardUser] = useState<{ name: string; role: string; email?: string } | null>(null);
   const [identity, setIdentity] = useState(() => { try { const user = JSON.parse(localStorage.getItem('tvs_credit_user') || 'null'); return user?.user_id || user?.email || 'guest'; } catch { return 'guest'; } });
   const panel = useRef<HTMLElement>(null);
   const opener = useRef<HTMLElement | null>(null);
@@ -60,6 +62,7 @@ export default function WebsiteApp() {
       hash === 'signin' || hash === '#signin' ? 'signin' :
       hash === 'farmer' || hash === '#farmer' ? 'farmer' :
       hash === 'precision-preview' || hash === '#precision-preview' ? 'precision-preview' :
+      hash === 'dashboard' || hash === '#dashboard' ? 'dashboard' :
       'landing'
     );
   };
@@ -108,7 +111,42 @@ export default function WebsiteApp() {
   return <MotionConfig reducedMotion="user"><div className="original-site">
     <a href="#website-main" className="skip-link">Skip to content</a>
     {view === 'signin' ? (
-      <SignInPage onBack={() => navigate('home')} onSuccess={() => { window.dispatchEvent(new Event('tvs-auth-change')); navigate('underwriting'); }} />
+      <SignInPage
+        onBack={() => navigate('home')}
+        onSuccess={(user) => {
+          window.dispatchEvent(new Event('tvs-auth-change'));
+          const role = user?.role || '';
+          const isCreditAdmin =
+            role === 'Agri Underwriter' ||
+            role === 'Risk Operations Officer' ||
+            /underwriter|officer|admin|credit/i.test(role);
+          if (isCreditAdmin) {
+            setDashboardUser(user);
+            navigate('dashboard');
+          } else {
+            navigate('home');
+          }
+        }}
+      />
+    ) : view === 'dashboard' ? (
+      <AdminDashboard
+        user={dashboardUser || (() => {
+          try {
+            const u = JSON.parse(localStorage.getItem('tvs_credit_user') || 'null');
+            return u || { name: 'Rajeshwar Sharma', role: 'Agri Underwriter', branch: 'Raipur Central Hub' };
+          } catch {
+            return { name: 'Rajeshwar Sharma', role: 'Agri Underwriter', branch: 'Raipur Central Hub' };
+          }
+        })()}
+        onSignOut={() => {
+          localStorage.removeItem('tvs_credit_user');
+          localStorage.removeItem('tvs_auth_token');
+          setDashboardUser(null);
+          window.dispatchEvent(new Event('tvs-auth-change'));
+          navigate('home');
+        }}
+        onNavigateHome={() => navigate('home')}
+      />
     ) : view === 'farmer' ? (
       <FarmerServicesPage context={context} ask={ask} navigate={navigate} />
     ) : view === 'precision-preview' ? (
@@ -126,7 +164,6 @@ export default function WebsiteApp() {
         <Reveal><InnovationPillars /></Reveal>
         <Reveal><LendingPipelineSection /></Reveal>
         <Reveal><FieldScenariosCarousel onSelectScenario={setScenario} /></Reveal>
-        <Reveal><UnderwritingSection key={identity} scenario={scenario} onOpenDeliberation={setDeliberation} onContext={setContext} /></Reveal>
         <Reveal><PortfolioSection /></Reveal>
         <Reveal><WhatIfSection /></Reveal>
         <Reveal><EWSSection /></Reveal>
@@ -135,7 +172,7 @@ export default function WebsiteApp() {
       <Footer />
       <DeliberationModal isOpen={!!deliberation} onClose={() => setDeliberation(null)} resultData={deliberation} />
     </>}
-    {view !== 'signin' && (
+    {view !== 'signin' && view !== 'dashboard' && (
       <>
         {showScrollTop && (
           <div className="fixed right-4 md:right-7 bottom-[82px] md:bottom-[98px] z-40">

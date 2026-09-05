@@ -16,8 +16,8 @@ const fadeUp = {
 };
 
 export const Hero: React.FC = () => {
-  const scrollToUnderwriting = () => {
-    const el = document.getElementById('underwriting');
+  const scrollToInnovations = () => {
+    const el = document.getElementById('innovations') || document.getElementById('lending-pipeline');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -134,7 +134,7 @@ export const Hero: React.FC = () => {
               filter: 'brightness(1.1)',
             }}
             whileTap={{ scale: 0.96 }}
-            onClick={scrollToUnderwriting}
+            onClick={scrollToInnovations}
             className="flex items-center justify-between text-white cursor-pointer select-none"
             style={{
               borderRadius: '50px',
@@ -146,7 +146,7 @@ export const Hero: React.FC = () => {
               gap: '32px',
             }}
           >
-            <span>Launch Decision Hub</span>
+            <span>Explore AI Innovations</span>
             <ArrowRightCircle size={20} />
           </motion.button>
         </motion.div>

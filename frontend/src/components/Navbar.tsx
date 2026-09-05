@@ -16,8 +16,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onFarmerPortalClick,
 }) => {
   const navLinks = [
-    { name: 'Decision Cockpit', href: '#underwriting' },
     { name: '4 Pillars', href: '#innovations' },
+    { name: 'How it Works', href: '#lending-pipeline' },
     { name: 'Portfolio Risk', href: '#portfolio' },
     { name: 'Krishi Saathi AI', href: '#krishi-saathi' },
   ];
@@ -116,16 +116,15 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Farmer Portal</span>
             </button>
           )}
-          <button
-            onClick={() => {
-              const el = document.getElementById('underwriting');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="text-sm font-semibold px-4 py-1.5 rounded-full text-white transition-all shadow-2xs hover:shadow-sm active:scale-95 cursor-pointer whitespace-nowrap"
-            style={{ backgroundColor: '#7342E2' }}
-          >
-            Launch Cockpit
-          </button>
+          {authUser && (authUser.role === 'Agri Underwriter' || authUser.role === 'Risk Operations Officer' || /underwriter|officer|admin/i.test(authUser.role || '')) && (
+            <button
+              onClick={() => { window.location.hash = '#dashboard'; }}
+              className="text-xs font-bold px-3.5 py-1.5 rounded-full text-white bg-[#0B2545] hover:bg-[#133863] shadow-xs active:scale-95 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5"
+              title="Open Credit Operations Dashboard"
+            >
+              <span>⚡ Admin Dashboard</span>
+            </button>
+          )}
           {authUser ? (
             <div className="flex items-center gap-2 bg-white/90 border border-slate-200/90 rounded-full pl-3 pr-2 py-1 shadow-2xs flex-shrink-0">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
