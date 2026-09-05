@@ -1,0 +1,166 @@
+{
+  "version": "2.0.0",
+  "organization": "TVS Credit Services Limited",
+  "target_program": "TVS Credit E.P.I.C 8 — AI-Powered Smart Lending Decision Hub",
+  "products": [
+    {
+      "id": "TRACTOR_NEW",
+      "name": "TVS New Tractor Loan",
+      "description": "Financing for brand-new 35HP to 60HP tractors for agricultural operations.",
+      "min_amount_inr": 250000,
+      "max_amount_inr": 1200000,
+      "base_roi_pct": 11.5,
+      "max_tenure_months": 60,
+      "base_ltv_pct": 85.0,
+      "min_land_acres": 3.0,
+      "eligibility": "Farmers with minimum 3 acres of agricultural land, validated via Sentinel-2 satellite vigor and ISRO Bhuvan LULC.",
+      "repayment_structure": "Seasonally-Aligned Harvest EMI: Nominal maintenance during June-October, bullet installment in November-December (Kharif Mandi sale)."
+    },
+    {
+      "id": "TRACTOR_USED",
+      "name": "TVS Used Tractor Loan",
+      "description": "Affordable pre-owned tractor financing with certified valuation and refurbishment options.",
+      "min_amount_inr": 100000,
+      "max_amount_inr": 600000,
+      "base_roi_pct": 13.5,
+      "max_tenure_months": 48,
+      "base_ltv_pct": 75.0,
+      "min_land_acres": 2.0,
+      "eligibility": "Farmers with minimum 2 acres of land; tractor age under 7 years at loan maturity.",
+      "repayment_structure": "Bi-annual harvest aligned installments matching regional harvest cycles."
+    },
+    {
+      "id": "KISAN_TWO_WHEELER",
+      "name": "TVS Kisan Rural Two-Wheeler Loan",
+      "description": "Tailored two-wheeler financing for farmers and rural youth for daily farm-to-mandi transport.",
+      "min_amount_inr": 35000,
+      "max_amount_inr": 140000,
+      "base_roi_pct": 14.0,
+      "max_tenure_months": 36,
+      "base_ltv_pct": 90.0,
+      "min_land_acres": 0.5,
+      "eligibility": "Rural residents with basic land records, Aadhaar, and banking transactions.",
+      "repayment_structure": "Low monthly installments with seasonal grace periods during monsoon sowing."
+    },
+    {
+      "id": "AGRI_EQUIPMENT",
+      "name": "TVS Farm Harvester & Implement Loan",
+      "description": "Credit for combine harvesters, rotavators, Happy Seeders, and solar pumps.",
+      "min_amount_inr": 80000,
+      "max_amount_inr": 800000,
+      "base_roi_pct": 12.5,
+      "max_tenure_months": 48,
+      "base_ltv_pct": 80.0,
+      "min_land_acres": 2.5,
+      "eligibility": "Custom hiring operators and progressive farmers with high land productivity scores.",
+      "repayment_structure": "Post-harvest customized bullet repayments."
+    }
+  ],
+  "rbi_guidelines": {
+    "priority_sector_lending": "Agricultural loans up to ₹20 Lakh to individual farmers qualify for 100% Priority Sector Lending (PSL) classification under RBI Master Directions.",
+    "sma_staging": {
+      "SMA_0": "Principal or interest payment overdue between 1 to 30 days. Action: Automated SMS and Vernacular Voice reminder.",
+      "SMA_1": "Principal or interest payment overdue between 31 to 60 days. Action: EWS field visit and Seasonally-Aligned restructuring assessment.",
+      "SMA_2": "Principal or interest payment overdue between 61 to 90 days. Action: Prioritized field recovery dossier and asset monitoring.",
+      "NPA": "Overdue exceeds 90 days. Action: Formal legal recovery and asset repossession protocol."
+    }
+  },
+  "crop_calendars_and_mandi": {
+    "PADDY_KHARIF": {
+      "season": "Kharif",
+      "sowing_months": "June - July",
+      "growing_months": "August - September",
+      "harvest_months": "November - December",
+      "mandi_liquidity_window": "December - January",
+      "base_yield_tonnes_per_ha": 3.8,
+      "msp_per_quintal_inr": 2300,
+      "repayment_note": "Bullet installment scheduled in December/January directly from Mandi paddy sales."
+    },
+    "WHEAT_RABI": {
+      "season": "Rabi",
+      "sowing_months": "October - November",
+      "growing_months": "December - February",
+      "harvest_months": "March - April",
+      "mandi_liquidity_window": "April - May",
+      "base_yield_tonnes_per_ha": 4.2,
+      "msp_per_quintal_inr": 2275,
+      "repayment_note": "Bullet installment scheduled in April/May post Baisakhi Mandi procurement."
+    },
+    "SOYBEAN_KHARIF": {
+      "season": "Kharif",
+      "sowing_months": "June - July",
+      "growing_months": "August - September",
+      "harvest_months": "October - November",
+      "mandi_liquidity_window": "October - December",
+      "base_yield_tonnes_per_ha": 2.2,
+      "msp_per_quintal_inr": 4892,
+      "repayment_note": "Bullet repayment in November."
+    }
+  },
+  "scorecard_rules": {
+    "weights": {
+      "financial_bureau": 0.40,
+      "satellite_land_health": 0.30,
+      "climate_resilience": 0.20,
+      "collateral_coverage": 0.10
+    },
+    "score_range": "300 to 900",
+    "tiers": {
+      "PRIME": "750 - 900: Auto-Approve, 1.5% ROI discount, +5% LTV boost",
+      "GOOD": "680 - 749: Fast-Track Approve, 0.5% ROI discount, standard LTV",
+      "MODERATE": "600 - 679: Manual Underwrite, 0.5% ROI surcharge, -5% LTV",
+      "HIGH_RISK": "500 - 599: Restricted Lending, 2.0% surcharge, co-guarantor required",
+      "REJECT": "300 - 499: Reject due to fraud, non-arable land, or extreme default risk"
+    }
+  },
+  "vernacular_faqs": [
+    {
+      "question_en": "Why do I need satellite land verification?",
+      "question_hi": "मुझे सैटेलाइट भूमि सत्यापन की आवश्यकता क्यों है?",
+      "question_cg": "मोर खेत के सैटेलाइट ले जांच काबर जरूरी हे?",
+      "answer_en": "Satellite verification via Sentinel-2 checks your crop vigor, soil fertility, and boundaries in under 30 seconds, eliminating physical visit delays and giving you an instant credit boost without CIBIL history.",
+      "answer_hi": "सेंटिनल-2 उपग्रह आपके खेत की हरियाली और मिट्टी की उर्वरता की जांच 30 सेकंड में करता है, जिससे बिना सिबिल स्कोर के भी आपको तुरंत और कम ब्याज पर लोन मिल जाता है।",
+      "answer_cg": "उपग्रह ले तुंहर खेत के हरियरी अउ माटी के जांच 30 सेकंड म हो जाथे। बिना सिबिल स्कोर के घलो तुमन ला जल्दी अउ कम ब्याज म लोन मिल जाथे।"
+    },
+    {
+      "question_en": "What is Seasonally-Aligned Harvest EMI?",
+      "question_hi": "फसल कटाई आधारित EMI क्या है?",
+      "question_cg": "फसल कटाई आधारित EMI का हवे?",
+      "answer_en": "Instead of paying equal high installments during lean sowing months, you pay only a nominal maintenance fee (~₹1,500) and make your primary loan payment when you sell your crop at the Mandi.",
+      "answer_hi": "बुआई के समय जब खर्च अधिक होता है, तब आपको केवल ₹1,500 का नाममात्र शुल्क देना होता है। मुख्य किस्त फसल कटाई और मंडी में बिकने के बाद चुकानी होती है।",
+      "answer_cg": "बोआई के बेरा म जब पइसा के तंगी रहिथे, तब खाली ₹1,500 के नानचुन किस्त देना हे। मुख्य किश्त ह जब धान मंडी म बिकाही तब देना हे।"
+    },
+    {
+      "question_en": "How does CloudGap handle monsoon clouds?",
+      "question_hi": "क्लाउडगैप मानसून के बादलों को कैसे हटाता है?",
+      "question_cg": "क्लाउडगैप बादर म खेत ला कइसे देखथे?",
+      "answer_en": "CloudGap uses Spatio-Temporal Deep Image Prior (ST-DIP) deep learning to reconstruct spectral bands obscured by monsoon clouds, allowing TVS Credit to underwrite loans year-round during Kharif season.",
+      "answer_hi": "क्लाउडगैप डीप लर्निंग (ST-DIP) तकनीक से बादलों से ढकी सैटेलाइट तस्वीरों को साफ करता है, जिससे बरसात के मौसम में भी बिना रुकावट लोन पास हो जाता है।",
+      "answer_cg": "क्लाउडगैप ह डीप लर्निंग तकनीक ले बादर के पाछू लुकाए खेत ला साफ-साफ देख लेथे, जेकर से बरसात म घलो लोन के काम नई रुकय।"
+    },
+    {
+      "question_en": "What documents are required for a TVS tractor loan?",
+      "question_hi": "ट्रैक्टर लोन के लिए क्या दस्तावेज चाहिए?",
+      "question_cg": "ट्रैक्टर लोन बर का-का कागज लगही?",
+      "answer_en": "Applying for a TVS Tractor Loan requires just 4 documents: Aadhaar card, Khasra 7/12 land records, 6-month bank statement, and dealer quotation. Satellite verification eliminates on-site delays.",
+      "answer_hi": "TVS कृषि ऋण के लिए केवल 4 सरल दस्तावेजों की आवश्यकता होती है: आधार कार्ड, खसरा 7/12 (भुइयां रिकॉर्ड), 6 माह का बैंक स्टेटमेंट, और अधिकृत डीलर से ट्रैक्टर कोटेशन। सैटेलाइट जांच के कारण किसी भौतिक सत्यापन की आवश्यकता नहीं होती।",
+      "answer_cg": "TVS लोन बर खाली 4 ठन कागज लगथे: आधार कार्ड, खसरा खतौनी / भुइयां रिकॉर्ड, 6 महिना के बैंक पासबुक, अउ ट्रैक्टर डीलर के कोटेशन। सैटेलाइट जांच ले 10 मिनट म लोन पास हो जाही।"
+    },
+    {
+      "question_en": "How do I claim PMFBY crop insurance for damage?",
+      "question_hi": "PMFBY फसल बीमा क्लेम कैसे करें?",
+      "question_cg": "PMFBY फसल बीमा क्लेम कइसे करबो?",
+      "answer_en": "If crop loss occurs due to pest attack, unseasonal rain, or drought, file a PMFBY claim within 72 hours via toll-free 1800-180-1551 or through your TVS Credit manager. Sentinel-2 NDVI satellite imagery acts as instant validation evidence.",
+      "answer_hi": "कीट प्रकोप या बेमौसम बारिश से फसल क्षति होने पर 72 घंटे के भीतर PMFBY टोल-फ्री 1800-180-1551 या टीवीएस रिलेशनशिप मैनेजर द्वारा क्लेम दर्ज कराएं। सैटेलाइट NDVI रिपोर्ट क्लेम निपटारे में त्वरित साक्ष्य का कार्य करती है।",
+      "answer_cg": "अगर सूखा या कीड़ा लगे ले फसल के नुकसान होथे, त तुमन प्रधानमंत्री फसल बीमा योजना (PMFBY) म 72 घंटा के भीतर टोल-फ्री 1800-180-1551 म या टीवीएस अफसर के मदद ले क्लेम दर्ज करा सकत हव। सैटेलाइट रिपोर्ट ले क्लेम जल्दी पास हो जाही।"
+    },
+    {
+      "question_en": "Can EMI installments be deferred during drought?",
+      "question_hi": "कम बारिश या सूखे पर क्या किस्त रुक सकती है?",
+      "question_cg": "कम पानी गिरे म का किस्त रुक सकत हे?",
+      "answer_en": "Yes, in the event of monsoon deficit or severe drought, TVS Credit Early Warning System automatically activates a 60-day EMI restructuring and moratorium buffer with zero penalty.",
+      "answer_hi": "हाँ, यदि कम वर्षा या सूखे से फसल प्रभावित होती है, तो टीवीएस क्रेडिट का EWS सिस्टम स्वतः 60-दिन की ईएमआई राहत और पुनर्गठन सुविधा बिना किसी पेनल्टी के प्रदान करता है।",
+      "answer_cg": "हव, अगर कम पानी गिरे या सूखा परे ले फसल कमजोर हो जाथे, त टीवीएस क्रेडिट के ईडब्ल्यूएस तंत्र अपने आप तुंहर किस्त ला 60 दिन बर आगे बढ़ा देथे। कोनो पेनल्टी नई लगही।"
+    }
+  ]
+}

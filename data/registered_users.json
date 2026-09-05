@@ -1,0 +1,62 @@
+[
+  {
+    "user_id": "TVS-USR-1001",
+    "name": "Rajeshwar Sharma",
+    "email": "rajeshwar.sharma@tvscredit.com",
+    "phone": "+91 98271 04421",
+    "role": "Agri Underwriter",
+    "branch": "Raipur Central Hub",
+    "password_hash": "68b693259b35b628b6d39634e9e03d46cc8b3353528b7fae2ba8296efcb030a5",
+    "created_at": "2026-09-01T10:00:00Z"
+  },
+  {
+    "user_id": "TVS-USR-1002",
+    "name": "Sunil Verma",
+    "email": "sunil.verma@tvscredit.com",
+    "phone": "+91 94252 88910",
+    "role": "Risk Operations Officer",
+    "branch": "Zonal Risk Command",
+    "password_hash": "c896503c004cbe90875e6e300188ef61fa25d30bc90a0718d79a202d083b4827",
+    "created_at": "2026-09-01T10:00:00Z"
+  },
+  {
+    "user_id": "TVS-USR-1003",
+    "name": "Kavita Patel",
+    "email": "kavita.patel@tvscredit.com",
+    "phone": "+91 98263 77412",
+    "role": "Field Agronomist",
+    "branch": "Bilaspur Cluster",
+    "password_hash": "68b693259b35b628b6d39634e9e03d46cc8b3353528b7fae2ba8296efcb030a5",
+    "created_at": "2026-09-01T10:00:00Z"
+  },
+  {
+    "user_id": "TVS-USR-1004",
+    "name": "Ramesh Patel",
+    "email": "ramesh.patel@tvsdealers.in",
+    "phone": "+91 98275 33211",
+    "role": "TVS Tractor Dealer",
+    "branch": "Durg TVS Dealership",
+    "password_hash": "68b693259b35b628b6d39634e9e03d46cc8b3353528b7fae2ba8296efcb030a5",
+    "created_at": "2026-09-01T10:00:00Z"
+  },
+  {
+    "user_id": "TVS-USR-7863",
+    "name": "Vikram Patel",
+    "email": "vikram.patel@tvscredit.com",
+    "phone": "+91 98271 99999",
+    "role": "Agri Underwriter",
+    "branch": "Raipur Hub",
+    "password_hash": "a62c5850c7fcdfe4cde5bcaeb12ea700812ef7caef8126e880a4b4ca68982498",
+    "created_at": "2026-09-05T11:46:43.661772Z"
+  },
+  {
+    "user_id": "TVS-USR-6212",
+    "name": "Manish Verma",
+    "email": "manish.verma@tvscredit.com",
+    "phone": "+91 94255 44332",
+    "role": "Agri Underwriter",
+    "branch": "Raipur Central Hub",
+    "password_hash": "26979e760403419bc1cdde41d7889769ee36184988415ad5e04c0307f25d414e",
+    "created_at": "2026-09-05T11:49:46.512190Z"
+  }
+]

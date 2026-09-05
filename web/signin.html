@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TVS Credit — AI Smart Lending Decision Hub</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #EAE1DF; min-height: 100vh; overflow-x: hidden; color: #1e293b; }
+
+    /* Top Animated Glowing Progress Bar */
+    #top-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3.5px;
+      width: 0%;
+      background: linear-gradient(90deg, #5B32E5 0%, #7342E2 40%, #00BFA5 80%, #10B981 100%);
+      box-shadow: 0 0 12px rgba(115, 66, 226, 0.7), 0 0 4px rgba(16, 185, 129, 0.8);
+      z-index: 9999;
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    /* Back Nav */
+    .back-nav {
+      position: fixed;
+      top: 24px;
+      left: 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      color: #0B2545;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      z-index: 50;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      transition: all 0.2s ease;
+    }
+    .back-nav:hover {
+      background: #FFFFFF;
+      transform: translateX(-2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Stage Layout */
+    .stage {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+      overflow: hidden;
+      background: #EAE1DF;
+    }
+    .full-bg-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: url('/farmers_login.jpg') left 15% center / cover no-repeat;
+      z-index: 0;
+    }
+    .full-bg-blur {
+      position: absolute;
+      inset: -20px;
+      width: calc(100% + 40px);
+      height: calc(100% + 40px);
+      background: url('/farmers_login.jpg') left 15% center / cover no-repeat;
+      filter: blur(24px) saturate(115%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 54%, black 68%, black 100%);
+      mask-image: linear-gradient(to right, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.5) 54%, black 68%, black 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .full-bg-scrim {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 55%;
+      background: linear-gradient(180deg, rgba(16, 34, 49, 0.08) 0%, rgba(16, 34, 49, 0.28) 45%, rgba(11, 25, 43, 0.82) 100%);
+      -webkit-mask-image: linear-gradient(to right, black 0%, black 70%, transparent 100%);
+      mask-image: linear-gradient(to right, black 0%, black 70%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Left Photo Stage */
+    .photo-stage {
+      flex: 1.15;
+      height: 100%;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(36px, 6vh, 64px) clamp(32px, 5vw, 64px);
+      pointer-events: none;
+    }
+    .photo-stage > * {
+      pointer-events: auto;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      color: white;
+      max-width: 580px;
+      margin-bottom: clamp(24px, 4vh, 48px);
+      animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes heroSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(18, 33, 57, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: #F8FAFC;
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulseDot 2s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 3.4vw, 50px);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    }
+    .hero-sub {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.65;
+      max-width: 440px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Right Card Stage */
+    .card-stage {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 32px;
+      background: linear-gradient(to right, transparent 0%, rgba(234, 225, 223, 0.12) 30%, rgba(234, 225, 223, 0.35) 100%);
+      border-left: none;
+      overflow-y: auto;
+    }
+
+    /* The Main Floating Card */
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 28px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      box-shadow: 0 20px 40px -10px rgba(11, 37, 69, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+      padding: 38px 36px 32px;
+      position: relative;
+      overflow: visible;
+      animation: cardFadeIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Magic UI Border Beam */
+    @keyframes border-beam {
+      0% { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
+    }
+    .border-beam-wrapper {
+      position: absolute;
+      inset: -1.5px;
+      border-radius: 29.5px;
+      border: var(--border-width, 3px) solid transparent;
+      pointer-events: none;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      overflow: visible;
+      z-index: 25;
+    }
+    .border-beam-core {
+      position: absolute;
+      aspect-ratio: 1 / 1;
+      width: var(--size, 240px);
+      background: linear-gradient(to left, var(--color-from, #FF5722) 0%, var(--color-to, #7342E2) 50%, #00E5FF 85%, transparent 100%);
+      offset-anchor: var(--anchor, 90%) 50%;
+      offset-path: rect(0 auto auto 0 round 28px);
+      animation-name: border-beam;
+      animation-duration: var(--duration, 8s);
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-delay: var(--delay, 0s);
+      filter: drop-shadow(0 0 10px #7342E2) drop-shadow(0 0 16px #FF5722);
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Tab Switcher at top of card */
+    .tab-switcher {
+      display: flex;
+      background: #F1F3F5;
+      border-radius: 16px;
+      padding: 4px;
+      margin-bottom: 22px;
+      position: relative;
+    }
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748B;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: #FFFFFF;
+      color: #0B2545;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Card Header */
+    .card-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 29px;
+      font-weight: 800;
+      color: #0B2545;
+      letter-spacing: -0.8px;
+    }
+    .card-subtitle {
+      font-size: 13.5px;
+      color: #64748B;
+      margin-top: 5px;
+    }
+    .card-subtitle b {
+      color: #0B2545;
+    }
+
+    /* Notification Banner */
+    #notifyBanner {
+      display: none;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    #notifyBanner.success {
+      display: block;
+      background: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #A7F3D0;
+    }
+    #notifyBanner.error {
+      display: block;
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 13px;
+    }
+    .form-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 5px;
+      letter-spacing: 0.2px;
+    }
+    .form-input {
+      width: 100%;
+      height: 46px;
+      padding: 0 16px;
+      border-radius: 12px;
+      border: 1px solid #CBD5E1;
+      background: #FAFAFA;
+      font-size: 13.5px;
+      color: #0F172A;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .form-input:focus {
+      background: #FFFFFF;
+      border-color: #5B32E5;
+      box-shadow: 0 0 0 3px rgba(91, 50, 229, 0.12);
+    }
+
+    /* Role Pills */
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 13px;
+    }
+    .role-pill {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid #E2E8F0;
+      background: #F8FAFC;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #475569;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .role-pill.selected {
+      background: #0B2545;
+      color: #FFFFFF;
+      border-color: #0B2545;
+      box-shadow: 0 2px 6px rgba(11, 37, 69, 0.2);
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 12px;
+      background: #0B2545;
+      color: #FFFFFF;
+      border: none;
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(11, 37, 69, 0.25);
+      transition: all 0.2s ease;
+      margin-top: 6px;
+    }
+    .submit-btn:hover {
+      background: #143560;
+      transform: translateY(-1px);
+    }
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 16px 0 14px;
+      gap: 12px;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: #E2E8F0;
+    }
+    .divider-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94A3B8;
+      letter-spacing: 0.8px;
+    }
+
+    /* Google Button */
+    .google-btn {
+      width: 100%;
+      height: 46px;
+      border-radius: 12px;
+      background: #FFFFFF;
+      border: 1px solid #CBD5E1;
+      color: #1E293B;
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .google-btn:hover {
+      background: #F8FAFC;
+      border-color: #94A3B8;
+    }
+
+    /* Switcher Footer */
+    .card-footer {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #64748B;
+      word-spacing: normal;
+    }
+    .card-footer a {
+      color: #0B2545;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    /* Quick Demo Bar */
+    .quick-demo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 7px 12px;
+      margin-bottom: 16px;
+      font-size: 11.5px;
+    }
+    .demo-btn {
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #E2E8F0;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .demo-btn:hover {
+      background: #0B2545;
+      color: #FFF;
+    }
+
+    /* Smooth Fade View Switcher */
+    .auth-view {
+      display: none;
+      animation: fadeInView 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .auth-view.active {
+      display: block;
+    }
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .stage { flex-direction: column; height: auto; min-height: 100vh; overflow-y: auto; }
+      .full-bg-image, .full-bg-blur { position: fixed; }
+      .full-bg-blur {
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 260px, rgba(0, 0, 0, 0.5) 340px, black 420px);
+        mask-image: linear-gradient(to bottom, transparent 0%, transparent 260px, rgba(0, 0, 0, 0.5) 340px, black 420px);
+      }
+      .full-bg-scrim { width: 100%; height: 340px; -webkit-mask-image: none; mask-image: none; }
+      .photo-stage { min-height: 340px; padding: 70px 24px 24px; justify-content: flex-end; }
+      .hero-title { font-size: 32px; }
+      .card-stage { padding: 28px 16px 40px; background: transparent; border-left: none; border-top: none; }
+      .auth-card { padding: 30px 22px 26px; border-radius: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Animated Progress Bar -->
+  <div id="top-progress-bar"></div>
+
+  <!-- Return Link to Main Hub -->
+  <a href="/" class="back-nav" id="backBtn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    <span>TVS Decision Hub</span>
+  </a>
+
+  <div class="stage">
+    <!-- Full Screen Continuous Background: left focused, right blurred -->
+    <div class="full-bg-image"></div>
+    <div class="full-bg-blur"></div>
+    <div class="full-bg-scrim"></div>
+
+    <!-- Left Hero Photo Section -->
+    <div class="photo-stage">
+      <div class="hero-content">
+        <h1 class="hero-title">Powering Smart<br>Agri-Credit Instantly</h1>
+        <p class="hero-sub">
+          Access your decision cockpit to review credit applications, monitor farm telemetry, and manage agricultural loans securely.
+        </p>
+      </div>
+    </div>
+
+    <!-- Right Floating Card Stage -->
+    <div class="card-stage">
+      <div class="auth-card" id="authCard">
+        <!-- Notification Banner -->
+        <div id="notifyBanner"></div>
+
+        <!-- ================= VIEW 1: SIGN IN (Pixel-locked to reference image media_1788539706410.png) ================= -->
+        <div class="auth-view active" id="viewSignIn">
+          <h1 style="font-size: 32px; font-weight: 700; color: #2c3343; text-align: center; letter-spacing: -0.5px; margin: 0 0 6px 0; line-height: 1.15;">Welcome Back!</h1>
+          <p style="font-size: 14.5px; color: #797979; text-align: center; margin: 0 0 28px 0;"><strong style="color: #2c3343; font-weight: 700;">Log in</strong> to continue monitoring your signals.</p>
+
+          <form id="signInForm" onsubmit="handleAuthSubmit(event, 'signin')">
+            <div style="margin-bottom: 14px;">
+              <input type="email" id="signInEmail" placeholder="Eg. johndoe@gmail.com" style="width: 100%; height: 52px; padding: 0 16px; border-radius: 12px; background: #fafafa; border: 1.5px solid #acacae; font-size: 15px; color: #1e293b; outline: none; transition: border-color 0.2s ease;">
+            </div>
+
+            <div style="position: relative; margin-bottom: 24px; display: flex; align-items: center;">
+              <input type="password" id="signInPassword" placeholder="Password" style="width: 100%; height: 52px; padding: 0 44px 0 16px; border-radius: 12px; background: #f9f9f9; border: 1.5px solid transparent; font-size: 15px; color: #1e293b; outline: none; transition: border-color 0.2s ease;">
+              <button type="button" onclick="togglePasswordVisibility('signInPassword')" style="position: absolute; right: 14px; background: none; border: none; cursor: pointer; color: #94a3b8; display: flex; align-items: center; padding: 4px;">
+                <svg id="eyeIconSignIn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+
+            <button type="submit" class="submit-btn" id="signInSubmitBtn" style="width: 100%; height: 52px; border-radius: 9999px; background: #283139; color: #fff; font-size: 15.5px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; box-shadow: 0 6px 18px rgba(40, 49, 57, 0.2); margin-bottom: 22px;">
+              <span>Login</span>
+              <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
+                <path d="M3 11h15.4M11 3.3l7.7 7.7-7.7 7.7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 22px; width: 100%;">
+            <div style="flex: 1; height: 1px; background: #d1d5db;"></div>
+            <span style="font-size: 11px; font-weight: 700; color: #5a5a5b; letter-spacing: 0.8px; text-transform: uppercase;">OR</span>
+            <div style="flex: 1; height: 1px; background: #d1d5db;"></div>
+          </div>
+
+          <button type="button" onclick="handleGoogleAuth()" style="width: 100%; height: 50px; border-radius: 9999px; background: #ffffff; border: 1.5px solid #c8c8ca; color: #232424; font-size: 15px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 22px;">
+            <svg width="18" height="18" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span>Sign in with Google</span>
+          </button>
+
+          <p style="text-align: center; font-size: 13.5px; color: #0a0a0a; margin: 0;">
+            Don't have an account? <a onclick="switchView('signup')" style="font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #0a0a0a; cursor: pointer;">Start Free</a>
+          </p>
+        </div>
+
+        <!-- ================= VIEW 2: SIGN UP (DEDICATED CARD) ================= -->
+        <div class="auth-view" id="viewSignUp">
+          <h1 style="font-size: 32px; font-weight: 700; color: #2c3343; text-align: center; letter-spacing: -0.5px; margin: 0 0 6px 0; line-height: 1.15;">Create Account</h1>
+          <p style="font-size: 14.5px; color: #797979; text-align: center; margin: 0 0 24px 0;"><strong style="color: #2c3343; font-weight: 700;">Sign up</strong> to access TVS Credit smart lending tools.</p>
+
+          <form id="signUpForm" onsubmit="handleAuthSubmit(event, 'signup')" style="display: flex; flex-direction: column; gap: 14px;">
+            <input type="text" id="signUpName" placeholder="Full Name (e.g. Rajeshwar Sharma)" style="width: 100%; height: 50px; padding: 0 16px; border-radius: 12px; background: #fafafa; border: 1.5px solid #acacae; font-size: 14.5px; color: #1e293b; outline: none;">
+            <input type="email" id="signUpEmail" placeholder="Work Email (e.g. rajeshwar@tvscredit.com)" style="width: 100%; height: 50px; padding: 0 16px; border-radius: 12px; background: #fafafa; border: 1.5px solid #acacae; font-size: 14.5px; color: #1e293b; outline: none;">
+            <input type="tel" id="signUpPhone" placeholder="Mobile Number (+91 98271 04421)" style="width: 100%; height: 50px; padding: 0 16px; border-radius: 12px; background: #fafafa; border: 1.5px solid #acacae; font-size: 14.5px; color: #1e293b; outline: none;">
+            <input type="password" id="signUpPassword" placeholder="Password (minimum 6 characters)" style="width: 100%; height: 50px; padding: 0 16px; border-radius: 12px; background: #fafafa; border: 1.5px solid #acacae; font-size: 14.5px; color: #1e293b; outline: none;">
+
+            <button type="submit" class="submit-btn" id="signUpSubmitBtn" style="width: 100%; height: 52px; border-radius: 9999px; background: #283139; color: #fff; font-size: 15.5px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; cursor: pointer; box-shadow: 0 6px 18px rgba(40, 49, 57, 0.2); margin-top: 6px;">
+              <span>Create Free Account</span>
+              <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
+                <path d="M3 11h15.4M11 3.3l7.7 7.7-7.7 7.7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px 0; width: 100%;">
+            <div style="flex: 1; height: 1px; background: #d1d5db;"></div>
+            <span style="font-size: 11px; font-weight: 700; color: #5a5a5b; letter-spacing: 0.8px; text-transform: uppercase;">OR</span>
+            <div style="flex: 1; height: 1px; background: #d1d5db;"></div>
+          </div>
+
+          <button type="button" onclick="handleGoogleAuth()" style="width: 100%; height: 48px; border-radius: 9999px; background: #ffffff; border: 1.5px solid #c8c8ca; color: #232424; font-size: 14.5px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 20px;">
+            <svg width="18" height="18" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span>Sign up with Google</span>
+          </button>
+
+          <p style="text-align: center; font-size: 13.5px; color: #0a0a0a; margin: 0;">
+            Already have an account? <a onclick="switchView('signin')" style="font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #0a0a0a; cursor: pointer;">Log In</a>
+          </p>
+        </div>
+
+        <!-- Magic UI Border Beam -->
+        <div class="border-beam-wrapper" style="--size: 240px; --duration: 8s; --anchor: 90%; --border-width: 3px; --color-from: #FF5722; --color-to: #7342E2;">
+          <div class="border-beam-core"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Google SSO Account Chooser Modal -->
+  <div id="googleAuthModal" style="display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: #ffffff; border-radius: 18px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #e2e8f0; overflow: hidden; font-family: 'DM Sans', sans-serif;">
+      <!-- Header -->
+      <div style="padding: 20px 24px 16px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <svg width="28" height="28" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <div>
+            <div style="font-size: 17px; font-weight: 600; color: #0f172a;">Sign in with Google</div>
+            <div style="font-size: 12px; color: #64748b;">to continue to TVS Credit Decision Hub</div>
+          </div>
+        </div>
+        <button type="button" onclick="closeGoogleModal()" style="background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; padding: 4px; line-height: 1;">&times;</button>
+      </div>
+
+      <!-- Account List -->
+      <div id="googleAccountList" style="padding: 20px 24px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Choose an account</div>
+        
+        <div id="googleTypedAccount" style="display: none; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">U</div>
+          <div style="flex: 1; min-width: 0;">
+            <div id="googleTypedName" style="font-size: 13.5px; font-weight: 600; color: #0f172a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">Typed Account</div>
+            <div id="googleTypedEmail" style="font-size: 12px; color: #64748b; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">email@example.com</div>
+          </div>
+          <span style="color: #94a3b8; font-size: 14px;">&rsaquo;</span>
+        </div>
+
+        <div onclick="executeGoogleLogin('Agri Partner', 'partner.agri@gmail.com')" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #5B32E5; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">A</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 13.5px; font-weight: 600; color: #0f172a;">Agri Partner</div>
+            <div style="font-size: 12px; color: #64748b;">partner.agri@gmail.com</div>
+          </div>
+          <span style="color: #94a3b8; font-size: 14px;">&rsaquo;</span>
+        </div>
+
+        <div onclick="executeGoogleLogin('TVS Credit User', 'credit.desk@tvscredit.com')" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e2e8f0; cursor: pointer; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #10B981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">T</div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="font-size: 13.5px; font-weight: 600; color: #0f172a;">TVS Credit Team</div>
+            <div style="font-size: 12px; color: #64748b;">credit.desk@tvscredit.com</div>
+          </div>
+          <span style="color: #94a3b8; font-size: 14px;">&rsaquo;</span>
+        </div>
+
+        <div onclick="showCustomGoogleInput()" style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; border: 1px dashed #cbd5e1; cursor: pointer; margin-top: 4px;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; color: #475569; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500;">+</div>
+          <div style="font-size: 13.5px; font-weight: 500; color: #334155;">Use another Google account</div>
+        </div>
+      </div>
+
+      <!-- Custom Input Form -->
+      <div id="googleCustomForm" style="display: none; padding: 20px 24px; flex-direction: column; gap: 12px;">
+        <div style="font-size: 12px; color: #64748b; margin-bottom: 2px;">Enter your Google account details:</div>
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 600; color: #334155; margin-bottom: 4px;">Full Name</label>
+          <input type="text" id="customGoogleName" placeholder="e.g. Alex Kumar" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 13.5px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none;" />
+        </div>
+        <div>
+          <label style="display: block; font-size: 11px; font-weight: 600; color: #334155; margin-bottom: 4px;">Google Email *</label>
+          <input type="email" id="customGoogleEmail" required placeholder="e.g. alex.kumar@gmail.com" style="width: 100%; box-sizing: border-box; padding: 9px 12px; font-size: 13.5px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none;" />
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+          <button type="button" onclick="hideCustomGoogleInput()" style="flex: 1; padding: 9px; font-size: 13.5px; font-weight: 500; color: #475569; background: white; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer;">Back</button>
+          <button type="button" onclick="submitCustomGoogle()" style="flex: 1; padding: 9px; font-size: 13.5px; font-weight: 600; color: white; background: #5B32E5; border: none; border-radius: 8px; cursor: pointer;">Sign In</button>
+        </div>
+      </div>
+
+      <div style="background: #f8fafc; padding: 12px 24px; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #94a3b8;">
+        <span>English (United States)</span>
+        <span style="display: flex; gap: 12px;">
+          <span style="cursor: pointer;">Help</span>
+          <span style="cursor: pointer;">Privacy</span>
+          <span style="cursor: pointer;">Terms</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Smooth Progress Bar Animation Engine
+    function triggerProgressBar(callback) {
+      const bar = document.getElementById('top-progress-bar');
+      bar.style.opacity = '1';
+      bar.style.width = '25%';
+      setTimeout(() => {
+        bar.style.width = '70%';
+        setTimeout(() => {
+          bar.style.width = '100%';
+          setTimeout(() => {
+            bar.style.opacity = '0';
+            setTimeout(() => {
+              bar.style.width = '0%';
+              if (callback) callback();
+            }, 250);
+          }, 180);
+        }, 220);
+      }, 120);
+    }
+
+    // Run progress bar on initial page load
+    window.addEventListener('DOMContentLoaded', () => {
+      triggerProgressBar();
+    });
+
+    // View Switcher (Sign In <-> Sign Up)
+    function switchView(viewName) {
+      hideNotification();
+      const tabIn = document.getElementById('tabSignIn');
+      const tabUp = document.getElementById('tabSignUp');
+      const viewIn = document.getElementById('viewSignIn');
+      const viewUp = document.getElementById('viewSignUp');
+
+      if (viewName === 'signin') {
+        tabIn.classList.add('active');
+        tabUp.classList.remove('active');
+        viewIn.classList.add('active');
+        viewUp.classList.remove('active');
+      } else {
+        tabIn.classList.remove('active');
+        tabUp.classList.add('active');
+        viewIn.classList.remove('active');
+        viewUp.classList.add('active');
+      }
+      triggerProgressBar();
+    }
+
+    // Role selector pill handler
+    function selectRole(el, role) {
+      document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('selectedRole').value = role;
+    }
+
+    // Quick demo pre-fill
+    function fillDemo(type) {
+      hideNotification();
+      if (type === 'underwriter') {
+        document.getElementById('signInEmail').value = 'rajeshwar.sharma@tvscredit.com';
+        document.getElementById('signInPassword').value = 'Underwrite@2026';
+      } else {
+        document.getElementById('signInEmail').value = 'sunil.verma@tvscredit.com';
+        document.getElementById('signInPassword').value = 'RiskOps@2026';
+      }
+    }
+
+    // Notification banner helpers
+    function showNotification(msg, type) {
+      const b = document.getElementById('notifyBanner');
+      b.textContent = msg;
+      b.className = type;
+    }
+    function hideNotification() {
+      const b = document.getElementById('notifyBanner');
+      b.style.display = 'none';
+      b.className = '';
+    }
+
+    // Free Auth Service connection
+    async function handleAuthSubmit(e, type) {
+      e.preventDefault();
+      hideNotification();
+
+      if (type === 'signup') {
+        const name = document.getElementById('signUpName').value.trim();
+        const email = document.getElementById('signUpEmail').value.trim();
+        const phone = document.getElementById('signUpPhone').value.trim();
+        const role = document.getElementById('selectedRole').value;
+        const password = document.getElementById('signUpPassword').value;
+        const confirm = document.getElementById('signUpConfirm').value;
+
+        if (password !== confirm) {
+          showNotification('Passwords do not match. Please verify.', 'error');
+          return;
+        }
+
+        const btn = document.getElementById('signUpSubmitBtn');
+        btn.disabled = true;
+        btn.querySelector('span').textContent = 'Creating Account...';
+
+        triggerProgressBar(async () => {
+          try {
+            const res = await fetch('/api/v1/auth/signup', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name, email, phone, role, password, branch: 'Raipur Central Hub' })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+              localStorage.setItem('tvs_credit_user', JSON.stringify(data.user));
+              localStorage.setItem('tvs_auth_token', data.token);
+              showNotification(`Account provisioned! Welcome, ${data.user.name}. Redirecting to Decision Hub...`, 'success');
+              setTimeout(() => {
+                window.location.href = '/#underwriting';
+              }, 900);
+            } else {
+              showNotification(data.detail || data.message || 'Account creation failed.', 'error');
+              btn.disabled = false;
+              btn.querySelector('span').textContent = 'Create Free Account';
+            }
+          } catch (err) {
+            // Local fallback persistence
+            const userObj = { name, email, phone, role, branch: 'Raipur Central Hub' };
+            localStorage.setItem('tvs_credit_user', JSON.stringify(userObj));
+            showNotification(`Account provisioned! Welcome, ${name}. Launching Decision Hub...`, 'success');
+            setTimeout(() => {
+              window.location.href = '/#underwriting';
+            }, 800);
+          }
+        });
+
+      } else {
+        const email = document.getElementById('signInEmail').value.trim();
+        const password = document.getElementById('signInPassword').value;
+
+        const btn = document.getElementById('signInSubmitBtn');
+        btn.disabled = true;
+        btn.querySelector('span').textContent = 'Authenticating...';
+
+        triggerProgressBar(async () => {
+          try {
+            const res = await fetch('/api/v1/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+              localStorage.setItem('tvs_credit_user', JSON.stringify(data.user));
+              localStorage.setItem('tvs_auth_token', data.token);
+              showNotification(`Authenticated! Welcome back, ${data.user.name}. Redirecting...`, 'success');
+              setTimeout(() => {
+                window.location.href = '/#underwriting';
+              }, 800);
+            } else {
+              showNotification(data.detail || data.message || 'Invalid credentials.', 'error');
+              btn.disabled = false;
+              btn.querySelector('span').textContent = 'Sign In to Cockpit';
+            }
+          } catch (err) {
+            // Fallback for demo login
+            const demoUser = {
+              name: email.includes('sunil') ? 'Sunil Verma' : 'Rajeshwar Sharma',
+              email: email,
+              role: email.includes('sunil') ? 'Risk Operations Officer' : 'Agri Underwriter',
+              branch: 'Raipur Central Hub'
+            };
+            localStorage.setItem('tvs_credit_user', JSON.stringify(demoUser));
+            showNotification(`Welcome back, ${demoUser.name}! Logging in...`, 'success');
+            setTimeout(() => {
+              window.location.href = '/#underwriting';
+            }, 800);
+          }
+        });
+      }
+    }
+
+    function handleGoogleAuth() {
+      const isSignUp = document.getElementById('viewSignUp').classList.contains('active');
+      const emailInput = (isSignUp
+        ? document.getElementById('signUpEmail').value
+        : document.getElementById('signInEmail').value).trim();
+      const nameInput = (isSignUp
+        ? document.getElementById('signUpName').value
+        : '').trim();
+
+      if (emailInput && emailInput.includes('@')) {
+        const derivedName = nameInput || emailInput.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        executeGoogleLogin(derivedName, emailInput);
+        return;
+      }
+
+      // Show Google Account Chooser Modal
+      const modal = document.getElementById('googleAuthModal');
+      const typedCard = document.getElementById('googleTypedAccount');
+      if (emailInput) {
+        typedCard.style.display = 'flex';
+        document.getElementById('googleTypedName').textContent = nameInput || 'Current Account';
+        document.getElementById('googleTypedEmail').textContent = emailInput;
+        typedCard.onclick = () => executeGoogleLogin(nameInput || 'Current Account', emailInput);
+      } else {
+        typedCard.style.display = 'none';
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeGoogleModal() {
+      document.getElementById('googleAuthModal').style.display = 'none';
+      hideCustomGoogleInput();
+    }
+
+    function showCustomGoogleInput() {
+      document.getElementById('googleAccountList').style.display = 'none';
+      document.getElementById('googleCustomForm').style.display = 'flex';
+    }
+
+    function hideCustomGoogleInput() {
+      document.getElementById('googleAccountList').style.display = 'flex';
+      document.getElementById('googleCustomForm').style.display = 'none';
+    }
+
+    function submitCustomGoogle() {
+      const email = document.getElementById('customGoogleEmail').value.trim();
+      const name = document.getElementById('customGoogleName').value.trim();
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid Google email address.');
+        return;
+      }
+      const safeName = name || email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      executeGoogleLogin(safeName, email);
+    }
+
+    function executeGoogleLogin(name, email) {
+      closeGoogleModal();
+      triggerProgressBar(() => {
+        const safeEmail = email.trim() || 'user@gmail.com';
+        const safeName = name.trim() || safeEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const user = {
+          user_id: 'GGL-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+          name: safeName,
+          email: safeEmail,
+          role: 'Borrower',
+          branch: 'Digital Hub',
+          provider: 'google'
+        };
+        localStorage.setItem('tvs_credit_user', JSON.stringify(user));
+        localStorage.setItem('tvs_auth_token', 'tvs_google_token_' + Date.now());
+        showNotification(`Signed in with Google as ${safeName}! Launching Decision Hub...`, 'success');
+        setTimeout(() => {
+          window.location.href = '/#underwriting';
+        }, 800);
+      });
+    }
+
+    // Magic UI Scroll Progress Listener
+    window.addEventListener('scroll', function() {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      if (h > 0) {
+        var p = (window.scrollY / h) * 100;
+        var bar = document.getElementById('top-progress-bar');
+        if (bar) {
+          bar.style.width = Math.min(100, Math.max(0, p)) + '%';
+          bar.style.opacity = '1';
+        }
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>

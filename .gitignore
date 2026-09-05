@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+.tox/
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+*.log
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+web/dist/
+node_modules/
+
+# Test & cache artefacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Vercel
+.vercel/
+
+# Outputs / scratch
+outputs/
+scratch/
+dom_dump.html
+screenshot*.png
+test_tamil.mp3
+models_cache/
+
+# Large binary files in presentation
+presentation/*.pptx

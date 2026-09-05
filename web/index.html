@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TVS Credit — AI-Powered Smart Lending Decision Hub</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <span class="tvs-badge">TVS CREDIT</span>
+      <div>
+        <h1 style="font-size: 1.15rem; font-weight: 800; letter-spacing: -0.5px;">AI Smart Lending Decision Hub</h1>
+        <p style="font-size: 0.75rem; color: var(--text-secondary);">Agri-Underwriting · Satellite Soil · Climate Risk · Seasonally-Aligned EMIs</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="underwritingTab">⚡ Underwriter Cockpit</button>
+      <button class="nav-tab" data-tab="portfolioTab">🗺️ Portfolio Map</button>
+      <button class="nav-tab" data-tab="whatifTab">🌪️ What-If Stress Sim</button>
+      <button class="nav-tab" data-tab="ewsTab">🚨 Early Warning (EWS)</button>
+      <button class="nav-tab" data-tab="chatTab">🤖 Krishi Saathi GenAI</button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <span style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; background: rgba(16, 185, 129, 0.15); color: #10b981; padding: 0.25rem 0.65rem; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 600;">
+        <span style="width: 7px; height: 7px; background-color: #10b981; border-radius: 50%;"></span> Round 2 Live Hub
+      </span>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="main-content">
+
+    <!-- ==================== TAB 1: UNDERWRITING COCKPIT ==================== -->
+    <div id="underwritingTab" class="tab-pane active">
+      <div class="grid-2">
+        
+        <!-- Left: Application Intake Form -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📝 Loan Application Intake & Geotagging</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Sentinel-2 · Bhuvan · SoilGrids</span>
+          </div>
+
+          <form id="loanAppForm">
+            <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.5rem;">
+              <div class="form-group">
+                <label class="form-label">Borrower Name</label>
+                <input type="text" id="applicantName" class="form-control" value="Rajeshwar Sahu" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Target District</label>
+                <select id="districtSelect" class="form-control">
+                  <option value="Raipur" selected>Raipur (Chhattisgarh)</option>
+                  <option value="Durg">Durg</option>
+                  <option value="Rajnandgaon">Rajnandgaon</option>
+                  <option value="Bilaspur">Bilaspur</option>
+                  <option value="Bastar">Bastar (Jagdalpur)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid-3" style="gap: 0.75rem; margin-bottom: 0.5rem;">
+              <div class="form-group">
+                <label class="form-label">Landholding (Acres)</label>
+                <input type="number" id="landAcres" class="form-control" value="4.5" step="0.1" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Crop Sown</label>
+                <select id="cropType" class="form-control">
+                  <option value="PADDY_KHARIF" selected>Paddy (Kharif)</option>
+                  <option value="WHEAT_RABI">Wheat (Rabi)</option>
+                  <option value="SOYBEAN_KHARIF">Soybean</option>
+                  <option value="COTTON_KHARIF">Cotton</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bureau / CIBIL</label>
+                <input type="number" id="cibilScore" class="form-control" value="690" placeholder="0 = Thin File">
+              </div>
+            </div>
+
+            <div class="grid-2" style="gap: 0.75rem; margin-bottom: 0.5rem;">
+              <div class="form-group">
+                <label class="form-label">Requested Loan Amount (₹)</label>
+                <input type="number" id="loanAmount" class="form-control" value="550000" step="10000" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cloud Cover (% Kharif)</label>
+                <input type="number" id="cloudCover" class="form-control" value="45" min="0" max="100">
+              </div>
+            </div>
+
+            <div style="background: rgba(31, 41, 55, 0.5); padding: 0.75rem; border-radius: 8px; border: 1px dashed var(--border-color); margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 0.25rem;">
+                <span style="color: var(--text-secondary);">Plot Geotag: Khasra #142/1 (Abhanpur)</span>
+                <span style="color: var(--accent-cyan);">✓ ISRO Bhuvan Cleared</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                <span>CloudGap: ST-DIP Inpainting Active</span> · <span>Collateral De-Dup: Unique</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; justify-content: center;">
+              ⚡ Run AI Multimodal Underwriting Engine
+            </button>
+          </form>
+        </div>
+
+        <!-- Right: Real-Time Underwriter Scorecard & Decision -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🎯 AI Underwriting Verdict & Explainable Scorecard</span>
+            <span id="decisionText" style="font-weight: 800; color: #34d399;">FAST TRACK APPROVE</span>
+          </div>
+
+          <!-- Score Value & Meter -->
+          <div class="score-meter-container">
+            <div style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); margin-bottom: 0.25rem;">Composite Agri-Credit Score</div>
+            <div id="scoreValue" class="score-value" style="color: #38bdf8;">735</div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">Scale: 300 (High Risk) — 900 (Prime)</div>
+            <span id="tierBadge" class="score-tier-badge tier-good">GOOD TIER</span>
+          </div>
+
+          <!-- Key Underwriting Metrics Grid -->
+          <div class="grid-4" style="margin-bottom: 1.25rem; text-align: center;">
+            <div style="background: var(--bg-card); padding: 0.65rem; border-radius: 8px;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">RECOMMENDED PRODUCT</div>
+              <div id="resProduct" style="font-size: 0.85rem; font-weight: 700; color: #fbbf24;">TVS New Tractor</div>
+            </div>
+            <div style="background: var(--bg-card); padding: 0.65rem; border-radius: 8px;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">SANCTION AMOUNT</div>
+              <div id="resAmount" style="font-size: 0.85rem; font-weight: 700; color: #34d399;">₹5,50,000</div>
+            </div>
+            <div style="background: var(--bg-card); padding: 0.65rem; border-radius: 8px;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">RISK PRICING (ROI)</div>
+              <div id="resROI" style="font-size: 0.85rem; font-weight: 700; color: #38bdf8;">10.5% p.a.</div>
+            </div>
+            <div style="background: var(--bg-card); padding: 0.65rem; border-radius: 8px;">
+              <div style="font-size: 0.7rem; color: var(--text-muted);">DEFAULT PROB (PD)</div>
+              <div id="resPD" style="font-size: 0.85rem; font-weight: 700; color: #a78bfa;">3.8%</div>
+            </div>
+          </div>
+
+          <!-- SHAP XAI Factor Breakdown -->
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem; text-transform: uppercase;">SHAP Explainable AI Attributions</div>
+            
+            <div class="shap-bar">
+              <span class="shap-label">Bureau & Past Repayment</span>
+              <div class="shap-progress"><div class="shap-fill-pos" style="width: 75%;"></div></div>
+              <span class="shap-val" style="color: #34d399;">+45 pts</span>
+            </div>
+
+            <div class="shap-bar">
+              <span class="shap-label">Satellite Land Health (NDVI)</span>
+              <div class="shap-progress"><div class="shap-fill-pos" style="width: 60%;"></div></div>
+              <span class="shap-val" style="color: #34d399;">+35 pts</span>
+            </div>
+
+            <div class="shap-bar">
+              <span class="shap-label">Collateral Asset Valuation</span>
+              <div class="shap-progress"><div class="shap-fill-pos" style="width: 45%;"></div></div>
+              <span class="shap-val" style="color: #34d399;">+25 pts</span>
+            </div>
+
+            <div class="shap-bar">
+              <span class="shap-label">14-Day Weather Shock Risk</span>
+              <div class="shap-progress"><div class="shap-fill-neg" style="width: 25%;"></div></div>
+              <span class="shap-val" style="color: #f87171;">-15 pts</span>
+            </div>
+          </div>
+
+          <!-- Satellite Soil & Collateral Footnote -->
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; background: rgba(0, 0, 0, 0.25); padding: 0.65rem; border-radius: 6px;">
+            <span>🌿 Satellite NDVI: <strong id="resNDVI">0.68</strong></span>
+            <span>🌾 Expected Yield: <strong id="resYield">4.1 t/ha</strong></span>
+            <span>💰 Land Asset Cover: <strong id="resCollateral">₹23,50,000</strong></span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom: Seasonally Aligned Harvest Schedule Table -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+          <span class="card-title">🗓️ TVS Seasonally-Aligned Harvest Repayment Schedule (Paddy Crop Cycle)</span>
+          <span style="font-size: 0.8rem; color: var(--accent-gold); font-weight: 600;">✨ Reduces Default Probability by 34.5% vs. Standard Monthly EMIs</span>
+        </div>
+
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Calendar Stage</th>
+              <th>Agricultural Liquidity Status</th>
+              <th>Installment Structure</th>
+              <th>Principal (₹)</th>
+              <th>Interest (₹)</th>
+              <th>Total EMI (₹)</th>
+              <th>Balance Principal (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Month 1</td>
+              <td>June (Sowing)</td>
+              <td><span class="badge-nominal">LEAN GROWING PERIOD</span></td>
+              <td>Nominal Maintenance</td>
+              <td>₹1,145</td>
+              <td>₹4,812</td>
+              <td><strong>₹5,957</strong></td>
+              <td>₹5,48,855</td>
+            </tr>
+            <tr>
+              <td>Month 2</td>
+              <td>July (Transplanting)</td>
+              <td><span class="badge-nominal">LEAN GROWING PERIOD</span></td>
+              <td>Nominal Maintenance</td>
+              <td>₹1,145</td>
+              <td>₹4,802</td>
+              <td><strong>₹5,947</strong></td>
+              <td>₹5,47,710</td>
+            </tr>
+            <tr>
+              <td>Month 3</td>
+              <td>August (Vegetative)</td>
+              <td><span class="badge-nominal">LEAN GROWING PERIOD</span></td>
+              <td>Nominal Maintenance</td>
+              <td>₹1,145</td>
+              <td>₹4,792</td>
+              <td><strong>₹5,937</strong></td>
+              <td>₹5,46,565</td>
+            </tr>
+            <tr style="background: rgba(245, 158, 11, 0.08);">
+              <td>Month 6</td>
+              <td>November (Harvest)</td>
+              <td><span class="badge-bullet">PEAK MANDI HARVEST SALES</span></td>
+              <td><strong>BULLET HARVEST PAYMENT</strong></td>
+              <td>₹58,500</td>
+              <td>₹4,750</td>
+              <td><strong style="color: #fbbf24;">₹63,250</strong></td>
+              <td>₹4,88,065</td>
+            </tr>
+            <tr style="background: rgba(245, 158, 11, 0.08);">
+              <td>Month 7</td>
+              <td>December (Post-Harvest)</td>
+              <td><span class="badge-bullet">PEAK MANDI HARVEST SALES</span></td>
+              <td><strong>BULLET HARVEST PAYMENT</strong></td>
+              <td>₹58,500</td>
+              <td>₹4,270</td>
+              <td><strong style="color: #fbbf24;">₹62,770</strong></td>
+              <td>₹4,29,565</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 2: PORTFOLIO RISK HEATMAP ==================== -->
+    <div id="portfolioTab" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🗺️ TVS Credit Agricultural Portfolio-at-Risk (PAR-90) Heatmap</span>
+          <span style="font-size: 0.85rem; color: var(--text-secondary);">Active Portfolio: ₹1,250 Cr across 28,400 Rural Borrowers</span>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 1.5rem;">
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">AVERAGE PORTFOLIO PAR-90</div>
+            <div style="font-size: 1.8rem; font-weight: 800; color: #10b981;">2.35%</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">-45 bps vs industry average</div>
+          </div>
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-left: 4px solid #38bdf8;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">AVERAGE COMPOSITE CREDIT SCORE</div>
+            <div style="font-size: 1.8rem; font-weight: 800; color: #38bdf8;">708 / 900</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">78% in Prime / Good tiers</div>
+          </div>
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border-left: 4px solid #fbbf24;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">CLOUDGAP-CG MONSOON COVERAGE</div>
+            <div style="font-size: 1.8rem; font-weight: 800; color: #fbbf24;">100% All-Weather</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">Zero lending blindspots in Kharif</div>
+          </div>
+        </div>
+
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>District</th>
+              <th>Active Loans</th>
+              <th>Disbursed Portfolio (₹ Cr)</th>
+              <th>PAR-90 (%)</th>
+              <th>Mean Credit Score</th>
+              <th>Major Crop Ecosystem</th>
+              <th>Risk Tier</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Janjgir-Champa</strong></td>
+              <td>4,600</td>
+              <td>₹198.0 Cr</td>
+              <td><span style="color: #34d399; font-weight: 700;">1.8%</span></td>
+              <td>730</td>
+              <td>Paddy (Canal Irrigated)</td>
+              <td><span class="score-tier-badge tier-prime">PRIME</span></td>
+            </tr>
+            <tr>
+              <td><strong>Durg</strong></td>
+              <td>3,800</td>
+              <td>₹162.0 Cr</td>
+              <td><span style="color: #34d399; font-weight: 700;">1.9%</span></td>
+              <td>725</td>
+              <td>Paddy & Commercial Veg</td>
+              <td><span class="score-tier-badge tier-prime">PRIME</span></td>
+            </tr>
+            <tr>
+              <td><strong>Raipur</strong></td>
+              <td>4,200</td>
+              <td>₹185.0 Cr</td>
+              <td><span style="color: #38bdf8; font-weight: 700;">2.1%</span></td>
+              <td>710</td>
+              <td>Paddy & Pulses</td>
+              <td><span class="score-tier-badge tier-good">GOOD</span></td>
+            </tr>
+            <tr>
+              <td><strong>Bilaspur</strong></td>
+              <td>3,500</td>
+              <td>₹145.0 Cr</td>
+              <td><span style="color: #38bdf8; font-weight: 700;">2.4%</span></td>
+              <td>695</td>
+              <td>Paddy & Wheat</td>
+              <td><span class="score-tier-badge tier-good">GOOD</span></td>
+            </tr>
+            <tr>
+              <td><strong>Bastar (Jagdalpur)</strong></td>
+              <td>1,800</td>
+              <td>₹76.0 Cr</td>
+              <td><span style="color: #fbbf24; font-weight: 700;">2.6%</span></td>
+              <td>680</td>
+              <td>Millets, Maize & Forest Produce</td>
+              <td><span class="score-tier-badge tier-good">ZERO-STATION VERIFIED</span></td>
+            </tr>
+            <tr>
+              <td><strong>Rajnandgaon</strong></td>
+              <td>3,100</td>
+              <td>₹130.0 Cr</td>
+              <td><span style="color: #f87171; font-weight: 700;">2.8%</span></td>
+              <td>685</td>
+              <td>Soybean & Paddy</td>
+              <td><span class="score-tier-badge tier-moderate">MODERATE WATCH</span></td>
+            </tr>
+            <tr>
+              <td><strong>Korba</strong></td>
+              <td>2,200</td>
+              <td>₹92.0 Cr</td>
+              <td><span style="color: #f87171; font-weight: 700;">3.4%</span></td>
+              <td>665</td>
+              <td>Paddy & Coarse Cereals</td>
+              <td><span class="score-tier-badge tier-moderate">MODERATE WATCH</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 3: WHAT-IF STRESS TESTING ==================== -->
+    <div id="whatifTab" class="tab-pane">
+      <div class="grid-2">
+        <!-- Sliders -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🌪️ Macro-Climatic Stress Scenario Simulator</span>
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <label class="form-label">Monsoon Rainfall Deficit / Surplus</label>
+              <span id="valRain" style="font-weight: 700; color: #f87171;">-30%</span>
+            </div>
+            <input type="range" id="sliderRain" min="-60" max="40" value="-30" style="width: 100%;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <label class="form-label">Extreme Heatwave Spike (°C)</label>
+              <span id="valTemp" style="font-weight: 700; color: #fbbf24;">+2.5°C</span>
+            </div>
+            <input type="range" id="sliderTemp" min="0" max="6" value="2.5" step="0.5" style="width: 100%;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+              <label class="form-label">Mandi Crop Market Price Crash</label>
+              <span id="valPrice" style="font-weight: 700; color: #f87171;">-10%</span>
+            </div>
+            <input type="range" id="sliderPrice" min="-40" max="20" value="-10" style="width: 100%;">
+          </div>
+
+          <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.85rem; border-radius: 8px; font-size: 0.85rem; color: #fca5a5;">
+            ⚠️ <strong>Stress Condition:</strong> Simulating severe Marathwada/Vidarbha-style drought with unseasonal heat spikes during grain-filling stage.
+          </div>
+        </div>
+
+        <!-- Simulated Impact -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📊 Simulated Portfolio Impact & Restructuring Buffer</span>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 1.25rem;">
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">STRESSED PORTFOLIO GNPA</div>
+              <div id="resStressedGnpa" style="font-size: 2rem; font-weight: 800; color: #f87171;">6.03%</div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary);">Baseline: 2.45%</div>
+            </div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px;">
+              <div style="font-size: 0.75rem; color: var(--text-muted);">GROSS DEFAULT RISK EXPOSURE</div>
+              <div id="resStressedCr" style="font-size: 2rem; font-weight: 800; color: #f87171;">₹75.4 Cr</div>
+              <div id="resIncCr" style="font-size: 0.75rem; color: #fca5a5;">+₹44.8 Cr incremental risk</div>
+            </div>
+          </div>
+
+          <!-- Mitigation Card -->
+          <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%); border: 1px solid rgba(16, 185, 129, 0.4); padding: 1.25rem; border-radius: 8px;">
+            <div style="font-size: 0.9rem; font-weight: 700; color: #34d399; margin-bottom: 0.5rem;">
+              🛡️ TVS Proactive Harvest Restructuring Advantage
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.4;">
+              By automatically activating 60-day harvest moratoriums and restructuring bullet payments before defaults occur, the system prevents:
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">CAPITAL LOSS PREVENTED</div>
+                <div id="resSavedCr" style="font-size: 1.6rem; font-weight: 800; color: #34d399;">₹29.1 Cr</div>
+              </div>
+              <button class="btn btn-success" onclick="alert('✓ Auto-Restructuring Playbook Dispatched to 1,420 Eligible Borrowers')">
+                Dispatch Proactive Restructure
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== TAB 4: EARLY WARNING SYSTEM ==================== -->
+    <div id="ewsTab" class="tab-pane">
+      <div class="grid-2">
+        
+        <!-- Left: Active EWS Alert Signals -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🚨 Active EWS Anomaly Signals (Live Watcher)</span>
+            <span style="font-size: 0.8rem; color: #f87171; font-weight: 700;">● 3 Alerts Active</span>
+          </div>
+
+          <!-- Alert 1 -->
+          <div style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+              <strong style="color: #f87171;">CRITICAL RED ALERT — Loan #TVS-TR-2023-4109</strong>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">65 DPD · SMA-2</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+              <strong>Bhupendra Baghel</strong> (Kurud, Dhamtari) · Outstanding: ₹3,90,000<br>
+              <span style="color: #fca5a5;">⚠️ 42% sudden drop in Sentinel-2 NDVI (Pest damage) + Imminent 90 DPD default threat.</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+              <strong>Playbook:</strong> Dispatch Senior Field Officer within 24h for One-Time Reschedulement.
+            </div>
+          </div>
+
+          <!-- Alert 2 -->
+          <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+              <strong style="color: #fbbf24;">HIGH AMBER ALERT — Loan #TVS-TR-2024-8812</strong>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">18 DPD · SMA-0</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+              <strong>Rameshwar Verma</strong> (Arang, Raipur) · Outstanding: ₹5,20,000<br>
+              <span style="color: #fde68a;">🌧️ Torrential rainfall forecast (135mm in 7 days) causing field waterlogging.</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">
+              <strong>Playbook:</strong> Push automated 45-day EMI extension & drainage advisory via WhatsApp.
+            </div>
+          </div>
+
+          <!-- Alert 3 -->
+          <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 1rem; border-radius: 6px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+              <strong style="color: #60a5fa;">WATCHLIST YELLOW — Loan #TVS-KW-2025-1044</strong>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">0 DPD · Standard</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-primary);">
+              <strong>Dhananjay Sahu</strong> (Bemetara) · Outstanding: ₹85,000 (Two-Wheeler)<br>
+              <span>Dry spell detected in block. Agronomic moisture advisory dispatched.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Prioritized Field Recovery Dossier -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">📋 Prioritized Field Collection Dossier</span>
+            <button class="btn btn-danger" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="alert('✓ Field Action Dossier Exported to TVS Mobile CRM!')">
+              Export Dossier
+            </button>
+          </div>
+
+          <div style="background: var(--bg-card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.85rem; line-height: 1.6;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+              <div><strong>Borrower:</strong> Bhupendra Baghel (+91-9752109832)</div>
+              <div><span class="score-tier-badge tier-high-risk">PRIORITY SCORE: 88.5/100</span></div>
+            </div>
+            <div><strong>Location:</strong> Village Kurud, District Dhamtari, CG</div>
+            <div><strong>Asset Pledged:</strong> TVS 45HP Tractor · 3.8 Acres (Khasra #214/1)</div>
+            <div><strong>Outstanding Principal:</strong> ₹3,90,000 · <strong>Days Past Due:</strong> 65 DPD (SMA-2)</div>
+            <div><strong>Probability of Default:</strong> 28.5% · <strong>Latest Satellite NDVI:</strong> 0.35 (Damaged)</div>
+            <div style="margin-top: 0.75rem; background: rgba(0, 0, 0, 0.3); padding: 0.75rem; border-radius: 6px;">
+              <strong style="color: #fbbf24;">Action Playbook for Field Agent:</strong><br>
+              1. Offer immediate 60-day Kharif harvest reschedulement.<br>
+              2. Assist farmer in lodging Pradhan Mantri Fasal Bima Yojana (PMFBY) pest claim to recover ₹80,000.<br>
+              3. Secure post-dated Mandi harvest pledge for November 2026.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==================== TAB 5: GENAI KRISHI SAATHI ==================== -->
+    <div id="chatTab" class="tab-pane">
+      <div class="card" style="max-width: 900px; margin: 0 auto;">
+        <div class="card-header">
+          <span class="card-title">🤖 TVS Krishi Saathi — Grounded Vernacular GenAI Loan Assistant</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <label style="font-size: 0.8rem; color: var(--text-secondary);">Language:</label>
+            <select id="chatLanguage" class="form-control" style="width: auto; padding: 0.3rem 0.6rem; font-size: 0.8rem;">
+              <option value="ENGLISH" selected>English</option>
+              <option value="HINDI">हिंदी (Hindi)</option>
+              <option value="CHHATTISGARHI">छत्तीसगढ़ी</option>
+              <option value="TAMIL">தமிழ் (Tamil)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="chat-box">
+          <!-- Messages -->
+          <div id="chatMessages" class="chat-messages">
+            <div class="chat-bubble bubble-assistant">
+              <strong>TVS Krishi Saathi:</strong><br>
+              नमस्ते Rajeshwar जी! TVS कृषि साथी में आपका स्वागत है। मैं आपकी ऋण पात्रता, फसल कटाई आधारित EMI योजना, सेंटिनल उपग्रह खेत जांच और मौसम सलाह में सहायता के लिए तैयार हूँ।
+            </div>
+          </div>
+
+          <!-- Suggested Quick Chips -->
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+            <button class="btn chip-btn" style="background: var(--bg-card); color: var(--text-secondary); font-size: 0.75rem; padding: 0.35rem 0.65rem;">What is my Agri-Credit Score?</button>
+            <button class="btn chip-btn" style="background: var(--bg-card); color: var(--text-secondary); font-size: 0.75rem; padding: 0.35rem 0.65rem;">फसल कटाई आधारित EMI कैसे काम करती है?</button>
+            <button class="btn chip-btn" style="background: var(--bg-card); color: var(--text-secondary); font-size: 0.75rem; padding: 0.35rem 0.65rem;">क्लाउडगैप बादर म खेत ला कइसे देखथे?</button>
+            <button class="btn chip-btn" style="background: var(--bg-card); color: var(--text-secondary); font-size: 0.75rem; padding: 0.35rem 0.65rem;">What is my satellite crop health?</button>
+          </div>
+
+          <!-- Voice Status Strip -->
+          <div id="voiceStatusStrip" style="display: none; padding: 0.4rem 0.75rem; margin-bottom: 0.5rem; border-radius: 6px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); font-size: 0.8rem; color: #60a5fa; align-items: center; gap: 0.5rem;">
+            <span class="recording-pulse"></span>
+            <span id="voiceStatusText">Listening to your voice... Speak now in English, Hindi, or Chhattisgarhi.</span>
+          </div>
+
+          <!-- Input Bar with Voice Button -->
+          <div class="chat-input-bar">
+            <button id="voiceMicBtn" class="btn voice-mic-btn" type="button" title="Speak in Hindi, English, or Chhattisgarhi">
+              🎤 Speak
+            </button>
+            <input type="text" id="chatInput" class="form-control" placeholder="Ask TVS Krishi Saathi about loan eligibility, harvest EMI, satellite soil health...">
+            <button id="sendChatBtn" class="btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="text-align: center; padding: 1rem; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); background: var(--bg-secondary);">
+    TVS Credit EPIC 8 IT Challenge · Problem Statement (c) AI-Powered Smart Lending Decision Hub · Built with Sentinel-2, ISRO Bhuvan, CloudGap-CG, NASA POWER, LightGBM & GenAI
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
