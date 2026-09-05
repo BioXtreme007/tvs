@@ -745,14 +745,14 @@ Dealer Delivery: TVS Raipur Authorized Dealership
               )}
             </div>
 
-            {/* Back to Cockpit button */}
+            {/* Back to Website button */}
             <button
               onClick={onBackToCockpit}
               className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold bg-white text-[#0B2545] hover:bg-slate-100 transition-colors shadow cursor-pointer"
             >
               <ArrowLeft size={14} />
-              <span className="hidden sm:inline">{t.backToCockpit}</span>
-              <span className="sm:hidden">Cockpit</span>
+              <span className="hidden sm:inline">Back to Website</span>
+              <span className="sm:hidden">Home</span>
             </button>
           </div>
         </div>

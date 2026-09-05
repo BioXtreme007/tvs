@@ -214,7 +214,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
             Powering Smart{'\n'}Agri-Credit Instantly
           </Text3DFlip>
           <p className="photo-auth-subtext">
-            Access your decision cockpit to review credit applications, monitor farm telemetry, and manage agricultural loans securely.
+            Access smart lending tools to evaluate credit applications, monitor farm telemetry, and manage agricultural loans securely.
           </p>
         </div>
       </div>

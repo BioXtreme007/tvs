@@ -158,7 +158,7 @@ export default function WebsiteApp() {
         <video ref={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true" onCanPlay={() => { video.current?.play().catch(() => {}); }} className="website-hero-video" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4" />
         <div className="website-hero-fade" />
         <div className="website-hero-content"><Hero /></div>
-        <a href="#innovations" className="website-scroll-cue"><span>Explore the decision hub</span><ArrowDown size={16} /></a>
+        <a href="#innovations" className="website-scroll-cue"><span>Explore innovation pillars</span><ArrowDown size={16} /></a>
       </header>
       <main id="website-main" tabIndex={-1}>
         <Reveal><InnovationPillars /></Reveal>

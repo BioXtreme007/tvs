@@ -127,11 +127,6 @@ export const Footer: React.FC = () => {
             </div>
             <ul className="flex flex-col gap-2 text-xs text-slate-600 font-medium">
               <li>
-                <a href="#underwriting" className="hover:text-slate-900 transition-colors">
-                  Decision Cockpit
-                </a>
-              </li>
-              <li>
                 <a href="#innovations" className="hover:text-slate-900 transition-colors">
                   4 Innovation Pillars
                 </a>
