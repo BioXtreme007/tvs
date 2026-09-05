@@ -139,7 +139,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
             {/* CTA Buttons at bottom */}
             <div className="flex flex-col gap-3 pt-6 border-t border-[#192837]/12">
-              {authUser && (authUser.role === 'Agri Underwriter' || authUser.role === 'Risk Operations Officer' || /underwriter|officer|admin/i.test(authUser.role || '')) && (
+              {authUser && (/underwriter|officer|admin|credit|risk/i.test(authUser.role || '') || /credit|tvs/i.test((authUser as any).email || '') || /credit/i.test(authUser.name || '')) && (
                 <button
                   onClick={() => {
                     window.location.hash = '#dashboard';

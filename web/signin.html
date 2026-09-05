@@ -831,10 +831,11 @@
             if (res.ok && data.success) {
               localStorage.setItem('tvs_credit_user', JSON.stringify(data.user));
               localStorage.setItem('tvs_auth_token', data.token);
-              showNotification(`Account provisioned! Welcome, ${data.user.name}. Redirecting to Decision Hub...`, 'success');
+              const isCredit = (data.user.role || '').includes('Underwriter') || (data.user.email || '').includes('tvscredit');
+              showNotification(`Account provisioned! Welcome, ${data.user.name}. Redirecting...`, 'success');
               setTimeout(() => {
-                window.location.href = '/#underwriting';
-              }, 900);
+                window.location.href = isCredit ? '/#dashboard' : '/#farmer';
+              }, 700);
             } else {
               showNotification(data.detail || data.message || 'Account creation failed.', 'error');
               btn.disabled = false;
@@ -842,12 +843,13 @@
             }
           } catch (err) {
             // Local fallback persistence
+            const isCredit = (role || '').includes('Underwriter') || (email || '').includes('tvscredit');
             const userObj = { name, email, phone, role, branch: 'Raipur Central Hub' };
             localStorage.setItem('tvs_credit_user', JSON.stringify(userObj));
-            showNotification(`Account provisioned! Welcome, ${name}. Launching Decision Hub...`, 'success');
+            showNotification(`Account provisioned! Welcome, ${name}. Launching portal...`, 'success');
             setTimeout(() => {
-              window.location.href = '/#underwriting';
-            }, 800);
+              window.location.href = isCredit ? '/#dashboard' : '/#farmer';
+            }, 600);
           }
         });
 
@@ -870,28 +872,37 @@
             if (res.ok && data.success) {
               localStorage.setItem('tvs_credit_user', JSON.stringify(data.user));
               localStorage.setItem('tvs_auth_token', data.token);
+              const isCredit = (data.user.role || '').includes('Underwriter') || (data.user.email || '').includes('tvscredit');
               showNotification(`Authenticated! Welcome back, ${data.user.name}. Redirecting...`, 'success');
               setTimeout(() => {
-                window.location.href = '/#underwriting';
-              }, 800);
+                window.location.href = isCredit ? '/#dashboard' : '/#farmer';
+              }, 700);
             } else {
               showNotification(data.detail || data.message || 'Invalid credentials.', 'error');
               btn.disabled = false;
-              btn.querySelector('span').textContent = 'Sign In to Cockpit';
+              btn.querySelector('span').textContent = 'Sign In';
             }
           } catch (err) {
             // Fallback for demo login
+            const isCredit = email.includes('tvscredit') || email.includes('credit') || email.includes('underwrite') || email.includes('sunil') || email.includes('rajeshwar');
             const demoUser = {
-              name: email.includes('sunil') ? 'Sunil Verma' : 'Rajeshwar Sharma',
+              name: email.includes('sunil') ? 'Sunil Verma' : (isCredit ? 'Rajeshwar Sharma' : 'Agri Partner'),
               email: email,
-              role: email.includes('sunil') ? 'Risk Operations Officer' : 'Agri Underwriter',
-              branch: 'Raipur Central Hub'
+              role: email.includes('sunil') ? 'Risk Operations Officer' : (isCredit ? 'Agri Underwriter' : 'Agri Partner'),
+              branch: isCredit ? 'Raipur Central Hub' : 'Digital Hub'
             };
             localStorage.setItem('tvs_credit_user', JSON.stringify(demoUser));
-            showNotification(`Welcome back, ${demoUser.name}! Logging in...`, 'success');
-            setTimeout(() => {
-              window.location.href = '/#underwriting';
-            }, 800);
+            if (isCredit) {
+              showNotification(`Welcome back, ${demoUser.name}! Opening Admin Dashboard...`, 'success');
+              setTimeout(() => {
+                window.location.href = '/#dashboard';
+              }, 600);
+            } else {
+              showNotification(`Welcome back, ${demoUser.name}! Opening Farmer Portal...`, 'success');
+              setTimeout(() => {
+                window.location.href = '/#farmer';
+              }, 600);
+            }
           }
         });
       }
@@ -955,22 +966,40 @@
     function executeGoogleLogin(name, email) {
       closeGoogleModal();
       triggerProgressBar(() => {
-        const safeEmail = email.trim() || 'user@gmail.com';
-        const safeName = name.trim() || safeEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const safeEmail = email.trim() || 'partner.agri@gmail.com';
+        const lowerEmail = safeEmail.toLowerCase();
+        const lowerName = name.toLowerCase();
+        const isCredit =
+          lowerEmail.includes('tvscredit') ||
+          lowerEmail.includes('credit') ||
+          lowerName.includes('credit') ||
+          lowerName.includes('underwrite') ||
+          lowerName.includes('admin') ||
+          lowerName.includes('rajeshwar') ||
+          lowerName.includes('sunil');
+
+        const safeName = name.trim() || (isCredit ? 'TVS Credit Team (Rajeshwar Sharma)' : 'Agri Partner');
         const user = {
-          user_id: 'GGL-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+          user_id: (isCredit ? 'CREDIT-' : 'AGRI-') + Math.random().toString(36).substring(2, 9).toUpperCase(),
           name: safeName,
           email: safeEmail,
-          role: 'Borrower',
-          branch: 'Digital Hub',
+          role: isCredit ? 'Agri Underwriter' : 'Agri Partner',
+          branch: isCredit ? 'Raipur Central Underwriting Desk' : 'Digital Agri Hub',
           provider: 'google'
         };
         localStorage.setItem('tvs_credit_user', JSON.stringify(user));
         localStorage.setItem('tvs_auth_token', 'tvs_google_token_' + Date.now());
-        showNotification(`Signed in with Google as ${safeName}! Launching Decision Hub...`, 'success');
-        setTimeout(() => {
-          window.location.href = '/#underwriting';
-        }, 800);
+        if (isCredit) {
+          showNotification(`Signed in as TVS Credit Admin (${safeName})! Opening Admin Dashboard...`, 'success');
+          setTimeout(() => {
+            window.location.href = '/#dashboard';
+          }, 600);
+        } else {
+          showNotification(`Signed in as Agri Partner (${safeName})! Opening Farmer Portal...`, 'success');
+          setTimeout(() => {
+            window.location.href = '/#farmer';
+          }, 600);
+        }
       });
     }
 

@@ -15,7 +15,7 @@ import Footer from './components/Footer';
 import SignInPage from './components/SignInPage';
 import DeliberationModal from './components/DeliberationModal';
 import Assistant from './components/Assistant';
-import FarmerServicesPage from './components/FarmerServicesPage';
+import FarmerPortal from './components/FarmerPortal';
 import PrecisionSectionPreview from './components/PrecisionSectionPreview';
 import AdminDashboard from './components/AdminDashboard';
 
@@ -115,16 +115,27 @@ export default function WebsiteApp() {
         onBack={() => navigate('home')}
         onSuccess={(user) => {
           window.dispatchEvent(new Event('tvs-auth-change'));
-          const role = user?.role || '';
+          const role = (user?.role || '').toLowerCase();
+          const email = (user?.email || '').toLowerCase();
+          const name = (user?.name || '').toLowerCase();
           const isCreditAdmin =
-            role === 'Agri Underwriter' ||
-            role === 'Risk Operations Officer' ||
-            /underwriter|officer|admin|credit/i.test(role);
+            role.includes('underwriter') ||
+            role.includes('officer') ||
+            role.includes('admin') ||
+            role.includes('credit') ||
+            role.includes('risk') ||
+            email.includes('tvscredit') ||
+            email.includes('credit') ||
+            name.includes('credit') ||
+            name.includes('underwriter') ||
+            name.includes('rajeshwar') ||
+            name.includes('sunil');
           if (isCreditAdmin) {
             setDashboardUser(user);
             navigate('dashboard');
           } else {
-            navigate('home');
+            // Agri Partner / Normal User -> Opens Farmer Portal
+            navigate('farmer');
           }
         }}
       />
@@ -148,7 +159,7 @@ export default function WebsiteApp() {
         onNavigateHome={() => navigate('home')}
       />
     ) : view === 'farmer' ? (
-      <FarmerServicesPage context={context} ask={ask} navigate={navigate} />
+      <FarmerPortal onBackToCockpit={() => navigate('home')} onOpenSignIn={() => navigate('signin')} />
     ) : view === 'precision-preview' ? (
       <PrecisionSectionPreview onBack={() => navigate('home')} />
     ) : <>

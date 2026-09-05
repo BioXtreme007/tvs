@@ -44,7 +44,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const [authUser, setAuthUser] = React.useState<{ name: string; role?: string } | null>(null);
+  const [authUser, setAuthUser] = React.useState<{ name: string; role?: string; email?: string } | null>(null);
 
   React.useEffect(() => {
     const checkAuth = () => {
@@ -68,6 +68,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, []);
 
+  const isCreditAdmin = Boolean(
+    authUser && (
+      /underwriter|officer|admin|credit|risk/i.test(authUser.role || '') ||
+      /credit|tvs/i.test(authUser.email || '') ||
+      /credit/i.test(authUser.name || '')
+    )
+  );
+
   return (
     <nav
       className={`website-nav fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 h-[65px] flex items-center ${
@@ -76,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           : 'bg-transparent'
       }`}
     >
-      <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 gap-4">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 w-full flex items-center justify-between">
         {/* Left: Logo component + Brand badge */}
         <div className="flex items-center gap-3 flex-shrink-0">
           <Logo />
@@ -106,6 +114,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right (desktop lg:flex): Action Buttons */}
         <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
+          {isCreditAdmin && (
+            <button
+              onClick={() => { window.location.hash = '#dashboard'; }}
+              className="text-xs font-bold px-3.5 py-1.5 rounded-full text-white bg-[#0B2545] hover:bg-[#133863] shadow-xs active:scale-95 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5"
+              title="Open Credit Operations Dashboard"
+            >
+              <span>⚡ Admin Dashboard</span>
+            </button>
+          )}
           {onFarmerPortalClick && (
             <button
               onClick={onFarmerPortalClick}
@@ -116,21 +133,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Farmer Portal</span>
             </button>
           )}
-          {authUser && (authUser.role === 'Agri Underwriter' || authUser.role === 'Risk Operations Officer' || /underwriter|officer|admin/i.test(authUser.role || '')) && (
-            <button
-              onClick={() => { window.location.hash = '#dashboard'; }}
-              className="text-xs font-bold px-3.5 py-1.5 rounded-full text-white bg-[#0B2545] hover:bg-[#133863] shadow-xs active:scale-95 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5"
-              title="Open Credit Operations Dashboard"
-            >
-              <span>⚡ Admin Dashboard</span>
-            </button>
-          )}
           {authUser ? (
             <div className="flex items-center gap-2 bg-white/90 border border-slate-200/90 rounded-full pl-3 pr-2 py-1 shadow-2xs flex-shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-              <span className="text-xs font-bold text-[#0B2545] truncate max-w-[120px]" title={authUser.name}>
+              <span className={`w-2 h-2 rounded-full ${isCreditAdmin ? 'bg-purple-500' : 'bg-emerald-500'} animate-pulse flex-shrink-0`} />
+              <button
+                onClick={() => { window.location.hash = isCreditAdmin ? '#dashboard' : '#farmer'; }}
+                className="text-xs font-bold text-[#0B2545] hover:underline cursor-pointer truncate max-w-[120px]"
+                title={isCreditAdmin ? 'Open Admin Dashboard' : 'Open Farmer Portal'}
+              >
                 {authUser.name}
-              </span>
+              </button>
               <button
                 onClick={() => {
                   localStorage.removeItem('tvs_credit_user');
