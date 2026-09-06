@@ -62,15 +62,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
   // Localization strings
   const t = {
     english: {
-      portalBadge: 'Farmer Service Portal · TVS Saathi',
+      portalBadge: 'Farmer Service Portal · GeoKisaan Saathi',
       backToCockpit: '← Back to Decision Cockpit',
       welcome: 'Welcome, Rajeshwar ji!',
       loanSanctionedTag: 'Loan Sanctioned (Pre-Approved)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'Sanctioned Loan Amount',
       subsidizedRate: '8.4% Subsidized PSL Interest Rate',
-      tractorModel: 'TVS 45HP Smart Farm Tractor',
-      dealerReady: 'Ready for delivery at TVS Raipur Dealership',
+      tractorModel: 'GeoKisaan 45HP Smart Farm Tractor',
+      dealerReady: 'Ready for delivery at GeoKisaan Raipur Dealership',
       downloadSanction: 'Download Sanction Letter',
       downloading: 'Downloading...',
       satelliteTitle: 'Sentinel-2 Satellite Crop Health',
@@ -88,7 +88,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'Optimal soil moisture detected. Crop irrigation stress is minimal.',
       lastPass: 'Last Satellite Pass: Today at 10:42 AM (Sentinel-2A)',
       verifiedPlot: 'Verified Cadastral Land Parcel',
-      emiTitle: 'TVS Seasonally-Aligned Harvest EMI Schedule',
+      emiTitle: 'GeoKisaan Seasonally-Aligned Harvest EMI Schedule',
       emiSubTitle: 'Flexible repayment aligned with your harvest revenue cycle',
       sowingEmiLabel: 'Sowing Season (June – October)',
       sowingEmiVal: '₹1,500 / month',
@@ -119,7 +119,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'Pest Risk Index:',
       safeLabel: 'Zero / Safe',
       freeVoiceTag: 'Free Neural Voice Assistant (Grounded RAG)',
-      askSaathiTitle: 'Talk to TVS Krishi Saathi Voice Copilot',
+      askSaathiTitle: 'Talk to GeoKisaan Krishi Saathi Voice Copilot',
       askSaathiSub: 'Ask questions freely — get instant spoken answers in your dialect',
       tapToTalk: 'Tap to Speak (Voice Copilot)',
       oneTapVoiceTitle: 'One-Tap Quick Questions (Instant Spoken Voice):',
@@ -129,15 +129,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'How do I pick up my tractor from the dealer?',
     },
     hindi: {
-      portalBadge: 'किसान सेवा केंद्र · TVS साथी',
+      portalBadge: 'किसान सेवा केंद्र · GeoKisaan साथी',
       backToCockpit: '← अधिकारी कॉकपिट पर वापस जाएं',
       welcome: 'नमस्ते, रामेश्वर जी!',
       loanSanctionedTag: 'ऋण स्वीकृत (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'स्वीकृत ऋण राशि',
       subsidizedRate: '8.4% रियायती ब्याज दर (PSL)',
-      tractorModel: 'TVS 45HP स्मार्ट फार्म ट्रैक्टर',
-      dealerReady: 'TVS रायपुर डीलरशिप पर डिलीवरी के लिए तैयार',
+      tractorModel: 'GeoKisaan 45HP स्मार्ट फार्म ट्रैक्टर',
+      dealerReady: 'GeoKisaan रायपुर डीलरशिप पर डिलीवरी के लिए तैयार',
       downloadSanction: 'स्वीकृति पत्र डाउनलोड करें',
       downloading: 'डाउनलोड हो रहा है...',
       satelliteTitle: 'उपग्रह फसल स्वास्थ्य (Sentinel-2 NDVI)',
@@ -155,7 +155,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'खेत में पर्याप्त नमी मौजूद है। सिंचाई का तनाव न्यूनतम स्तर पर है।',
       lastPass: 'अंतिम उपग्रह परिक्रमा: आज प्रातः 10:42 बजे (Sentinel-2A)',
       verifiedPlot: 'सत्यापित भू-अभिलेख',
-      emiTitle: 'TVS हार्वेस्ट-अलैन्ड मौसमी किस्त (Harvest EMI)',
+      emiTitle: 'GeoKisaan हार्वेस्ट-अलैन्ड मौसमी किस्त (Harvest EMI)',
       emiSubTitle: 'फसल चक्र के अनुरूप लचीली किस्त व्यवस्था',
       sowingEmiLabel: 'बुवाई के दौरान (जून - अक्टूबर)',
       sowingEmiVal: '₹1,500 / माह',
@@ -186,7 +186,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'कीट प्रकोप जोखिम:',
       safeLabel: 'शून्य / सुरक्षित',
       freeVoiceTag: 'निःशुल्क न्यूरल आवाज सहायक (Free Vernacular Voice)',
-      askSaathiTitle: 'TVS कृषि साथी से बोलकर पूछें',
+      askSaathiTitle: 'GeoKisaan कृषि साथी से बोलकर पूछें',
       askSaathiSub: 'कोई भी सवाल पूछें — तुरंत आवाज में जवाब पाएं',
       tapToTalk: 'माइक दबाकर बात करें (Tap to Speak)',
       oneTapVoiceTitle: 'एक क्लिक में पूछें (One-Tap Spoken Answers):',
@@ -196,15 +196,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'डीलर से ट्रैक्टर कब मिलेगा?',
     },
     telugu: {
-      portalBadge: 'రైతు సేవా కేంద్రం · TVS సాథి',
+      portalBadge: 'రైతు సేవా కేంద్రం · GeoKisaan సాథి',
       backToCockpit: '← అధికారి కాక్‌పిట్‌కు తిరిగి వెళ్ళండి',
       welcome: 'స్వాగతం, రాజేశ్వర్ జీ!',
       loanSanctionedTag: 'రుణం మంజూరైంది (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'మంజూరైన రుణ మొత్తం',
       subsidizedRate: '8.4% రాయితీ వడ్డీ రేటు (PSL)',
-      tractorModel: 'TVS 45HP స్మార్ట్ ఫార్మ్ ట్రాక్టర్',
-      dealerReady: 'TVS రాయ్‌పూర్ డీలర్‌షిప్ వద్ద డెలివరీకి సిద్ధంగా ఉంది',
+      tractorModel: 'GeoKisaan 45HP స్మార్ట్ ఫార్మ్ ట్రాక్టర్',
+      dealerReady: 'GeoKisaan రాయ్‌పూర్ డీలర్‌షిప్ వద్ద డెలివరీకి సిద్ధంగా ఉంది',
       downloadSanction: 'మంజూరు పత్రం డౌన్‌లోడ్ చేయండి',
       downloading: 'డౌన్‌లోడ్ అవుతోంది...',
       satelliteTitle: 'ఉపగ్రహ పంట ఆరోగ్యం (Sentinel-2 NDVI)',
@@ -222,7 +222,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'నేలలో సరైన తేమ ఉంది. సాగు నీటి ఒత్తిడి చాలా తక్కువగా ఉంది.',
       lastPass: 'చివరి ఉపగ్రహ కదలిక: నేడు ఉదయం 10:42 గంటలకు (Sentinel-2A)',
       verifiedPlot: 'ధృవీకరించబడిన రెవెన్యూ భూ రికార్డు',
-      emiTitle: 'TVS హార్వెస్ట్ అనుగుణ సీజనల్ EMI షెడ్యూల్',
+      emiTitle: 'GeoKisaan హార్వెస్ట్ అనుగుణ సీజనల్ EMI షెడ్యూల్',
       emiSubTitle: 'పంట రాబడి చక్రానికి తగిన అనువైన వాయిదాల పద్ధతి',
       sowingEmiLabel: 'విత్తనాల కాలం (జూన్ - అక్టోబర్)',
       sowingEmiVal: '₹1,500 / నెలకు',
@@ -253,7 +253,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'తెగుళ్ల ముప్పు సూచిక:',
       safeLabel: 'సున్నా / సురక్షితం',
       freeVoiceTag: 'ఉచిత న్యూరల్ వాయిస్ అసిస్టెంట్ (Grounded RAG)',
-      askSaathiTitle: 'TVS కృషి సాథితో మాట్లాడండి',
+      askSaathiTitle: 'GeoKisaan కృషి సాథితో మాట్లాడండి',
       askSaathiSub: 'ఏదైనా ప్రశ్న అడగండి — తక్షణమే మీ భాషలో సమాధానం వినండి',
       tapToTalk: 'మైక్ నొక్కి మాట్లాడండి (Tap to Speak)',
       oneTapVoiceTitle: 'ఒక్క క్లిక్‌తో సమాధానాలు (One-Tap Voice):',
@@ -263,15 +263,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'డీలర్ నుండి ట్రాక్టర్ ఎప్పుడు తీసుకోవచ్చు?',
     },
     marathi: {
-      portalBadge: 'शेतकरी सेवा केंद्र · TVS साथी',
+      portalBadge: 'शेतकरी सेवा केंद्र · GeoKisaan साथी',
       backToCockpit: '← अधिकारी कॉकपिटवर परत जा',
       welcome: 'स्वागत आहे, राजेश्वर जी!',
       loanSanctionedTag: 'कर्ज मंजूर (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'मंजूर कर्ज रक्कम',
       subsidizedRate: '8.4% सवलतीचा व्याजदर (PSL)',
-      tractorModel: 'TVS 45HP स्मार्ट फार्म ट्रॅक्टर',
-      dealerReady: 'TVS रायपूर डीलरशिपवर वितरणासाठी सज्ज',
+      tractorModel: 'GeoKisaan 45HP स्मार्ट फार्म ट्रॅक्टर',
+      dealerReady: 'GeoKisaan रायपूर डीलरशिपवर वितरणासाठी सज्ज',
       downloadSanction: 'मंजुरी पत्र डाउनलोड करा',
       downloading: 'डाउनलोड होत आहे...',
       satelliteTitle: 'उपग्रह पीक आरोग्य (Sentinel-2 NDVI)',
@@ -289,7 +289,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'मातीत पुरेसा ओलावा उपलब्ध आहे. पिकावरील ताण नगण्य आहे.',
       lastPass: 'शेवटची उपग्रह फेरी: आज सकाळी 10:42 वाजता (Sentinel-2A)',
       verifiedPlot: 'सत्यापित भू-अभिलेख',
-      emiTitle: 'TVS हंगामी हार्वेस्ट ईएमआय वेळापत्रक (Harvest EMI)',
+      emiTitle: 'GeoKisaan हंगामी हार्वेस्ट ईएमआय वेळापत्रक (Harvest EMI)',
       emiSubTitle: 'पीक चक्रानुसार लवचिक परतफेड व्यवस्था',
       sowingEmiLabel: 'पेरणीचा काळ (जून - ऑक्टोबर)',
       sowingEmiVal: '₹1,500 / महिना',
@@ -320,7 +320,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'कीड प्रादुर्भाव जोखीम:',
       safeLabel: 'शून्य / सुरक्षित',
       freeVoiceTag: 'विनामूल्य न्यूरल आवाज सहाय्यक (Grounded RAG)',
-      askSaathiTitle: 'TVS कृषी साथीशी बोलून विचारा',
+      askSaathiTitle: 'GeoKisaan कृषी साथीशी बोलून विचारा',
       askSaathiSub: 'कोणताही प्रश्न विचारा — तत्काळ आपल्या भाषेत उत्तर मिळवा',
       tapToTalk: 'माईक दाबून बोला (Tap to Speak)',
       oneTapVoiceTitle: 'एका क्लीकमध्ये विचारा (One-Tap Voice):',
@@ -330,15 +330,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'डीलरकडून ट्रॅक्टर कधी मिळेल?',
     },
     kannada: {
-      portalBadge: 'ರೈತ ಸೇವಾ ಕೇಂದ್ರ · TVS ಸಾಥಿ',
+      portalBadge: 'ರೈತ ಸೇವಾ ಕೇಂದ್ರ · GeoKisaan ಸಾಥಿ',
       backToCockpit: '← ಅಧಿಕಾರಿ ಕಾಕ್‌ಪಿಟ್‌ಗೆ ಹಿಂತಿರುಗಿ',
       welcome: 'ಸ್ವಾಗತ, ರಾಜೇಶ್ವರ್ ಜೀ!',
       loanSanctionedTag: 'ಸಾಲ ಮಂಜೂರಾಗಿದೆ (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'ಮಂಜೂರಾದ ಸಾಲದ ಮೊತ್ತ',
       subsidizedRate: '8.4% ಸಬ್ಸಿಡಿ ಬಡ್ಡಿದರ (PSL)',
-      tractorModel: 'TVS 45HP ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್ ಟ್ರ್ಯಾಕ್ಟರ್',
-      dealerReady: 'TVS ರಾಯಪುರ ಡೀಲರ್‌ಶಿಪ್‌ನಲ್ಲಿ ವಿತರಣೆಗೆ ಸಿದ್ಧವಾಗಿದೆ',
+      tractorModel: 'GeoKisaan 45HP ಸ್ಮಾರ್ಟ್ ಫಾರ್ಮ್ ಟ್ರ್ಯಾಕ್ಟರ್',
+      dealerReady: 'GeoKisaan ರಾಯಪುರ ಡೀಲರ್‌ಶಿಪ್‌ನಲ್ಲಿ ವಿತರಣೆಗೆ ಸಿದ್ಧವಾಗಿದೆ',
       downloadSanction: 'ಮಂಜೂರಾತಿ ಪತ್ರ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ',
       downloading: 'ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
       satelliteTitle: 'ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ (Sentinel-2 NDVI)',
@@ -356,7 +356,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'ಮಣ್ಣಿನಲ್ಲಿ ಸೂಕ್ತ ತೇವಾಂಶವಿದೆ. ಬೆಳೆ ನೀರಿನ ಒತ್ತಡ ಕನಿಷ್ಠವಾಗಿದೆ.',
       lastPass: 'ಕೊನೆಯ ಉಪಗ್ರಹ ಪರಿಶೀಲನೆ: ಇಂದು ಬೆಳಗ್ಗೆ 10:42 (Sentinel-2A)',
       verifiedPlot: 'ದೃಢೀಕೃತ ಭೂ ದಾಖಲೆ (ಕಹಸ್ರಾ)',
-      emiTitle: 'TVS ಸುಗ್ಗಿ ಆಧಾರಿತ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ವೇಳಾಪಟ್ಟಿ',
+      emiTitle: 'GeoKisaan ಸುಗ್ಗಿ ಆಧಾರಿತ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ವೇಳಾಪಟ್ಟಿ',
       emiSubTitle: 'ಬೆಳೆ ಆದಾಯ ಚಕ್ರಕ್ಕೆ ಹೊಂದಿಕೊಳ್ಳುವ ಸುಲಭ ಕಂತುಗಳು',
       sowingEmiLabel: 'ಬಿತ್ತನೆ ಕಾಲ (ಜೂನ್ - ಅಕ್ಟೋಬರ್)',
       sowingEmiVal: '₹1,500 / ತಿಂಗಳಿಗೆ',
@@ -387,7 +387,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'ಕೀಟ ಬಾಧೆ ಅಪಾಯ:',
       safeLabel: 'ಶೂನ್ಯ / ಸುರಕ್ಷಿತ',
       freeVoiceTag: 'ಉಚಿತ ನ್ಯೂರಲ್ ಧ್ವನಿ ಸಹಾಯಕ (Grounded RAG)',
-      askSaathiTitle: 'TVS ಕೃಷಿ ಸಾಥಿಯೊಂದಿಗೆ ಮಾತನಾಡಿ',
+      askSaathiTitle: 'GeoKisaan ಕೃಷಿ ಸಾಥಿಯೊಂದಿಗೆ ಮಾತನಾಡಿ',
       askSaathiSub: 'ಯಾವುದೇ ಪ್ರಶ್ನೆ ಕೇಳಿ — ತಕ್ಷಣ ಧ್ವನಿಯ ಮೂಲಕ ಉತ್ತರ ಪಡೆಯಿರಿ',
       tapToTalk: 'ಮೈಕ್ ಒತ್ತಿ ಮಾತನಾಡಿ (Tap to Speak)',
       oneTapVoiceTitle: 'ಒಂದೇ ಕ್ಲಿಕ್‌ನಲ್ಲಿ ಧ್ವನಿ ಉತ್ತರಗಳು:',
@@ -397,15 +397,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'ಡೀಲರ್‌ನಿಂದ ಟ್ರ್ಯಾಕ್ಟರ್ ಯಾವಾಗ ಸಿಗುತ್ತದೆ?',
     },
     bengali: {
-      portalBadge: 'কৃষক সেবা কেন্দ্র · TVS সাথী',
+      portalBadge: 'কৃষক সেবা কেন্দ্র · GeoKisaan সাথী',
       backToCockpit: '← ক্রেডিট অফিসার ককপিটে ফিরে যান',
       welcome: 'স্বাগতম, রাজেশ্বর জী!',
       loanSanctionedTag: 'ঋণ মঞ্জুর হয়েছে (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'মঞ্জুরীকৃত ঋণের পরিমাণ',
       subsidizedRate: '8.4% ভর্তুকিযুক্ত সুদের হার (PSL)',
-      tractorModel: 'TVS 45HP স্মার্ট ফার্ম ট্র্যাক্টর',
-      dealerReady: 'TVS রায়পুর ডিলারশিপে ডেলিভারির জন্য প্রস্তুত',
+      tractorModel: 'GeoKisaan 45HP স্মার্ট ফার্ম ট্র্যাক্টর',
+      dealerReady: 'GeoKisaan রায়পুর ডিলারশিপে ডেলিভারির জন্য প্রস্তুত',
       downloadSanction: 'মঞ্জুরিপত্র ডাউনলোড করুন',
       downloading: 'ডাউনলোড হচ্ছে...',
       satelliteTitle: 'উপগ্রহ ফসল স্বাস্থ্য (Sentinel-2 NDVI)',
@@ -423,7 +423,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'মাটিতে পর্যাপ্ত আর্দ্রতা রয়েছে। ফসলে সেচজনিত চাপ অত্যন্ত কম।',
       lastPass: 'সর্বশেষ উপগ্রহ চক্র: আজ সকাল ১০:৪২ মিনিটে (Sentinel-2A)',
       verifiedPlot: 'যাচাইকৃত খতিয়ান/জমি রেকর্ড',
-      emiTitle: 'TVS মরশুমি হার্ভেস্ট ইএমআই সময়সূচী',
+      emiTitle: 'GeoKisaan মরশুমি হার্ভেস্ট ইএমআই সময়সূচী',
       emiSubTitle: 'ফসল উৎপাদন চক্রের সাথে মানানসই নমনীয় কিস্তি ব্যবস্থা',
       sowingEmiLabel: 'বপনের মরশুম (জুন - অক্টোবর)',
       sowingEmiVal: '₹1,500 / প্রতি মাসে',
@@ -454,7 +454,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'কীটপতঙ্গ ঝুঁকি সূচক:',
       safeLabel: 'শূন্য / নিরাপদ',
       freeVoiceTag: 'বিনামূল্যে নিউরাল ভয়েস সহকারী (Grounded RAG)',
-      askSaathiTitle: 'TVS কৃষি সাথীর সাথে কথা বলুন',
+      askSaathiTitle: 'GeoKisaan কৃষি সাথীর সাথে কথা বলুন',
       askSaathiSub: 'যেকোনো প্রশ্ন মুখে বলুন — তাৎক্ষণিক কথ্য ভাষায় উত্তর পান',
       tapToTalk: 'মাইক চেপে কথা বলুন (Tap to Speak)',
       oneTapVoiceTitle: 'এক ক্লিকে ভয়েস উত্তর (One-Tap Voice):',
@@ -464,15 +464,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'ডিলারের কাছ থেকে ট্র্যাক্টর কবে পাওয়া যাবে?',
     },
     chhattisgarhi: {
-      portalBadge: 'किसान सेवा केंद्र · TVS साथी',
+      portalBadge: 'किसान सेवा केंद्र · GeoKisaan साथी',
       backToCockpit: '← क्रेडिट अफसर कॉकपिट म जाव',
       welcome: 'जय जोहार, रामेश्वर जी!',
       loanSanctionedTag: 'ऋण स्वीकृत (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'स्वीकृत राशि',
       subsidizedRate: '8.4% रियायती ब्याज दर (PSL)',
-      tractorModel: 'TVS 45HP स्मार्ट फार्म ट्रैक्टर',
-      dealerReady: 'TVS रायपुर डीलरशिप म गाड़ी मिले बर तइयार हे',
+      tractorModel: 'GeoKisaan 45HP स्मार्ट फार्म ट्रैक्टर',
+      dealerReady: 'GeoKisaan रायपुर डीलरशिप म गाड़ी मिले बर तइयार हे',
       downloadSanction: 'स्वीकृति पत्र डाउनलोड करव',
       downloading: 'डाउनलोड होवत हे...',
       satelliteTitle: 'उपग्रह फसल स्वास्थ्य (Sentinel-2 NDVI)',
@@ -490,7 +490,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'खेत में पर्याप्त नमी मौजूद है। सिंचाई का तनाव न्यूनतम स्तर पर है।',
       lastPass: 'अंतिम उपग्रह परिक्रमा: आज प्रातः 10:42 बजे (Sentinel-2A)',
       verifiedPlot: 'सत्यापित भू-अभिलेख',
-      emiTitle: 'TVS हार्वेस्ट-अलैन्ड मौसमी किस्त (Harvest EMI)',
+      emiTitle: 'GeoKisaan हार्वेस्ट-अलैन्ड मौसमी किस्त (Harvest EMI)',
       emiSubTitle: 'फसल चक्र के अनुरूप लचीली किस्त व्यवस्था',
       sowingEmiLabel: 'बोआई बेरा (जून - अक्टूबर)',
       sowingEmiVal: '₹1,500 / महीना',
@@ -521,7 +521,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'कीट प्रकोप जोखिम:',
       safeLabel: 'शून्य / सुरक्षित',
       freeVoiceTag: 'निःशुल्क न्यूरल आवाज सहायक (Free Vernacular Voice)',
-      askSaathiTitle: 'TVS कृषि साथी से बोल के पूछव',
+      askSaathiTitle: 'GeoKisaan कृषि साथी से बोल के पूछव',
       askSaathiSub: 'कोनो भी सवाल पूछव — तुरंत आवाज म उत्तर मिलही',
       tapToTalk: 'माइक दबा के पूछव (Tap to Speak)',
       oneTapVoiceTitle: 'एक क्लिक में पूछें (One-Tap Spoken Answers):',
@@ -531,15 +531,15 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       q4: 'डीलर ले ट्रैक्टर कइसे मिलही?',
     },
     tamil: {
-      portalBadge: 'உழவர் சேவை மையம் · TVS சாதி',
+      portalBadge: 'உழவர் சேவை மையம் · GeoKisaan சாதி',
       backToCockpit: '← கடன் ஆய்வாளர் காக்பிட் திரும்புக',
       welcome: 'வணக்கம், ராஜேஷ்வர் ஜி!',
       loanSanctionedTag: 'கடன் அனுமதி உறுதியானது (Loan Sanctioned)',
       loanAmount: '₹5,50,000',
       sanctionedAmountLabel: 'அனுமதிக்கப்பட்ட கடன் தொகை',
       subsidizedRate: '8.4% மானிய வட்டி விகிதம் (PSL)',
-      tractorModel: 'TVS 45HP ஸ்மார்ட் விவசாய டிராக்டர்',
-      dealerReady: 'ராய்ப்பூர் TVS டீலர் அலுவலகத்தில் வாகனம் தயார்',
+      tractorModel: 'GeoKisaan 45HP ஸ்மார்ட் விவசாய டிராக்டர்',
+      dealerReady: 'ராய்ப்பூர் GeoKisaan டீலர் அலுவலகத்தில் வாகனம் தயார்',
       downloadSanction: 'அனுமதி கடிதத்தை பதிவிறக்குக',
       downloading: 'பதிவிறக்கம் செய்யப்படுகிறது...',
       satelliteTitle: 'செயற்கைக்கோள் பயிர் நலம் (Sentinel-2 NDVI)',
@@ -557,7 +557,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       moistureDesc: 'மண்ணில் போதுமான ஈரப்பதம் உள்ளது. பாசன அழுத்தம் குறைவு.',
       lastPass: 'கடைசி செயற்கைக்கோள் சுழற்சி: இன்று காலை 10:42 (Sentinel-2A)',
       verifiedPlot: 'சரிபார்க்கப்பட்ட நில ஆவணம்',
-      emiTitle: 'TVS சீசனல் அறுவடை தவணை திட்டம் (Harvest EMI)',
+      emiTitle: 'GeoKisaan சீசனல் அறுவடை தவணை திட்டம் (Harvest EMI)',
       emiSubTitle: 'பயிர் வருவாய் சுழற்சிக்கு ஏற்ற நெகிழ்வான தவணை முறை',
       sowingEmiLabel: 'விதைப்பு காலம் (ஜூன் - அக்டோபர்)',
       sowingEmiVal: '₹1,500 / மாதம்',
@@ -588,7 +588,7 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
       pestLabel: 'பூச்சித் தாக்குதல் அபாயம்:',
       safeLabel: 'பூஜ்ஜியம் / பாதுகாப்பானது',
       freeVoiceTag: 'இலவச நியூரோ குரல் உதவியாளர் (Grounded RAG)',
-      askSaathiTitle: 'TVS கிரிஷி சாதியிடம் பேசி அறிந்திடுங்கள்',
+      askSaathiTitle: 'GeoKisaan கிரிஷி சாதியிடம் பேசி அறிந்திடுங்கள்',
       askSaathiSub: 'குரல் வழியே உங்கள் கேள்விகளைக் கேட்டு உடனே விடை பெறுங்கள்',
       tapToTalk: 'மைக் அழுத்தி பேசுக (Tap to Speak)',
       oneTapVoiceTitle: 'ஒரே தொடுதலில் கேள்வி கேளுங்கள்:',
@@ -612,22 +612,22 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
     setTimeout(() => {
       setShowSanctionDownloadToast(false);
       const borrowerName = loan?.applicant_name || 'Rajeshwar Sahu';
-      const appId = loan?.application_id || 'TVS-TR-2024-5510';
+      const appId = loan?.application_id || 'GK-TR-2024-5510';
       const khasra = loan?.khasra_no || '142/1';
       const village = loan?.village || 'Raipur';
       const district = loan?.district || 'Chhattisgarh';
       const acres = loan?.land_acres || '4.50';
       const amountInr = loan?.sanctioned_amount_inr ? Number(loan.sanctioned_amount_inr).toLocaleString('en-IN') : '5,50,000';
-      const tractor = loan?.tractor_model || 'TVS 45HP Smart Agriculture Tractor';
+      const tractor = loan?.tractor_model || 'GeoKisaan 45HP Smart Agriculture Tractor';
       const roi = loan?.interest_rate_pct || 8.4;
       const sowingEmi = loan?.repayment_structure?.sowing_lean_inr ? Number(loan.repayment_structure.sowing_lean_inr).toLocaleString('en-IN') : '1,500';
       const harvestEmi = loan?.repayment_structure?.harvest_bullet_inr ? Number(loan.repayment_structure.harvest_bullet_inr).toLocaleString('en-IN') : '55,000';
       const ndvi = loan?.scorecard_breakdown?.satellite_ndvi_mean ?? 0.68;
-      const dealership = loan?.dealership || `TVS ${district} Authorized Dealership`;
+      const dealership = loan?.dealership || `GeoKisaan ${district} Authorized Dealership`;
 
       // Trigger a real text file download for the sanction letter
       const sanctionText = `=====================================================
-TVS CREDIT SERVICES LIMITED - AGRI-LENDING SANCTION
+GEOKISAAN SERVICES LIMITED - AGRI-LENDING SANCTION
 =====================================================
 Borrower: ${borrowerName}
 Application Ref: ${appId}
@@ -635,7 +635,7 @@ Khasra / Plot: ${khasra}, ${village}, ${district} (${acres} Acres)
 Sanction Amount: INR ${amountInr}
 Product: ${tractor}
 Interest Rate: ${roi}% p.a. (Priority Sector Lending PSL)
-Repayment Structure: Seasonally-Aligned TVS Harvest EMI
+Repayment Structure: Seasonally-Aligned GeoKisaan Harvest EMI
   - Sowing Lean Months (June-Oct): INR ${sowingEmi}/month
   - Harvest Bullet Months (Nov-Dec): INR ${harvestEmi}/bullet
 Verification: Sentinel-2 NDVI ${ndvi} + CloudGap-CG Verified
@@ -645,7 +645,7 @@ Dealer Delivery: ${dealership}
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `TVS_Credit_Sanction_Letter_${borrowerName.replace(/\s+/g, '_')}.txt`;
+      a.download = `GeoKisaan_Sanction_Letter_${borrowerName.replace(/\s+/g, '_')}.txt`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -669,27 +669,27 @@ Dealer Delivery: ${dealership}
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base sm:text-lg font-bold tracking-tight text-white">
-                  TVS Credit
+                  GeoKisaan
                 </span>
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500 text-slate-950">
                   {t.portalBadge}
                 </span>
               </div>
               <p className="text-xs text-slate-300 font-medium hidden sm:block">
-                {loan ? `${loan.applicant_name} · Ref: ${loan.application_id || 'TVS-K-8921'} (${loan.village || loan.district})` : (
+                {loan ? `${loan.applicant_name} · Ref: ${loan.application_id || 'GK-8921'} (${loan.village || loan.district})` : (
                   lang === 'english'
-                    ? 'Rajeshwar Sahu · Member ID: TVS-K-8921 (Raipur)'
+                    ? 'Rajeshwar Sahu · Member ID: GK-8921 (Raipur)'
                     : lang === 'tamil'
-                    ? 'ராஜேஷ்வர் சாஹு · உறுப்பினர் ID: TVS-K-8921 (ராய்ப்பூர்)'
+                    ? 'ராஜேஷ்வர் சாஹு · உறுப்பினர் ID: GK-8921 (ராய்ப்பூர்)'
                     : lang === 'telugu'
-                    ? 'రాజేశ్వర్ సాహు · సభ్యుని ID: TVS-K-8921 (రాయ్‌పూర్)'
+                    ? 'రాజేశ్వర్ సాహు · సభ్యుని ID: GK-8921 (రాయ్‌పూర్)'
                     : lang === 'kannada'
-                    ? 'ರಾಜೇಶ್ವರ್ ಸಾಹು · ಸದಸ್ಯ ID: TVS-K-8921 (ರಾಯಪುರ)'
+                    ? 'ರಾಜೇಶ್ವರ್ ಸಾಹು · ಸದಸ್ಯ ID: GK-8921 (ರಾಯಪುರ)'
                     : lang === 'bengali'
-                    ? 'রাজেশ্বর সাহু · সদস্য ID: TVS-K-8921 (রায়পুর)'
+                    ? 'রাজেশ্বর সাহু · সদস্য ID: GK-8921 (রায়পুর)'
                     : lang === 'marathi'
-                    ? 'राजेश्वर साहू · सदस्य आयडी: TVS-K-8921 (रायपूर)'
-                    : 'राजेश्वर साहू · सदस्य ID: TVS-K-8921 (रायपुर)'
+                    ? 'राजेश्वर साहू · सदस्य आयडी: GK-8921 (रायपूर)'
+                    : 'राजेश्वर साहू · सदस्य ID: GK-8921 (रायपुर)'
                 )}
               </p>
             </div>

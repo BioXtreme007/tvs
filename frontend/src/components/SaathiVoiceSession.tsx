@@ -105,9 +105,9 @@ export default function SaathiVoiceSession({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-slate-100">TVS Krishi Saathi Live</h3>
+                <h3 className="text-base font-bold text-slate-100">GeoKisaan Krishi Saathi Live</h3>
                 <span className="px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
-                  {provider === 'gemini_live' ? 'Gemini Live Native Audio' : 'TVS High-Resilience Voice'}
+                  {provider === 'gemini_live' ? 'Gemini Live Native Audio' : 'GeoKisaan High-Resilience Voice'}
                 </span>
               </div>
               <p className="text-xs text-slate-400">
@@ -195,7 +195,7 @@ export default function SaathiVoiceSession({
               <span className="text-sm font-semibold text-slate-200">
                 {status === 'speaking' && 'Krishi Saathi Speaking (Tap to interrupt)...'}
                 {status === 'listening' && 'Listening freely... Speak anytime'}
-                {status === 'thinking' && 'Reasoning with TVS Policy Knowledge...'}
+                {status === 'thinking' && 'Reasoning with GeoKisaan Policy Knowledge...'}
                 {status === 'interrupted' && 'Interrupted · Listening...'}
                 {status === 'requesting_mic' && 'Enabling Microphone...'}
                 {status === 'connecting' && 'Connecting to Realtime Voice...'}

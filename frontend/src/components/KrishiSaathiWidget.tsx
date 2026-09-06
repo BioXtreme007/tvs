@@ -66,7 +66,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     district: 'Raipur',
     crop: 'Paddy (Grade-A)',
     khasra_no: '142/1',
-    loan_id: 'TVS-TR-2024-5510',
+    loan_id: 'GK-TR-2024-5510',
     agri_credit_score: 735,
     max_sanction_amount_inr: 550000,
     ndvi: 0.68,
@@ -77,11 +77,11 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     english: {
       name: 'English',
       code: 'EN',
-      greeting: `Hello ${activeContext.applicant_name || 'Farmer'}! I am TVS Krishi Saathi Copilot. I am ready to assist with your ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} tractor loan sanction, Seasonally-Aligned Harvest EMIs, and Sentinel-2 crop vigor (NDVI ${activeContext.ndvi || 0.68}).`,
+      greeting: `Hello ${activeContext.applicant_name || 'Farmer'}! I am GeoKisaan Krishi Saathi Copilot. I am ready to assist with your ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} tractor loan sanction, Seasonally-Aligned Harvest EMIs, and Sentinel-2 crop vigor (NDVI ${activeContext.ndvi || 0.68}).`,
       placeholder: 'Ask about Harvest EMI, loan sanction, or PMFBY (Supports Hinglish & Vernacular)...',
       quickPrompts: [
         { icon: Sprout, label: 'How does Harvest EMI work?', query: 'How does Seasonally-Aligned Harvest EMI work during sowing?' },
-        { icon: Tractor, label: 'What documents for tractor loan?', query: 'What documents are required for a TVS tractor loan?' },
+        { icon: Tractor, label: 'What documents for tractor loan?', query: 'What documents are required for a GeoKisaan tractor loan?' },
         { icon: ShieldCheck, label: 'How to claim PMFBY insurance?', query: 'How do I file a PMFBY crop insurance claim for damaged yield?' },
         { icon: CloudRain, label: 'Can EMI be deferred during drought?', query: 'Can EMI installments be deferred or restructured during monsoon drought?' },
       ],
@@ -89,8 +89,8 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     hindi: {
       name: 'हिंदी',
       code: 'HI',
-      greeting: `नमस्ते ${activeContext.applicant_name || 'किसान जी'}! मैं टीवीएस कृषि साथी AI हूँ। आपके ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ट्रैक्टर ऋण, हार्वेस्ट ईएमआई, एवं खसरा 142/1 (NDVI ${activeContext.ndvi || 0.68}) फसल स्वास्थ्य से संबंधित हर सहायता के लिए उपस्थित हूँ।`,
-      placeholder: 'TVS Harvest EMI, लोन अप्रूवल, या PMFBY के बारे में पूछें...',
+      greeting: `नमस्ते ${activeContext.applicant_name || 'किसान जी'}! मैं जियोकिसान कृषि साथी AI हूँ। आपके ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ट्रैक्टर ऋण, हार्वेस्ट ईएमआई, एवं खसरा 142/1 (NDVI ${activeContext.ndvi || 0.68}) फसल स्वास्थ्य से संबंधित हर सहायता के लिए उपस्थित हूँ।`,
+      placeholder: 'GeoKisaan Harvest EMI, लोन अप्रूवल, या PMFBY के बारे में पूछें...',
       quickPrompts: [
         { icon: Sprout, label: 'हार्वेस्ट EMI कैसे काम करती है?', query: 'हार्वेस्ट EMI कैसे काम करती है और बुवाई समय कितना देना पड़ता है?' },
         { icon: Tractor, label: 'ट्रैक्टर लोन दस्तावेज क्या हैं?', query: 'ट्रैक्टर लोन के लिए कौन कौन से दस्तावेज लगते हैं?' },
@@ -101,7 +101,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     chhattisgarhi: {
       name: 'छत्तीसगढ़ी',
       code: 'CG',
-      greeting: `जय जोहार ${activeContext.applicant_name || 'किसान भइया'}! मैं टीवीएस कृषि साथी हंव। तुंहर ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} के ट्रैक्टर लोन, हार्वेस्ट किस्त, अउ रायपुर खेत (NDVI ${activeContext.ndvi || 0.68}) के बारे म कोनो भी सवाल पूछव।`,
+      greeting: `जय जोहार ${activeContext.applicant_name || 'किसान भइया'}! मैं जियोकिसान कृषि साथी हंव। तुंहर ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} के ट्रैक्टर लोन, हार्वेस्ट किस्त, अउ रायपुर खेत (NDVI ${activeContext.ndvi || 0.68}) के बारे म कोनो भी सवाल पूछव।`,
       placeholder: 'हार्वेस्ट EMI, ट्रैक्टर लोन, PMFBY बीमा के बारे म पूछव...',
       quickPrompts: [
         { icon: Sprout, label: 'हार्वेस्ट EMI कइसे काम करथे?', query: 'हार्वेस्ट EMI कइसे काम करथे अउ बोआई बेरा कतका देना पड़ही?' },
@@ -113,10 +113,10 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     tamil: {
       name: 'தமிழ்',
       code: 'TA',
-      greeting: `வணக்கம் ${activeContext.applicant_name || 'விவசாயி'}! நான் TVS கிரிஷி சாதி. உங்கள் ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} டிராக்டர் கடன் அனுமதி, சீசனல் அறுவடை EMI, மற்றும் ராய்ப்பூர் நிலத்தின் செயற்கைக்கோள் பயிர் நலம் (NDVI ${activeContext.ndvi || 0.68}) குறித்த அனைத்து தகவல்களையும் தருகிறேன்.`,
-      placeholder: 'TVS அறுவடை தவணை, கடன் ஒப்புதல், அல்லது PMFBY பற்றி கேளுங்கள்...',
+      greeting: `வணக்கம் ${activeContext.applicant_name || 'விவசாயி'}! நான் GeoKisaan கிரிஷி சாதி. உங்கள் ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} டிராக்டர் கடன் அனுமதி, சீசனல் அறுவடை EMI, மற்றும் ராய்ப்பூர் நிலத்தின் செயற்கைக்கோள் பயிர் நலம் (NDVI ${activeContext.ndvi || 0.68}) குறித்த அனைத்து தகவல்களையும் தருகிறேன்.`,
+      placeholder: 'GeoKisaan அறுவடை தவணை, கடன் ஒப்புதல், அல்லது PMFBY பற்றி கேளுங்கள்...',
       quickPrompts: [
-        { icon: Sprout, label: 'அறுவடை EMI எவ்வாறு செயல்படுகிறது?', query: 'TVS அறுவடை சீசனல் EMI எவ்வாறு செயல்படுகிறது மற்றும் விதைப்பு காலத்தில் எவ்வளவு செலுத்த வேண்டும்?' },
+        { icon: Sprout, label: 'அறுவடை EMI எவ்வாறு செயல்படுகிறது?', query: 'GeoKisaan அறுவடை சீசனல் EMI எவ்வாறு செயல்படுகிறது மற்றும் விதைப்பு காலத்தில் எவ்வளவு செலுத்த வேண்டும்?' },
         { icon: Tractor, label: 'விவசாய கடனுக்கு தேவையான ஆவணங்கள்?', query: 'டிராக்டர் மற்றும் விவசாய கடனுக்கு என்னென்ன ஆவணங்கள் தேவை?' },
         { icon: ShieldCheck, label: 'PMFBY பயிர் காப்பீடு கோருவது எப்படி?', query: 'பயிர் சேதம் ஏற்பட்டால் PMFBY காப்பீடு இழப்பீடு கோருவது எப்படி?' },
         { icon: CloudRain, label: 'வறட்சி காலத்தில் EMI ஒத்திவைக்கப்படுமா?', query: 'மழைப்பொழிவு குறைவு அல்லது வறட்சி காலத்தில் தவணை ஒத்திவைப்பு கிடைக்குமா?' },
@@ -125,11 +125,11 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     telugu: {
       name: 'తెలుగు',
       code: 'TE',
-      greeting: `నమస్కారం ${activeContext.applicant_name || 'రైతు సోదరా'}! నేను TVS కృషి సాథి Copilot. మీ ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ట్రాక్టర్ లోన్ మంజూరు, సీజనల్ హార్వెస్ట్ EMI మరియు శాటిలైట్ పంట ఆరోగ్యం (NDVI ${activeContext.ndvi || 0.68}) పై సహాయం చేయడానికి సిద్ధంగా ఉన్నాను.`,
+      greeting: `నమస్కారం ${activeContext.applicant_name || 'రైతు సోదరా'}! నేను GeoKisaan కృషి సాథి Copilot. మీ ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ట్రాక్టర్ లోన్ మంజూరు, సీజనల్ హార్వెస్ట్ EMI మరియు శాటిలైట్ పంట ఆరోగ్యం (NDVI ${activeContext.ndvi || 0.68}) పై సహాయం చేయడానికి సిద్ధంగా ఉన్నాను.`,
       placeholder: 'హార్వెస్ట్ EMI, లోన్ మంజూరు లేదా PMFBY గురించి అడగండి...',
       quickPrompts: [
-        { icon: Sprout, label: 'హార్వెస్ట్ EMI ఎలా పనిచేస్తుంది?', query: 'విత్తనాలు నాటే సమయంలో సీజనల్ హార్వెస్ట్ EMI ఎలా పనిచేస్తుంది?' },
-        { icon: Tractor, label: 'ట్రాక్టర్ లోన్‌కు ఏ పత్రాలు కావాలి?', query: 'TVS ట్రాక్టర్ లోన్ కోసం ఏ ఏ పత్రాలు మరియు డాక్యుమెంట్లు కావాలి?' },
+        { icon: Sprout, label: 'హార్వెస్ట్ EMI ఎలా పనిచేస్తుంది?', query: 'విత్తనాలు నాటే సమయంలో సీజనಲ್ హార్వెస్ట్ EMI ఎలా పనిచేస్తుంది?' },
+        { icon: Tractor, label: 'ట్రాక్టర్ లోన్‌కు ఏ పత్రాలు కావాలి?', query: 'GeoKisaan ట్రాక్టర్ లోన్ కోసం ఏ ఏ పత్రాలు మరియు డాక్యుమెంట్లు కావాలి?' },
         { icon: ShieldCheck, label: 'PMFBY పంట బీమా క్లెయిమ్ ఎలా చేయాలి?', query: 'పంట నష్టం జరిగితే PMFBY బీమా క్లెయిమ్ ఎలా నమోదు చేయాలి?' },
         { icon: CloudRain, label: 'కరువు సమయంలో EMI వాయిదా పడుతుందా?', query: 'వర్షాలు లేక కరువు వచ్చినప్పుడు EMI వాయిదా వేయవచ్చా?' },
       ],
@@ -137,11 +137,11 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     marathi: {
       name: 'मराठी',
       code: 'MR',
-      greeting: `नमस्कार ${activeContext.applicant_name || 'शेतकरी बंधू'}! मी टीव्हीएस कृषी साथी AI आहे. आपल्या ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ट्रॅक्टर कर्ज मंजुरी, पीक हंगामी हार्वेस्ट ईएमआय आणि सॅटेलाइट पीक आरोग्य (NDVI ${activeContext.ndvi || 0.68}) संदर्भात मदत करण्यास मी तत्पर आहे.`,
+      greeting: `नमस्कार ${activeContext.applicant_name || 'शेतकरी बंधू'}! मी जिओकिसान कृषी साथी AI आहे. आपल्या ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ट्रॅक्टर कर्ज मंजुरी, पीक हंगामी हार्वेस्ट ईएमआय आणि सॅटेलाइट पीक आरोग्य (NDVI ${activeContext.ndvi || 0.68}) संदर्भात मदत करण्यास मी तत्पर आहे.`,
       placeholder: 'हार्वेस्ट ईएमआय, ट्रॅक्टर कर्ज किंवा PMFBY बाबत विचारा...',
       quickPrompts: [
-        { icon: Sprout, label: 'हार्वेस्ट EMI कशी कार्य करते?', query: 'पेरणीच्या वेळी टीव्हीएस हार्वेस्ट ईएमआय कशी कार्य करते?' },
-        { icon: Tractor, label: 'ट्रॅक्टर कर्जासाठी कोणती कागदपत्रे लागतात?', query: 'टीव्हीएस ट्रॅक्टर कर्जासाठी कोणती कागदपत्रे आवश्यक आहेत?' },
+        { icon: Sprout, label: 'हार्वेस्ट EMI कशी कार्य करते?', query: 'पेरणीच्या वेळी जिओकिसान हार्वेस्ट ईएमआय कशी कार्य करते?' },
+        { icon: Tractor, label: 'ट्रॅक्टर कर्जासाठी कोणती कागदपत्रे लागतात?', query: 'जिओकिसान ट्रॅक्टर कर्जासाठी कोणती कागदपत्रे आवश्यक आहेत?' },
         { icon: ShieldCheck, label: 'PMFBY पीक विमा क्लेम कसा करावा?', query: 'पीक नुकसान झाल्यास PMFBY विमा क्लेम कसा नोंदवावा?' },
         { icon: CloudRain, label: 'दुष्काळात हप्ता पुढे ढकलला जाऊ शकतो का?', query: 'पाऊस कमी झाल्यास किंवा दुष्काळ पडल्यास हप्ता पुढे ढकलला जाऊ शकतो का?' },
       ],
@@ -149,11 +149,11 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     kannada: {
       name: 'ಕನ್ನಡ',
       code: 'KN',
-      greeting: `ನಮಸ್ಕಾರ ${activeContext.applicant_name || 'ರೈತ ಬಾಂಧವರೇ'}! ನಾನು ಟಿವಿಎಸ್ ಕೃಷಿ ಸಾಥಿ AI. ನಿಮ್ಮ ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲ ಮಂಜೂರಾತಿ, ಸುಗ್ಗಿಯ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಮತ್ತು ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ (NDVI ${activeContext.ndvi || 0.68}) ಕುರಿತು ಸಹಾಯ ಮಾಡಲು ನಾನು ಸಿದ್ಧನಿದ್ದೇನೆ.`,
+      greeting: `ನಮಸ್ಕಾರ ${activeContext.applicant_name || 'ರೈತ ಬಾಂಧವರೇ'}! ನಾನು ಜಿಯೋಕಿಸಾನ್ ಕೃಷಿ ಸಾಥಿ AI. ನಿಮ್ಮ ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲ ಮಂಜೂರಾತಿ, ಸುಗ್ಗಿಯ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಮತ್ತು ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ (NDVI ${activeContext.ndvi || 0.68}) ಕುರಿತು ಸಹಾಯ ಮಾಡಲು ನಾನು ಸಿದ್ಧನಿದ್ದೇನೆ.`,
       placeholder: 'ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ, ಸಾಲ ಅನುಮೋದನೆ ಅಥವಾ PMFBY ಬಗ್ಗೆ ಕೇಳಿ...',
       quickPrompts: [
-        { icon: Sprout, label: 'ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?', query: 'ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ಟಿವಿಎಸ್ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?' },
-        { icon: Tractor, label: 'ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲಕ್ಕೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?', query: 'ಟಿವಿಎಸ್ ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲ ಪಡೆಯಲು ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?' },
+        { icon: Sprout, label: 'ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?', query: 'ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ಜಿಯೋಕಿಸಾನ್ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?' },
+        { icon: Tractor, label: 'ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲಕ್ಕೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?', query: 'ಜಿಯೋಕಿಸಾನ್ ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲ ಪಡೆಯಲು ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?' },
         { icon: ShieldCheck, label: 'PMFBY ಬೆಳೆ ವಿಮೆ ಕ್ಲೈಮ್ ಮಾಡುವುದು ಹೇಗೆ?', query: 'ಬೆಳೆ ಹಾನಿಯಾದಾಗ PMFBY ಬೆಳೆ ವಿಮೆ ಪರಿಹಾರ ಪಡೆಯುವುದು ಹೇಗೆ?' },
         { icon: CloudRain, label: 'ಬರಗಾಲದ ಸಮಯದಲ್ಲಿ ಇಎಂಐ ಮುಂದೂಡಬಹುದೇ?', query: 'ಮಳೆ ಕೊರತೆ ಅಥವಾ ಬರಗಾಲದ ಸಮಯದಲ್ಲಿ ಕಂತು ಮುಂದೂಡಲು ಸಾಧ್ಯವೇ?' },
       ],
@@ -161,11 +161,11 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
     bengali: {
       name: 'বাংলা',
       code: 'BN',
-      greeting: `নমস্কার ${activeContext.applicant_name || 'কৃষক ভাই'}! আমি টিভিএস কৃষি সাথী AI। আপনার ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ট্র্যাক্টর ঋণ মঞ্জুরি, মরশুমি হার্ভেস্ট ইএমআই এবং উপগ্রহ ফসল স্বাস্থ্য (NDVI ${activeContext.ndvi || 0.68}) সংক্রান্ত সকল তথ্যের জন্য আমি উপস্থিত আছি।`,
+      greeting: `নমস্কার ${activeContext.applicant_name || 'কৃষক ভাই'}! আমি জিওকিষাণ কৃষি সাথী AI। আপনার ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ট্র্যাক্টর ঋণ মঞ্জুরি, মরশুমি হার্ভেস্ট ইএমআই এবং উপগ্রহ ফসল স্বাস্থ্য (NDVI ${activeContext.ndvi || 0.68}) সংক্রান্ত সকল তথ্যের জন্য আমি উপস্থিত আছি।`,
       placeholder: 'হার্ভেস্ট ইএমআই, ঋণ অনুমোদন বা PMFBY সম্পর্কে জিজ্ঞাসা করুন...',
       quickPrompts: [
-        { icon: Sprout, label: 'হার্ভেস্ট ইএমআই কীভাবে কাজ করে?', query: 'বপনের মরশুমে টিভিএস হার্ভেস্ট ইএমআই কীভাবে কাজ করে?' },
-        { icon: Tractor, label: 'ট্র্যাক্টর লোনের জন্য কী কী নথি প্রয়োজন?', query: 'টিভিএস ট্র্যাক্টর লোনের জন্য কোন কোন নথিপত্র প্রয়োজন?' },
+        { icon: Sprout, label: 'হার্ভেস্ট ইএমআই কীভাবে কাজ করে?', query: 'বপনের মরশুমে জিওকিষাণ হার্ভেস্ট ইএমআই কীভাবে কাজ করে?' },
+        { icon: Tractor, label: 'ট্র্যাক্টর লোনের জন্য কী কী নথি প্রয়োজন?', query: 'জিওকিষাণ ট্র্যাক্টর লোনের জন্য কোন কোন নথিপত্র প্রয়োজন?' },
         { icon: ShieldCheck, label: 'PMFBY ফসল বীমা দাবি কীভাবে করবেন?', query: 'ফসল নষ্ট হলে PMFBY ফসল বীমা ক্ষতিপূরণ দাবি কীভাবে করবেন?' },
         { icon: CloudRain, label: 'খরার সময় কি ইএমআই স্থগিত হতে পারে?', query: 'কম বৃষ্টি বা খরা দেখা দিলে কি কিস্তি পিছিয়ে দেওয়া সম্ভব?' },
       ],
@@ -177,7 +177,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
       id: 'init-1',
       sender: 'assistant',
       text: languagePresets.english.greeting,
-      sourceDoc: 'TVS Credit Grounded Agri-Lending Policy 2024',
+      sourceDoc: 'GeoKisaan Grounded Agri-Lending Policy 2024',
       time: 'Just now',
     },
   ]);
@@ -250,7 +250,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
             id: 'init-1',
             sender: 'assistant',
             text: languagePresets[newLang].greeting,
-            sourceDoc: 'TVS Credit Grounded Agri-Lending Policy 2024',
+            sourceDoc: 'GeoKisaan Grounded Agri-Lending Policy 2024',
             time: 'Just now',
           },
         ];
@@ -431,7 +431,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
           sender: 'assistant',
           text: data.response || data.reply || 'जानकारी उपलब्ध है।',
           vernacularText: data.vernacular_translation || undefined,
-          sourceDoc: data.source || 'TVS Credit Grounded Knowledge Base',
+          sourceDoc: data.source || 'GeoKisaan Grounded Knowledge Base',
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         };
         setMessages((prev) => [...prev, asstMsg]);
@@ -461,23 +461,23 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
         text.includes('தவணை')
       ) {
         if (isHinglishInput) {
-          fallbackText = 'TVS Credit ke Harvest EMI mein sowing season ke dauran sirf ₹1,500 maintenance installment deni hoti hai. December mein mandi mein dhan bikne ke baad main bullet installment (₹55,000) clear hoti hai.';
+          fallbackText = 'GeoKisaan ke Harvest EMI mein sowing season ke dauran sirf ₹1,500 maintenance installment deni hoti hai. December mein mandi mein dhan bikne ke baad main bullet installment (₹55,000) clear hoti hai.';
         } else if (language === 'chhattisgarhi') {
-          fallbackText = 'भइया, TVS क्रेडिट के हार्वेस्ट EMI म बोआई बेरा खाली ₹1,500 के नानचुन किस्त देना पड़ही। जब धान मंडी म बिकाही, तब दिसंबर म ₹55,000 के बड़का किस्त भरे बर लगही।';
+          fallbackText = 'भइया, जियोकिसान के हार्वेस्ट EMI म बोआई बेरा खाली ₹1,500 के नानचुन किस्त देना पड़ही। जब धान मंडी म बिकाही, तब दिसंबर म ₹55,000 के बड़का किस्त भरे बर लगही।';
         } else if (language === 'hindi') {
-          fallbackText = 'टीवीएस क्रेडिट हार्वेस्ट ईएमआई में बुवाई (जून-अक्टूबर) के दौरान केवल ₹1,500 रखरखाव किस्त लगती है। दिसंबर में मंडी में फसल बिकने पर मुख्य बुलेट किस्त (₹55,000) देनी होती है।';
+          fallbackText = 'जियोकिसान हार्वेस्ट ईएमआई में बुवाई (जून-अक्टूबर) के दौरान केवल ₹1,500 रखरखाव किस्त लगती है। दिसंबर में मंडी में फसल बिकने पर मुख्य बुलेट किस्त (₹55,000) देनी होती है।';
         } else if (language === 'tamil') {
-          fallbackText = 'TVS சீசனல் அறுவடை EMI திட்டத்தில் விதைப்பு காலத்தில் மாதத்திற்கு ₹1,500 மட்டுமே. டிசம்பர் மண்டி விற்பனைக்கு பிறகு ₹55,000 முக்கிய தவணை செலுத்தப்படும்.';
+          fallbackText = 'GeoKisaan சீசனல் அறுவடை EMI திட்டத்தில் விதைப்பு காலத்தில் மாதத்திற்கு ₹1,500 மட்டுமே. டிசம்பர் மண்டி விற்பனைக்கு பிறகு ₹55,000 முக்கிய தவணை செலுத்தப்படும்.';
         } else if (language === 'telugu') {
-          fallbackText = 'TVS హార్వెస్ట్ EMI కింద విత్తనాల సమయంలో నెలకు కేవలం ₹1,500 నామమాత్రపు మెయింటెనెన్స్ కట్టాలి. డిసెంబర్‌లో పంట అమ్మకం తర్వాత ప్రధాన బుల్లెట్ వాయిదా ₹55,000 చెల్లించాలి.';
+          fallbackText = 'GeoKisaan హార్వెస్ట్ EMI కింద విత్తనాల సమయంలో నెలకు కేవలం ₹1,500 నామమాత్రపు మెయింటెనెన్స్ కట్టాలి. డిసెంబర్‌లో పంట అమ్మకం తర్వాత ప్రధాన బుల్లెట్ వాయిదా ₹55,000 చెల్లించాలి.';
         } else if (language === 'marathi') {
-          fallbackText = 'टीव्हीएस हार्वेस्ट ईएमआय अंतर्गत पेरणी काळात दरमहा केवळ ₹1,500 देखभाल हप्ता असतो. डिसेंबरमध्ये मंडईत पीक विकल्यानंतर मुख्य बुलेट हप्ता (₹55,000) भरावा लागतो.';
+          fallbackText = 'जियोकिसान हार्वेस्ट ईएमआय अंतर्गत पेरणी काळात दरमहा केवळ ₹1,500 देखभाल हप्ता असतो. डिसेंबरमध्ये मंडईत पीक विकल्यानंतर मुख्य बुलेट हप्ता (₹55,000) भरावा लागतो.';
         } else if (language === 'kannada') {
-          fallbackText = 'ಟಿವಿಎಸ್ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಅಡಿಯಲ್ಲಿ ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ತಿಂಗಳಿಗೆ ಕೇವಲ ₹1,500 ನಿರ್ವಹಣಾ ಕಂತು ಇರುತ್ತದೆ. ಡಿಸೆಂಬರ್‌ನಲ್ಲಿ ಮಂಡಿಯಲ್ಲಿ ಬೆಳೆ ಮಾರಾಟವಾದ ನಂತರ ಮುಖ್ಯ ಕಂತು ₹55,000 ಪಾವತಿಸಬೇಕು.';
+          fallbackText = 'GeoKisaan ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಅಡಿಯಲ್ಲಿ ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ತಿಂಗಳಿಗೆ ಕೇವಲ ₹1,500 ನಿರ್ವಹಣಾ ಕಂತು ಇರುತ್ತದೆ. ಡಿಸೆಂಬರ್‌ನಲ್ಲಿ ಮಂಡಿಯಲ್ಲಿ ಬೆಳೆ ಮಾರಾಟವಾದ ನಂತರ ಮುಖ್ಯ ಕಂತು ₹55,000 ಪಾವತಿಸಬೇಕು.';
         } else if (language === 'bengali') {
-          fallbackText = 'টিভিএস হার্ভেস্ট ইএমআই-এর অধীনে বপনের মরশুমে মাসে মাত্র ₹১,৫০০ রক্ষণাবেক্ষণ কিস্তি দিতে হয়। ডিসেম্বরে ফসল বিক্রির পর মূল বুলেট কিস্তি (₹৫৫,০০০) পরিশোধ করতে হয়।';
+          fallbackText = 'GeoKisaan হার্ভেস্ট ইএমআই-এর অধীনে বপনের মরশুমে মাসে মাত্র ₹১,৫০০ রক্ষণাবেক্ষণ কিস্তি দিতে হয়। ডিসেম্বরে ফসল বিক্রির পর মূল বুলেট কিস্তি (₹৫৫,০০০) পরিশোধ করতে হয়।';
         } else {
-          fallbackText = 'Under TVS Seasonally-Aligned Harvest EMIs, you pay a nominal maintenance installment of only ₹1,500/month during sowing. The primary bullet installment of ₹55,000 is due in December after harvest mandi sales.';
+          fallbackText = 'Under GeoKisaan Seasonally-Aligned Harvest EMIs, you pay a nominal maintenance installment of only ₹1,500/month during sowing. The primary bullet installment of ₹55,000 is due in December after harvest mandi sales.';
         }
       } else if (
         lower.includes('tractor') ||
@@ -491,21 +491,21 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
         text.includes('ஆவணம்')
       ) {
         if (isHinglishInput) {
-          fallbackText = 'TVS tractor loan ke liye sirf 4 documents chahiye: Aadhaar card, Khasra 142/1 land record, 6-month bank statement, aur dealer quotation. Satellite check se bina kisi delay ke approval milta hai.';
+          fallbackText = 'GeoKisaan tractor loan ke liye sirf 4 documents chahiye: Aadhaar card, Khasra 142/1 land record, 6-month bank statement, aur dealer quotation. Satellite check se bina kisi delay ke approval milta hai.';
         } else if (language === 'chhattisgarhi') {
           fallbackText = 'ट्रैक्टर लोन बर खाली 4 ठन कागज लगथे: आधार कार्ड, भुइयां खसरा 142/1 रिकॉर्ड, 6 महिना के बैंक पासबुक, अउ डीलर कोटेशन। सैटेलाइट जांच ले तुरंत लोन पास हो जाही!';
         } else if (language === 'hindi') {
           fallbackText = 'ट्रैक्टर ऋण हेतु आधार कार्ड, खसरा 7/12 (भुइयां रिकॉर्ड), 6 माह बैंक स्टेटमेंट और डीलर कोटेशन चाहिए। सैटेलाइट से तुरंत जांच होकर बिना देरी संस्वीकृति मिलती है।';
         } else if (language === 'tamil') {
-          fallbackText = 'TVS டிராக்டர் கடனுக்கு 4 எளிய ஆவணங்கள்: ஆதார், பட்டா/சிட்டா, 6 மாத வங்கி அறிக்கை, மற்றும் டீலர் விலைப்பட்டியல் போதுமானது.';
+          fallbackText = 'GeoKisaan டிராக்டர் கடனுக்கு 4 எளிய ஆவணங்கள்: ஆதார், பட்டா/சிட்டா, 6 மாத வங்கி அறிக்கை, மற்றும் டீலர் விலைப்பட்டியல் போதுமானது.';
         } else if (language === 'telugu') {
-          fallbackText = 'TVS ట్రాక్టర్ లోన్ కోసం 4 పత్రాలు అవసరం: ఆధార్ కార్డు, పహాణీ/ఖస్రా 142/1 రికార్డు, 6 నెలల బ్యాంక్ స్టేట్‌మెంట్, మరియు డీలర్ కొటేషన్.';
+          fallbackText = 'GeoKisaan ట్రాక్టర్ లోన్ కోసం 4 పత్రాలు అవసరం: ఆధార్ కార్డు, పహాణీ/ఖస్రా 142/1 రికార్డు, 6 నెలల బ్యాంక్ స్టేట్‌మెంట్, మరియు డీలర్ కొటేషన్.';
         } else if (language === 'marathi') {
-          fallbackText = 'टीव्हीएस ट्रॅक्टर कर्जासाठी आधार कार्ड, ७/१२ उतारा, ६ महिन्यांचे बँक स्टेटमेंट आणि डीलर कोटेशन आवश्यक आहे.';
+          fallbackText = 'जियोकिसान ट्रॅक्टर कर्जासाठी आधार कार्ड, ७/१२ उतारा, ६ महिन्यांचे बँक स्टेटमेंट आणि डीलर कोटेशन आवश्यक आहे.';
         } else if (language === 'kannada') {
-          fallbackText = 'ಟಿವಿಎಸ್ ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲಕ್ಕೆ ಆಧಾರ್ ಕಾರ್ಡ್, ಪಹಣಿ/ಖಾಸ್ರಾ 142/1, 6 ತಿಂಗಳ ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್‌ಮೆಂಟ್ ಮತ್ತು ಡೀಲರ್ ಕೊಟೇಶನ್ ಅಗತ್ಯವಿದೆ.';
+          fallbackText = 'GeoKisaan ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲಕ್ಕೆ ಆಧಾರ್ ಕಾರ್ಡ್, ಪಹಣಿ/ಖಾಸ್ರಾ 142/1, 6 ತಿಂಗಳ ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್‌ಮೆಂಟ್ ಮತ್ತು ಡೀಲರ್ ಕೊಟೇಶನ್ ಅಗತ್ಯವಿದೆ.';
         } else if (language === 'bengali') {
-          fallbackText = 'টিভিএস ট্র্যাক্টর লোনের জন্য আধার কার্ড, খতিয়ান/খসরা রেকর্ড, ৬ মাসের ব্যাংক স্টেটমেন্ট এবং ডিলার কোটেশন প্রয়োজন।';
+          fallbackText = 'GeoKisaan ট্র্যাক্টর লোনের জন্য আধার কার্ড, খতিয়ান/খসরা রেকর্ড, ৬ মাসের ব্যাংক স্টেটমেন্ট এবং ডিলার কোটেশন প্রয়োজন।';
         } else {
           fallbackText = 'Required documents: Aadhaar card, Land Record (Khasra 142/1), 6-month bank statement, and dealer quotation. Verified via Sentinel-2 orbital imagery.';
         }
@@ -520,21 +520,21 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
         text.includes('காப்பீடு')
       ) {
         if (isHinglishInput) {
-          fallbackText = 'Crop damage ya drought aane par 72 hours ke andar PMFBY portal ya TVS branch par claim register karein. Hamari Sentinel-2 satellite NDVI report claim settlement ko tez karti hai.';
+          fallbackText = 'Crop damage ya drought aane par 72 hours ke andar PMFBY portal ya GeoKisaan branch par claim register karein. Hamari Sentinel-2 satellite NDVI report claim settlement ko tez karti hai.';
         } else if (language === 'chhattisgarhi') {
-          fallbackText = 'अगर बेमौसम बारिश या सूखा ले फसल खराब हो जाथे, त TVS क्रेडिट 72 घंटा के भीतर PMFBY क्लेम दर्ज कराए बर मदद करथे।';
+          fallbackText = 'अगर बेमौसम बारिश या सूखा ले फसल खराब हो जाथे, त जियोकिसान 72 घंटा के भीतर PMFBY क्लेम दर्ज कराए बर मदद करथे।';
         } else if (language === 'hindi') {
-          fallbackText = 'फसल क्षति पर 72 घंटे में PMFBY पोर्टल या टीवीएस शाखा पर क्लेम दर्ज कराएं। हमारी सैटेलाइट NDVI रिपोर्ट क्लेम निपटारे में त्वरित प्रमाण देती है।';
+          fallbackText = 'फसल क्षति पर 72 घंटे में PMFBY पोर्टल या जियोकिसान शाखा पर क्लेम दर्ज कराएं। हमारी सैटेलाइट NDVI रिपोर्ट क्लेम निपटारे में त्वरित प्रमाण देती है।';
         } else if (language === 'tamil') {
-          fallbackText = 'பயிர் சேதம் ஏற்பட்டால் 72 மணி நேரத்திற்குள் PMFBY காப்பீட்டு உதவி எண் அல்லது TVS கிளையில் கோரிக்கை பதிவு செய்யலாம்.';
+          fallbackText = 'பயிர் சேதம் ஏற்பட்டால் 72 மணி நேரத்திற்குள் PMFBY காப்பீட்டு உதவி எண் அல்லது GeoKisaan கிளையில் கோரிக்கை பதிவு செய்யலாம்.';
         } else if (language === 'telugu') {
-          fallbackText = 'పంట నష్టం లేదా కరువు ఏర్పడితే 72 గంటలలోపు PMFBY పోర్టల్ లేదా TVS బ్రాంచ్‌లో క్లెయిమ్ నమోదు చేయండి.';
+          fallbackText = 'పంట నష్టం లేదా కరువు ఏర్పడితే 72 గంటలలోపు PMFBY పోర్టల్ లేదా GeoKisaan బ్రాంచ్‌లో క్లెయిమ్ నమోదు చేయండి.';
         } else if (language === 'marathi') {
-          fallbackText = 'पीक नुकसान किंवा दुष्काळ पडल्यास ७२ तासांच्या आत PMFBY पोर्टलवर किंवा टीव्हीएस शाखेत क्लेम नोंदवा.';
+          fallbackText = 'पीक नुकसान किंवा दुष्काळ पडल्यास ७२ तासांच्या आत PMFBY पोर्टलवर किंवा जियोकिसान शाखेत क्लेम नोंदवा.';
         } else if (language === 'kannada') {
-          fallbackText = 'ಬೆಳೆ ಹಾನಿ ಸಂಭವಿಸಿದಲ್ಲಿ 72 ಗಂಟೆಗಳ ಒಳಗೆ PMFBY ಪೋರ್ಟಲ್ ಅಥವಾ ಟಿವಿಎಸ್ ಶಾಖೆಯಲ್ಲಿ ಕ್ಲೈಮ್ ನೋಂದಾಯಿಸಿ.';
+          fallbackText = 'ಬೆಳೆ ಹಾನಿ ಸಂಭವಿಸಿದಲ್ಲಿ 72 ಗಂಟೆಗಳ ಒಳಗೆ PMFBY ಪೋರ್ಟಲ್ ಅಥವಾ GeoKisaan ಶಾಖೆಯಲ್ಲಿ ಕ್ಲೈಮ್ ನೋಂದಾಯಿಸಿ.';
         } else if (language === 'bengali') {
-          fallbackText = 'ফসল ক্ষতি হলে ৭২ ঘণ্টার মধ্যে PMFBY পোর্টাল বা টিভিএস শাখায় ক্ষতিপূরণ দাবি নথিভুক্ত করুন।';
+          fallbackText = 'ফসল ক্ষতি হলে ৭২ ঘণ্টার মধ্যে PMFBY পোর্টাল বা GeoKisaan শাখায় ক্ষতিপূরণ দাবি নথিভুক্ত করুন।';
         } else {
           fallbackText = 'For crop damage, file a PMFBY claim within 72 hours. Our Sentinel-2 satellite NDVI evidence accelerates insurance clearance.';
         }
@@ -542,7 +542,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
         if (isHinglishInput) {
           fallbackText = `Namaste! Aapka ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} loan pre-approved hai. Plot 142/1 Raipur mein satellite crop vigor (NDVI ${activeContext.ndvi || 0.68}) kaafi healthy hai!`;
         } else if (language === 'chhattisgarhi') {
-          fallbackText = `जय जोहार! तुंहर ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} के आवेदन टीवीएस सैटेलाइट तंत्र ले स्वीकृत हे। Raipur NDVI ${activeContext.ndvi || 0.68} बहुत बढ़िया हे!`;
+          fallbackText = `जय जोहार! तुंहर ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} के आवेदन जियोकिसान सैटेलाइट तंत्र ले स्वीकृत हे। Raipur NDVI ${activeContext.ndvi || 0.68} बहुत बढ़िया हे!`;
         } else if (language === 'hindi') {
           fallbackText = `नमस्ते! आपका ₹${(activeContext.max_sanction_amount_inr || 550000).toLocaleString('en-IN')} ऋण आवेदन स्वीकृत है। रायपुर खसरा 142/1 पर फसल स्वास्थ्य (NDVI ${activeContext.ndvi || 0.68}) उत्तम है।`;
         } else if (language === 'tamil') {
@@ -564,7 +564,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
         id: `asst-${Date.now()}`,
         sender: 'assistant',
         text: fallbackText,
-        sourceDoc: 'TVS Credit Grounded Policy Engine (Offline Fallback)',
+        sourceDoc: 'GeoKisaan Grounded Policy Engine (Offline Fallback)',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, fallbackMsg]);
@@ -654,7 +654,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
               backgroundColor: '#0B2545',
               boxShadow: '0 12px 36px -4px rgba(11, 37, 69, 0.45)',
             }}
-            aria-label="Open TVS Krishi Saathi AI Assistant"
+            aria-label="Open GeoKisaan Krishi Saathi AI Assistant"
           >
             {/* Pulsing indicator ring */}
             <span className="relative flex h-3 w-3">
@@ -719,7 +719,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold tracking-tight">TVS Krishi Saathi</span>
+                    <span className="text-sm font-bold tracking-tight">GeoKisaan Krishi Saathi</span>
                     <span className="text-[10px] uppercase font-semibold px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 rounded">
                       Free Neural AI
                     </span>
@@ -848,7 +848,7 @@ export const KrishiSaathiWidget: React.FC<KrishiSaathiWidgetProps> = ({ borrower
 
                       <div className="flex flex-col">
                         <span className="text-xs font-bold tracking-tight text-white flex items-center gap-1.5">
-                          {isListening ? 'Listening with Whisper Neural...' : 'TVS Smart Voice Speaking...'}
+                          {isListening ? 'Listening with Whisper Neural...' : 'GeoKisaan Smart Voice Speaking...'}
                           <span className="text-[10px] px-1 py-0.2 rounded bg-emerald-400/20 text-emerald-300 font-mono">
                             {language === 'tamil' ? 'Pallavi Neural' : language === 'english' ? 'Neerja Neural' : 'Swara Neural'}
                           </span>

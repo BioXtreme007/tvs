@@ -33,7 +33,7 @@ export const UnderwritingSection: React.FC<UnderwritingSectionProps> = ({
     agri_credit_score: 735,
     tier: 'GOOD',
     underwriting_decision: 'FAST_TRACK_APPROVE',
-    recommended_product: 'TVS New Tractor Loan (45HP)',
+    recommended_product: 'GeoKisaan New Tractor Loan (45HP)',
     sanctioned_amount_inr: 550000,
     risk_adjusted_roi_pct: 10.5,
     satellite_ndvi: 0.68,

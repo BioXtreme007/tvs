@@ -47,15 +47,15 @@ export const KrishiSaathiSection: React.FC = () => {
         {
           id: 'cg-1',
           sender: 'assistant' as const,
-          text: 'जय जोहार! मैं टीवीएस कृषि साथी हंव। तुंहर ट्रैक्टर लोन, फसल बीमा (PMFBY), अउ हार्वेस्ट किस्त (EMI) के बारे म सब जानकारी दे सकथंव।',
-          vernacularText: 'TVS Credit कृषि ऋण नीति अउ उपग्रह जांच ले सत्यापित।',
-          sourceDoc: 'TVS Credit Agri Policy Manual 2024 (Grounded RAG)',
+          text: 'जय जोहार! मैं जियोकिसान कृषि साथी हंव। तुंहर ट्रैक्टर लोन, फसल बीमा (PMFBY), अउ हार्वेस्ट किस्त (EMI) के बारे म सब जानकारी दे सकथंव।',
+          vernacularText: 'GeoKisaan कृषि ऋण नीति अउ उपग्रह जांच ले सत्यापित।',
+          sourceDoc: 'GeoKisaan Agri Policy Manual 2024 (Grounded RAG)',
           iconType: 'sparkles' as const,
         },
       ],
     },
     hindi: {
-      placeholder: 'TVS Harvest EMI, लोन अप्रूवल, या PMFBY के बारे में पूछें...',
+      placeholder: 'GeoKisaan Harvest EMI, लोन अप्रूवल, या PMFBY के बारे में पूछें...',
       quickPrompts: [
         { icon: Sprout, iconColor: 'text-amber-600', label: 'हार्वेस्ट EMI कैसे काम करती है?', query: 'हार्वेस्ट EMI कैसे काम करती है और बुवाई समय कितना देना पड़ता है?' },
         { icon: Tractor, iconColor: 'text-emerald-600', label: 'ट्रैक्टर लोन के लिए क्या दस्तावेज चाहिए?', query: 'ट्रैक्टर लोन के लिए कौन कौन से दस्तावेज लगते हैं?' },
@@ -66,18 +66,18 @@ export const KrishiSaathiSection: React.FC = () => {
         {
           id: 'hi-1',
           sender: 'assistant' as const,
-          text: 'नमस्ते! मैं टीवीएस कृषि साथी हूँ। आपके ट्रैक्टर ऋण, पीएमएफबीवाई फसल बीमा, और मौसमी किस्त (EMI) के बारे में सब जानकारी दे सकता हूँ।',
-          vernacularText: 'TVS Credit RAG ज्ञानकोष से सत्यापित कृषि ऋण सहायता।',
-          sourceDoc: 'TVS Credit Agri Policy Manual 2024 (Grounded RAG)',
+          text: 'नमस्ते! मैं जियोकिसान कृषि साथी हूँ। आपके ट्रैक्टर ऋण, पीएमएफबीवाई फसल बीमा, और मौसमी किस्त (EMI) के बारे में सब जानकारी दे सकता हूँ।',
+          vernacularText: 'GeoKisaan RAG ज्ञानकोष से सत्यापित कृषि ऋण सहायता।',
+          sourceDoc: 'GeoKisaan Agri Policy Manual 2024 (Grounded RAG)',
           iconType: 'sparkles' as const,
         },
       ],
     },
     english: {
-      placeholder: 'Ask about TVS Harvest EMIs, loan approval, or PMFBY...',
+      placeholder: 'Ask about GeoKisaan Harvest EMIs, loan approval, or PMFBY...',
       quickPrompts: [
         { icon: Sprout, iconColor: 'text-amber-600', label: 'How does Harvest EMI work?', query: 'How does Seasonally-Aligned Harvest EMI work during sowing?' },
-        { icon: Tractor, iconColor: 'text-emerald-600', label: 'What documents are needed for loan?', query: 'What documents are required for a TVS tractor loan?' },
+        { icon: Tractor, iconColor: 'text-emerald-600', label: 'What documents are needed for loan?', query: 'What documents are required for a GeoKisaan tractor loan?' },
         { icon: ShieldCheck, iconColor: 'text-blue-600', label: 'How to claim PMFBY crop insurance?', query: 'How do I file a PMFBY crop insurance claim for damaged yield?' },
         { icon: CloudRain, iconColor: 'text-purple-600', label: 'Can EMI be deferred during drought?', query: 'Can EMI installments be deferred or restructured during monsoon drought?' },
       ],
@@ -85,17 +85,17 @@ export const KrishiSaathiSection: React.FC = () => {
         {
           id: 'en-1',
           sender: 'assistant' as const,
-          text: 'Welcome! I am TVS Krishi Saathi AI. I can assist you with your tractor loan sanction, PMFBY crop insurance claims, and Seasonally-Aligned Harvest EMIs.',
-          vernacularText: 'Verified and grounded in TVS Credit Agricultural Lending & Sanction Guidelines.',
-          sourceDoc: 'TVS Credit Agri Policy Manual 2024 (Grounded RAG)',
+          text: 'Welcome! I am GeoKisaan Krishi Saathi AI. I can assist you with your tractor loan sanction, PMFBY crop insurance claims, and Seasonally-Aligned Harvest EMIs.',
+          vernacularText: 'Verified and grounded in GeoKisaan Agricultural Lending & Sanction Guidelines.',
+          sourceDoc: 'GeoKisaan Agri Policy Manual 2024 (Grounded RAG)',
           iconType: 'sparkles' as const,
         },
       ],
     },
     tamil: {
-      placeholder: 'TVS அறுவடை தவணை, கடன் ஒப்புதல், அல்லது PMFBY பற்றி கேளுங்கள்...',
+      placeholder: 'GeoKisaan அறுவடை தவணை, கடன் ஒப்புதல், அல்லது PMFBY பற்றி கேளுங்கள்...',
       quickPrompts: [
-        { icon: Sprout, iconColor: 'text-amber-600', label: 'அறுவடை EMI எவ்வாறு செயல்படுகிறது?', query: 'TVS அறுவடை சீசனல் EMI எவ்வாறு செயல்படுகிறது மற்றும் விதைப்பு காலத்தில் எவ்வளவு செலுத்த வேண்டும்?' },
+        { icon: Sprout, iconColor: 'text-amber-600', label: 'அறுவடை EMI எவ்வாறு செயல்படுகிறது?', query: 'GeoKisaan அறுவடை சீசனல் EMI எவ்வாறு செயல்படுகிறது மற்றும் விதைப்பு காலத்தில் எவ்வளவு செலுத்த வேண்டும்?' },
         { icon: Tractor, iconColor: 'text-emerald-600', label: 'விவசாய கடனுக்கு தேவையான ஆவணங்கள்?', query: 'டிராக்டர் மற்றும் விவசாய கடனுக்கு என்னென்ன ஆவணங்கள் தேவை?' },
         { icon: ShieldCheck, iconColor: 'text-blue-600', label: 'PMFBY பயிர் காப்பீடு கோருவது எப்படி?', query: 'பயிர் சேதம் ஏற்பட்டால் PMFBY காப்பீடு இழப்பீடு கோருவது எப்படி?' },
         { icon: CloudRain, iconColor: 'text-purple-600', label: 'வறட்சி காலத்தில் EMI ஒத்திவைக்கப்படுமா?', query: 'மழைப்பொழிவு குறைவு அல்லது வறட்சி காலத்தில் தவணை ஒத்திவைப்பு கிடைக்குமா?' },
@@ -104,9 +104,9 @@ export const KrishiSaathiSection: React.FC = () => {
         {
           id: 'ta-1',
           sender: 'assistant' as const,
-          text: 'வணக்கம்! நான் TVS கிரிஷி சாதி. உங்கள் டிராக்டர் கடன் அனுமதி, PMFBY பயிர் காப்பீடு, மற்றும் சீசனல் அறுவடை EMI திட்டங்கள் குறித்த அனைத்து விவரங்களையும் வழங்க முடியும்.',
-          vernacularText: 'TVS Credit RAG கொள்கை வழிகாட்டுதல்கள் மற்றும் செயற்கைக்கோள் சரிபார்ப்பு.',
-          sourceDoc: 'TVS Credit Agri Policy Manual 2024 (Grounded RAG)',
+          text: 'வணக்கம்! நான் GeoKisaan கிரிஷி சாதி. உங்கள் டிராக்டர் கடன் அனுமதி, PMFBY பயிர் காப்பீடு, மற்றும் சீசனல் அறுவடை EMI திட்டங்கள் குறித்த அனைத்து விவரங்களையும் வழங்க முடியும்.',
+          vernacularText: 'GeoKisaan RAG கொள்கை வழிகாட்டுதல்கள் மற்றும் செயற்கைக்கோள் சரிபார்ப்பு.',
+          sourceDoc: 'GeoKisaan Agri Policy Manual 2024 (Grounded RAG)',
           iconType: 'sparkles' as const,
         },
       ],
@@ -245,7 +245,7 @@ export const KrishiSaathiSection: React.FC = () => {
             district: 'Raipur',
             crop: 'Paddy',
             khasra_no: '142/1',
-            loan_id: 'TVS-TR-2024-5510',
+            loan_id: 'GK-TR-2024-5510',
             agri_credit_score: 735,
             max_sanction_amount_inr: 550000,
           },
@@ -262,7 +262,7 @@ export const KrishiSaathiSection: React.FC = () => {
             sender: 'assistant',
             text: data.response || data.reply || 'Jaankari uplabdh hai.',
             vernacularText: data.vernacular_translation || undefined,
-            sourceDoc: data.source || data.grounded_sources?.[0]?.source || 'TVS Credit RAG Knowledge Base',
+            sourceDoc: data.source || data.grounded_sources?.[0]?.source || 'GeoKisaan RAG Knowledge Base',
             time: replyTime,
             iconType: 'sparkles',
           },
@@ -277,12 +277,12 @@ export const KrishiSaathiSection: React.FC = () => {
       if (lowerText.includes('harvest') || lowerText.includes('buvai') || textToSend.includes('हार्वेस्ट') || textToSend.includes('किस्त') || textToSend.includes('कटाई') || textToSend.includes('அறுவடை') || textToSend.includes('தவணை')) {
         fallback =
           language === 'chhattisgarhi'
-            ? 'भइया, TVS क्रेडिट के हार्वेस्ट EMI म बोआई के बेरा खाली ₹1,500 के नानचुन किस्त देना पड़ही। जब धान मंडी म बिकाही, तब नवंबर-दिसंबर म बड़का किस्त भरे बर लगही। अइसन म डिफाल्ट के कोनो डर नई रहय!'
+            ? 'भइया, जियोकिसान के हार्वेस्ट EMI म बोआई के बेरा खाली ₹1,500 के नानचुन किस्त देना पड़ही। जब धान मंडी म बिकाही, तब नवंबर-दिसंबर म बड़का किस्त भरे बर लगही। अइसन म डिफाल्ट के कोनो डर नई रहय!'
             : language === 'hindi'
-            ? 'टीवीएस क्रेडिट हार्वेस्ट ईएमआई में बुवाई के दौरान केवल ₹1,500 रखरखाव किस्त लगती है। मंडी में फसल बिकने पर ही मुख्य किस्त देनी होती है।'
+            ? 'जियोकिसान हार्वेस्ट ईएमआई में बुवाई के दौरान केवल ₹1,500 रखरखाव किस्त लगती है। मंडी में फसल बिकने पर ही मुख्य किस्त देनी होती है।'
             : language === 'tamil'
-            ? 'TVS சீசனல் அறுவடை EMI திட்டத்தில், பயிர் வளரும் காலங்களில் (ஜூன்-அக்டோபர்) மாதத்திற்கு சுமார் ₹1,500 மட்டுமே பராமரிப்பு தவணை. முக்கிய தவணை (~₹55,000) நவம்பர்-டிசம்பர் அறுவடை மண்டி விற்பனைக்கு பிறகே செலுத்தப்படும்.'
-            : 'Under TVS Seasonally-Aligned Harvest EMIs, during lean crop-growing months (June–October), you pay a nominal maintenance installment of only ~₹1,500/month. Your primary bullet installment (~₹55,000) is scheduled during November–December after mandi sales.';
+            ? 'GeoKisaan சீசனல் அறுவடை EMI திட்டத்தில், பயிர் வளரும் காலங்களில் (ஜூன்-அக்டோபர்) மாதத்திற்கு சுமார் ₹1,500 மட்டுமே பராமரிப்பு தவணை. முக்கிய தவணை (~₹55,000) நவம்பர்-டிசம்பர் அறுவடை மண்டி விற்பனைக்கு பிறகே செலுத்தப்படும்.'
+            : 'Under GeoKisaan Seasonally-Aligned Harvest EMIs, during lean crop-growing months (June–October), you pay a nominal maintenance installment of only ~₹1,500/month. Your primary bullet installment (~₹55,000) is scheduled during November–December after mandi sales.';
       } else if (lowerText.includes('tractor') || lowerText.includes('dastawez') || textToSend.includes('दस्तावेज') || textToSend.includes('कागज') || lowerText.includes('document') || textToSend.includes('ஆவணம்')) {
         fallback =
           language === 'chhattisgarhi'
@@ -290,34 +290,34 @@ export const KrishiSaathiSection: React.FC = () => {
             : language === 'hindi'
             ? 'ट्रैक्टर लोन के लिए आधार कार्ड, खसरा 7/12, 6 महीने का बैंक स्टेटमेंट और डीलर कोटेशन आवश्यक हैं। सैटेलाइट जांच से 10 मिनट में सत्यापन होता है।'
             : language === 'tamil'
-            ? 'TVS விவசாய கடனுக்கு 4 எளிய ஆவணங்கள் மட்டுமே தேவை: ஆதார் & பான் கார்டு, நில உரிமை பட்டா / சிட்டா, 6 மாத வங்கி அறிக்கை, மற்றும் டீலர் விலைப்பட்டியல். செயற்கைக்கோள் சரிபார்ப்பால் நேரடி ஆய்வு தாமதமில்லை.'
-            : 'Applying for a TVS Tractor Loan requires 4 simple documents: Aadhaar card, Khasra 7/12 land records, 6-month bank statement, and dealer quotation. Satellite verification eliminates on-site delays.';
+            ? 'GeoKisaan விவசாய கடனுக்கு 4 எளிய ஆவணங்கள் மட்டுமே தேவை: ஆதார் & பான் கார்டு, நில உரிமை பட்டா / சிட்டா, 6 மாத வங்கி அறிக்கை, மற்றும் டீலர் விலைப்பட்டியல். செயற்கைக்கோள் சரிபார்ப்பால் நேரடி ஆய்வு தாமதமில்லை.'
+            : 'Applying for a GeoKisaan Tractor Loan requires 4 simple documents: Aadhaar card, Khasra 7/12 land records, 6-month bank statement, and dealer quotation. Satellite verification eliminates on-site delays.';
       } else if (lowerText.includes('pmfby') || lowerText.includes('bima') || textToSend.includes('बीमा') || textToSend.includes('क्लेम') || lowerText.includes('claim') || textToSend.includes('காப்பீடு')) {
         fallback =
           language === 'chhattisgarhi'
-            ? 'अगर कीट प्रकोप या बेमौसम बारिश ले फसल खराब हो जाथे, त TVS क्रेडिट सिस्टम 72 घंटा के भीतर PMFBY क्लेम दर्ज कराए बर मदद करथे। सैटेलाइट NDVI रिपोर्ट ले क्लेम जल्दी पास हो जाथे।'
+            ? 'अगर कीट प्रकोप या बेमौसम बारिश ले फसल खराब हो जाथे, त जियोकिसान सिस्टम 72 घंटा के भीतर PMFBY क्लेम दर्ज कराए बर मदद करथे। सैटेलाइट NDVI रिपोर्ट ले क्लेम जल्दी पास हो जाथे।'
             : language === 'hindi'
-            ? 'फसल क्षति होने पर आप 72 घंटे के भीतर PMFBY टोल-फ्री 1800-180-1551 या टीवीएस रिलेशनशिप मैनेजर द्वारा क्लेम दर्ज करा सकते हैं। हमारी सैटेलाइट NDVI रिपोर्ट क्लेम निपटारे में त्वरित मदद करती है।'
+            ? 'फसल क्षति होने पर आप 72 घंटे के भीतर PMFBY टोल-फ्री 1800-180-1551 या जियोकिसान रिलेशनशिप मैनेजर द्वारा क्लेम दर्ज करा सकते हैं। हमारी सैटेलाइट NDVI रिपोर्ट क्लेम निपटारे में त्वरित मदद करती है।'
             : language === 'tamil'
-            ? 'பயிர் சேதம் ஏற்பட்டால் 72 மணி நேரத்திற்குள் PMFBY இலவச உதவி எண் 1800-180-1551 அல்லது TVS கடன் அதிகாரி மூலம் காப்பீட்டுக் கோரிக்கையை பதிவு செய்யலாம்.'
-            : 'In case of crop loss, TVS Credit helps you lodge a PMFBY insurance claim within 72 hours. Our Sentinel-2 satellite NDVI data serves as verified evidence for accelerated insurance disbursement.';
+            ? 'பயிர் சேதம் ஏற்பட்டால் 72 மணி நேரத்திற்குள் PMFBY இலவச உதவி எண் 1800-180-1551 அல்லது GeoKisaan கடன் அதிகாரி மூலம் காப்பீட்டுக் கோரிக்கையை பதிவு செய்யலாம்.'
+            : 'In case of crop loss, GeoKisaan helps you lodge a PMFBY insurance claim within 72 hours. Our Sentinel-2 satellite NDVI data serves as verified evidence for accelerated insurance disbursement.';
       } else if (lowerText.includes('drought') || textToSend.includes('सूखा') || textToSend.includes('बारिश') || textToSend.includes('पानी') || lowerText.includes('rain') || textToSend.includes('வறட்சி')) {
         fallback =
           language === 'chhattisgarhi'
-            ? 'अगर कम पानी गिरे या सूखा परे ले फसल कमजोर हो जाथे, त टीवीएस क्रेडिट के ईडब्ल्यूएस तंत्र अपने आप तुंहर किस्त ला 60 दिन बर आगे बढ़ा देथे। कोनो पेनल्टी नई लगही।'
+            ? 'अगर कम पानी गिरे या सूखा परे ले फसल कमजोर हो जाथे, त जियोकिसान के ईडब्ल्यूएस तंत्र अपने आप तुंहर किस्त ला 60 दिन बर आगे बढ़ा देथे। कोनो पेनल्टी नई लगही।'
             : language === 'hindi'
-            ? 'यदि कम बारिश या सूखे के कारण फसल तनाव में आती है, तो टीवीएस क्रेडिट का EWS सिस्टम स्वतः 60-दिन की ईएमआई राहत और पुनर्गठन सुविधा प्रदान करता है।'
+            ? 'यदि कम बारिश या सूखे के कारण फसल तनाव में आती है, तो जियोकिसान का EWS सिस्टम स्वतः 60-दिन की ईएमआई राहत और पुनर्गठन सुविधा प्रदान करता है।'
             : language === 'tamil'
-            ? 'மழைப்பொழிவு பற்றாக்குறை அல்லது வறட்சி ஏற்பட்டால், TVS கிரெடிட்டின் EWS அமைப்பு தானாகவே 60 நாட்கள் EMI ஒத்திவைப்பு மற்றும் மறுசீரமைப்பு சலுகையை வழங்குகிறது.'
-            : 'If drought or low rainfall impacts your yield, TVS Credit Early Warning System automatically activates a 60-day EMI restructuring and moratorium buffer.';
+            ? 'மழைப்பொழிவு பற்றாக்குறை அல்லது வறட்சி ஏற்பட்டால், GeoKisaan அமைப்பின் EWS தானாகவே 60 நாட்கள் EMI ஒத்திவைப்பு மற்றும் மறுசீரமைப்பு சலுகையை வழங்குகிறது.'
+            : 'If drought or low rainfall impacts your yield, GeoKisaan Early Warning System automatically activates a 60-day EMI restructuring and moratorium buffer.';
       } else {
         fallback =
           language === 'chhattisgarhi'
-            ? 'जय जोहार संगवारी! तुंहर ₹550,000 के लोन आवेदन टीवीएस सैटेलाइट तंत्र ले सुरक्षित हे। रायपुर खसरा 142/1 म खेत के हरियाली बहुत बढ़िया हे!'
+            ? 'जय जोहार संगवारी! तुंहर ₹550,000 के लोन आवेदन जियोकिसान सैटेलाइट तंत्र ले सुरक्षित हे। रायपुर खसरा 142/1 म खेत के हरियाली बहुत बढ़िया हे!'
             : language === 'hindi'
-            ? 'नमस्ते राजेश जी! आपका ₹5,50,000 का ऋण आवेदन टीवीएस क्रेडिट सैटेलाइट जांच द्वारा सत्यापित है। रायपुर खसरा 142/1 में फसल स्वास्थ्य उत्तम है।'
+            ? 'नमस्ते राजेश जी! आपका ₹5,50,000 का ऋण आवेदन जियोकिसान सैटेलाइट जांच द्वारा सत्यापित है। रायपुर खसरा 142/1 में फसल स्वास्थ्य उत्तम है।'
             : language === 'tamil'
-            ? 'வணக்கம் ராஜேஷ்! TVS செயற்கைக்கோள் ஆய்வு மூலம் உங்கள் ₹5,50,000 கடன் அனுமதி பாதுகாப்பானது. ராய்ப்பூர் புல எண் 142/1-ல் நிலத்தின் பசுமை குறியீடு (NDVI: 0.68) சிறப்பான நிலையில் உள்ளது.'
+            ? 'வணக்கம் ராஜேஷ்! GeoKisaan செயற்கைக்கோள் ஆய்வு மூலம் உங்கள் ₹5,50,000 கடன் அனுமதி பாதுகாப்பானது. ராய்ப்பூர் புல எண் 142/1-ல் நிலத்தின் பசுமை குறியீடு (NDVI: 0.68) சிறப்பான நிலையில் உள்ளது.'
             : 'Hello Rajesh! Your ₹550,000 tractor loan application is validated via Sentinel-2 orbital telemetry. Plot 142/1 in Raipur shows healthy crop vigor (NDVI: 0.68).';
       }
 
@@ -328,7 +328,7 @@ export const KrishiSaathiSection: React.FC = () => {
           id: `asst-${Date.now()}`,
           sender: 'assistant',
           text: fallback,
-          sourceDoc: 'TVS Credit RAG Knowledge Base',
+          sourceDoc: 'GeoKisaan RAG Knowledge Base',
           time: replyTime,
           iconType: 'sparkles',
         },
@@ -384,7 +384,7 @@ export const KrishiSaathiSection: React.FC = () => {
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"
             style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}
           >
-            TVS Krishi Saathi Voice Assistant
+            GeoKisaan Krishi Saathi Voice Assistant
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-700 max-w-2xl leading-relaxed">
             Grounded RAG conversational assistant answering rural farmers in their native tongue: Hindi, Chhattisgarhi, Tamil, and English.
@@ -402,7 +402,7 @@ export const KrishiSaathiSection: React.FC = () => {
               </div>
               <div>
                 <h3 className="font-bold text-base text-[#0B2545] tracking-tight">
-                  TVS Krishi Saathi AI
+                  GeoKisaan Krishi Saathi AI
                 </h3>
                 <div className="flex items-center gap-1.5 mt-0.5 text-xs font-semibold">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
@@ -472,7 +472,7 @@ export const KrishiSaathiSection: React.FC = () => {
                   <span className="w-1 h-4 bg-cyan-300 rounded-full animate-bounce [animation-delay:-0.1s]" />
                 </div>
                 <span className="text-xs font-semibold tracking-tight text-white flex items-center gap-1.5">
-                  TVS Voice Speaking ({language === 'tamil' ? 'Pallavi Neural' : language === 'english' ? 'Neerja Neural' : 'Swara Neural'})
+                  GeoKisaan Voice Speaking ({language === 'tamil' ? 'Pallavi Neural' : language === 'english' ? 'Neerja Neural' : 'Swara Neural'})
                 </span>
               </div>
               <button
@@ -567,7 +567,7 @@ export const KrishiSaathiSection: React.FC = () => {
                   <Sparkles size={16} className="animate-spin" />
                 </div>
                 <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs text-xs text-slate-500 italic">
-                  TVS Krishi Saathi is retrieving policy documents in {language}...
+                  GeoKisaan Krishi Saathi is retrieving policy documents in {language}...
                 </div>
               </div>
             )}

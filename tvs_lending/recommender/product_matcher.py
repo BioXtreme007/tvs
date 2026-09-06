@@ -1,6 +1,6 @@
 """
-TVS Loan Product Recommender Engine
-Matches borrower land profile, credit tier, and cashflow needs to the optimal TVS Credit lending product.
+GeoKisaan Loan Product Recommender Engine
+Matches borrower land profile, credit tier, and cashflow needs to the optimal GeoKisaan lending product.
 """
 
 from typing import Dict, Any, List
@@ -14,12 +14,12 @@ import config
 
 class ProductMatcher:
     """
-    Recommends optimal loan products from TVS Credit's portfolio:
-    - TVS New Tractor Loan
-    - TVS Used Tractor Loan
-    - TVS Kisan Two-Wheeler Loan
-    - TVS Farm Harvester & Agri-Implement Loan
-    - TVS Krishi Seasonal Input Line of Credit
+    Recommends optimal loan products from GeoKisaan's portfolio:
+    - GeoKisaan New Tractor Loan
+    - GeoKisaan Used Tractor Loan
+    - GeoKisaan Kisan Rural Two-Wheeler Loan
+    - GeoKisaan Farm Harvester & Implement Loan
+    - GeoKisaan Krishi Seasonal Input Line of Credit
     """
 
     def __init__(self):

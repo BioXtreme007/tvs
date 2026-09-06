@@ -3,7 +3,7 @@ import PrecisionSection, { PrecisionPillar } from './PrecisionSection';
 import InnovationPillars from './InnovationPillars';
 import { ArrowLeft, CheckCircle2, Sparkles, Layers, Eye } from 'lucide-react';
 
-const TVS_AGRI_PILLARS: PrecisionPillar[] = [
+const GEOKISAAN_AGRI_PILLARS: PrecisionPillar[] = [
   {
     label: 'Inpaints',
     items: ['Sentinel-2 radar', 'CloudGap-CG', '10m optical', 'Kharif canopy'],
@@ -74,7 +74,7 @@ export const PrecisionSectionPreview: React.FC<PrecisionSectionPreviewProps> = (
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <CheckCircle2 size={14} className="text-emerald-600" /> TVS Credit Wired (Consistent Bg)
+              <CheckCircle2 size={14} className="text-emerald-600" /> GeoKisaan Wired (Consistent Bg)
             </button>
             <button
               onClick={() => setActiveTab('compare')}
@@ -133,7 +133,7 @@ export const PrecisionSectionPreview: React.FC<PrecisionSectionPreviewProps> = (
             <div className="mb-4 flex items-center justify-between">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-                  Option A · TVS Credit Smart Lending (Consistent with #BAB2B0 Canvas)
+                  Option A · GeoKisaan Smart Lending (Consistent with #BAB2B0 Canvas)
                 </span>
                 <h3 className="text-xl font-bold text-[#0B2545] mt-1">
                   Precision Staircase Wired to Autonomous Agri-Underwriting
@@ -143,11 +143,11 @@ export const PrecisionSectionPreview: React.FC<PrecisionSectionPreviewProps> = (
 
             <div className="rounded-3xl overflow-hidden border border-[#192837]/15 shadow-xl bg-[#BAB2B0]">
               <PrecisionSection
-                badgeText="TVS Credit E.P.I.C 8 · Multimodal Precision Architecture"
+                badgeText="GeoKisaan E.P.I.C 8 · Multimodal Precision Architecture"
                 headingLine1="One integrated underwriting engine."
                 headingLine2="Compounding agri-credit precision."
                 subtitle="Satellite radar, land registry cadastrals, and 6 autonomous deliberation agents aligned to harvest liquidity."
-                pillars={TVS_AGRI_PILLARS}
+                pillars={GEOKISAAN_AGRI_PILLARS}
                 backgroundImage=""
                 backgroundColor="#BAB2B0"
                 headingColor="#0B2545"

@@ -47,7 +47,7 @@ export default function App() {
     api('/health', { signal: controller.signal }).then(() => setHealth('online')).catch(() => { if (!controller.signal.aborted) setHealth('offline'); });
     return () => { window.removeEventListener('hashchange', changed); controller.abort(); };
   }, []);
-  useEffect(() => { document.title = titles[route] + ' · TVS Credit'; contentRef.current?.focus(); }, [route]);
+  useEffect(() => { document.title = titles[route] + ' · GeoKisaan'; contentRef.current?.focus(); }, [route]);
   const [assistantVoice, setAssistantVoice] = useState(false);
   const openAssistant = (query = '', voiceMode = false) => {
     opener.current = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null;
@@ -121,7 +121,7 @@ export default function App() {
     <a className="skip-link" href="#main-content" onClick={e => { e.preventDefault(); contentRef.current?.focus(); }}>Skip to content</a>
     {mobile && <button className="nav-scrim" aria-label="Close navigation" onClick={() => setMobile(false)} />}
     <aside className={'sidebar ' + (mobile ? 'is-open' : '')} aria-label="Main navigation">
-      <a href="#overview" className="brand" onClick={() => setMobile(false)}><span className="brand-mark"><Sprout size={24} /></span><span><b>TVS <em>Credit</em></b><small>SMART LENDING HUB</small></span></a>
+      <a href="#overview" className="brand" onClick={() => setMobile(false)}><span className="brand-mark"><Sprout size={24} /></span><span><b>Geo<em>Kisaan</em></b><small>SMART LENDING HUB</small></span></a>
       <div className="workspace-switch"><span className="branch-icon"><Leaf size={17} /></span><span><b>Agricultural lending</b><small>Chhattisgarh workspace</small></span><ChevronRight size={15} /></div>
       <p className="nav-label">WORKSPACE</p>
       <nav>{navigation.map(item => <a key={item.id} href={'#' + item.id} onClick={() => { setMobile(false); setAssistantOpen(false); }} className={'nav-item ' + (route === item.id ? 'active' : '')} aria-current={route === item.id ? 'page' : undefined}><item.icon size={19} /><span>{item.label}</span>{item.id === 'krishi-saathi' && <span className="tiny-tag">AI</span>}</a>)}</nav>
@@ -131,13 +131,13 @@ export default function App() {
       <button className="nav-item" onClick={() => openAssistant('What can I do in the Smart Lending Hub?')}><CircleHelp size={19} />Help & guidance</button>
       <div className="sidebar-bottom">
         <div className="assistant-teaser"><span className="teaser-icon"><Sparkles size={18} /></span><b>A little clarity goes a long way.</b><p>Understand loan decisions in your own language.</p><button onClick={() => openAssistant()}>Ask Krishi Saathi <ArrowUpRight size={15} /></button></div>
-        <button className="profile" onClick={() => user ? signOut() : navigate('signin')}><span className="avatar">{user?.name?.slice(0, 2).toUpperCase() || 'TV'}</span><span><b>{user?.name || 'Guest workspace'}</b><small>{user ? 'Sign out' : 'Sign in to your account'}</small></span>{user ? <LogOut size={16} /> : <ChevronRight size={16} />}</button>
+        <button className="profile" onClick={() => user ? signOut() : navigate('signin')}><span className="avatar">{user?.name?.slice(0, 2).toUpperCase() || 'GK'}</span><span><b>{user?.name || 'Guest workspace'}</b><small>{user ? 'Sign out' : 'Sign in to your account'}</small></span>{user ? <LogOut size={16} /> : <ChevronRight size={16} />}</button>
       </div>
     </aside>
     <div className="workspace-body">
       <header className="topbar">
         <div className="breadcrumbs"><button id="menu-toggle" className="icon-button mobile-toggle" aria-label="Open navigation" aria-expanded={mobile} onClick={() => setMobile(!mobile)}><SidebarToggleIcon isOpen={mobile} className="w-5 h-5 text-slate-700" /></button><span>Workspace</span><ChevronRight size={14} /><b>{navigation.find(n => n.id === route)?.label || titles[route]}</b></div>
-        <div className="topbar-actions"><span className={'connection ' + health}><i />{health === 'online' ? 'API connected' : health === 'checking' ? 'Checking service' : 'API unavailable'}</span><button className="icon-button" title="Early warnings" aria-label="View early warnings" onClick={() => navigate('ews')}><Bell size={19} /></button><button className="avatar small" aria-label={user ? 'Account: ' + user.name : 'Sign in'} onClick={() => navigate('signin')}>{user?.name?.slice(0, 2).toUpperCase() || 'TV'}</button></div>
+        <div className="topbar-actions"><span className={'connection ' + health}><i />{health === 'online' ? 'API connected' : health === 'checking' ? 'Checking service' : 'API unavailable'}</span><button className="icon-button" title="Early warnings" aria-label="View early warnings" onClick={() => navigate('ews')}><Bell size={19} /></button><button className="avatar small" aria-label={user ? 'Account: ' + user.name : 'Sign in'} onClick={() => navigate('signin')}>{user?.name?.slice(0, 2).toUpperCase() || 'GK'}</button></div>
       </header>
       <main id="main-content" ref={contentRef} tabIndex={-1} className="main-content">
         <div className="page-heading"><div><div className="eyebrow">AGRICULTURE / CREDIT INTELLIGENCE</div><h1>{titles[route]}</h1><p>{route === 'overview' ? 'A clearer picture of your portfolio. A better next decision.' : route === 'underwriting' ? 'Bring borrower, land and financial details into one assessment.' : route === 'krishi-saathi' ? 'Make sense of lending, repayment and crop health.' : 'Connected insights for thoughtful agricultural lending.'}</p></div>{route !== 'underwriting' && route !== 'signin' && <button className="button primary" onClick={() => navigate('underwriting')}><Plus size={17} />New assessment</button>}</div>
@@ -150,7 +150,7 @@ export default function App() {
         {route === 'farmer' && <FarmerView context={context} ask={openAssistant} navigate={navigate} />}
         {route === 'signin' && <SignIn onSuccess={u => { setContext(null); setUser(u); window.dispatchEvent(new Event('tvs-auth-change')); navigate('overview'); }} />}
         <div hidden={route !== 'krishi-saathi'} className="assistant-page-placeholder"><div className="panel assistant-intro"><Sparkles size={30} /><h2>One conversation. More clarity.</h2><p>Your conversation stays available as you move through the workspace. Open your assistant to continue.</p><button className="button primary" onClick={() => openAssistant()}>Open Krishi Saathi <ArrowUpRight size={17} /></button><div className="feature-chips"><span>8 languages</span><span>Voice input</span><span>Assessment context</span></div></div></div>
-        <footer className="workspace-footer"><span><Sprout size={14} /> TVS Credit · Smart Lending Hub</span><span>Built around the people behind every loan.</span></footer>
+        <footer className="workspace-footer"><span><Sprout size={14} /> GeoKisaan · Smart Lending Hub</span><span>Built around the people behind every loan.</span></footer>
       </main>
     </div>
     {!assistantOpen && <button id="saathi-launcher" className="assistant-launcher" onClick={() => openAssistant()} aria-label="Open Krishi Saathi assistant"><Sparkles size={19} /><span>Ask Saathi</span></button>}

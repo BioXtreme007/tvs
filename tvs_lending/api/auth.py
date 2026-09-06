@@ -21,6 +21,8 @@ OFFICER_ROLES = {
     "Risk Operations Officer",
     "Risk Operations",
     "Field Agronomist",
+    "GeoKisaan Tractor Dealer",
+    "GeoKisaan Dealer",
     "TVS Tractor Dealer",
     "TVS Dealer",
     "Admin",
@@ -107,7 +109,7 @@ def register_user(
 
     return {
         "success": True,
-        "message": f"Welcome aboard, {name}! Your TVS Credit account has been provisioned as {assigned_role}.",
+        "message": f"Welcome aboard, {name}! Your GeoKisaan account has been provisioned as {assigned_role}.",
         "token": session_token,
         "user": {
             "user_id": user_id,
@@ -153,7 +155,7 @@ def authenticate_user(
         if not user_row["is_active"]:
             return {
                 "success": False,
-                "message": "This account is inactive. Please contact your TVS Credit branch administrator.",
+                "message": "This account is inactive. Please contact your GeoKisaan branch administrator.",
                 "token": None,
                 "user": None,
             }

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck, CloudRain, Sprout,
   ChevronLeft,
@@ -61,7 +61,7 @@ const scenarios: FieldScenario[] = [
     cloudCoverage: '42% (CloudGap Inpainted 99.4%)',
     keyFeature: 'Zero physical patwari inspection required. Verified via Sentinel-2 orbital pass.',
     summary:
-      'Healthy vegetative vigor and verified Bhuvan land boundaries qualify for TVS Harvest EMI with 118-second autonomous sanction.',
+      'Healthy vegetative vigor and verified Bhuvan land boundaries qualify for GeoKisaan Harvest EMI with 118-second autonomous sanction.',
   },
   {
     id: 'sukhram-bastar',
@@ -107,7 +107,7 @@ const scenarios: FieldScenario[] = [
     sowingEmi: '₹2,100 / mo',
     harvestEmi: 'Dual Harvest Bullet (Nov + Apr)',
     cloudCoverage: '15% Clear Sky',
-    keyFeature: 'Eligible for TVS Farm Implement Harvester add-on with 0% extra processing fee.',
+    keyFeature: 'Eligible for GeoKisaan Farm Implement Harvester add-on with 0% extra processing fee.',
     summary:
       'Topsoil organic carbon (0.72%) and canal perennial irrigation back highest credit tier with dual Kharif/Rabi harvest alignments.',
   },
@@ -131,7 +131,7 @@ const scenarios: FieldScenario[] = [
     sowingEmi: 'N/A',
     harvestEmi: 'N/A',
     cloudCoverage: '0% Clear Optical',
-    keyFeature: 'Two-Tier H3 Hexagonal Grid detected duplicate polygon overlap with active TVS borrower.',
+    keyFeature: 'Two-Tier H3 Hexagonal Grid detected duplicate polygon overlap with active GeoKisaan borrower.',
     summary:
       'Synthetic fraud attempt caught immediately by Bhuvan H3 cadastral overlap verification and NDVI barren index (0.14 vs required 0.40).',
   },

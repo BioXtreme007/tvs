@@ -48,7 +48,7 @@ export const Hero: React.FC = () => {
           style={{ color: 'var(--color-text)' }}
         >
           <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
-          TVS Credit E.P.I.C 8 · Multimodal Agri-Credit Decision Engine
+          GeoKisaan E.P.I.C 8 · Multimodal Agri-Credit Decision Engine
         </motion.div>
 
         {/* Heading (<h1>) */}

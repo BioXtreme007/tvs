@@ -58,7 +58,7 @@ from tvs_lending.agents.orchestrator import DualTrackOrchestrator
 from tvs_lending.db.database import get_db_connection
 
 app = FastAPI(
-    title="TVS Credit AI-Powered Smart Lending Decision Hub API",
+    title="GeoKisaan Smart Lending Decision Hub API",
     description="Unified AI Platform for Agricultural Lending, Satellite Underwriting & Risk Monitoring",
     version="2.0.0",
 )
@@ -184,7 +184,7 @@ def health_check():
 
     return {
         "status": "HEALTHY" if db_status == "HEALTHY" else "DEGRADED",
-        "service": "TVS Credit Smart Lending Decision Hub",
+        "service": "GeoKisaan Smart Lending Decision Hub",
         "version": "2.0.0",
         "execution_mode": "DEMO" if DEMO_MODE else "PRODUCTION",
         "policy_version": "2026.Q3",
@@ -201,7 +201,7 @@ def health_check():
 @app.post("/api/v1/auth/signup", response_model=AuthResponse)
 def auth_signup(req: SignUpRequest, request: Request):
     """
-    100% Free, Institutional Account Creation for TVS Credit Smart Lending Hub.
+    100% Free, Institutional Account Creation for GeoKisaan Smart Lending Hub.
     """
     ip = request.client.host if request.client else None
     ua = request.headers.get("user-agent")
@@ -276,7 +276,7 @@ def underwrite_loan_application(
     6. Composite Agri-Credit Scoring (300-900)
     7. Default Prediction (PD) with P10/P50/P90 Quantile Bounds
     8. SHAP Explainable AI (XAI) Attributions
-    9. TVS Product Recommendation & Seasonally-Aligned Harvest EMI Schedule
+    9. GeoKisaan Product Recommendation & Seasonally-Aligned Harvest EMI Schedule
     10. Durable Storage in Applications & Application History Tables
     """
     # 0. Geographic polygon validation
@@ -513,7 +513,7 @@ def underwrite_loan_application(
         "tier": score_res["tier"],
         "decision": verdict_decision,
         "gate_reason": gate_reason,
-        "recommended_product": chosen_product["product_name"] if chosen_product else "TVS Agri Loan",
+        "recommended_product": chosen_product["product_name"] if chosen_product else "GeoKisaan Agri Loan",
         "sanctioned_amount_inr": sanctioned_amount,
         "risk_adjusted_roi_pct": pricing_res["final_risk_adjusted_roi_pct"] if sanctioned_amount > 0 else 0.0,
         "max_ltv_pct": pricing_res["final_risk_adjusted_ltv_pct"] if sanctioned_amount > 0 else 0.0,

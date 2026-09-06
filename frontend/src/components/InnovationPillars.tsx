@@ -61,7 +61,7 @@ export const InnovationPillars: React.FC = () => {
         <div className="flex flex-col items-center text-center mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-xs font-semibold mb-2.5">
             <Sparkles size={13} className="text-[#0B2545]" />
-            <span>Architectural Innovations for TVS Credit</span>
+            <span>Architectural Innovations for GeoKisaan</span>
           </div>
           <h2
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"

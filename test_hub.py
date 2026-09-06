@@ -44,7 +44,7 @@ def test_v3_backend_suites():
         "applicant_name": "Rameshwar Sahu",
         "agri_credit_score": 740,
         "underwriting_decision": "FAST_TRACK_APPROVE",
-        "recommended_product": "TVS New 45HP Tractor Loan",
+        "recommended_product": "GeoKisaan New 45HP Tractor Loan",
         "max_sanction_amount_inr": 580000,
         "interest_rate_pct": 10.5,
         "satellite_ndvi": 0.71,
@@ -62,7 +62,7 @@ def test_v3_backend_suites():
     assert isinstance(en_res["grounding_evidence"], list) and len(en_res["grounding_evidence"]) > 0
     assert len(en_res["suggested_follow_ups"]) == 3
     assert en_res["hallucination_risk"] == "MINIMAL"
-    assert "580,000" in en_res["response"] or "TVS" in en_res["response"]
+    assert "580,000" in en_res["response"] or "GeoKisaan" in en_res["response"] or "TVS" in en_res["response"]
     print("  [OK] Dynamic English RAG query answered cleanly with verified grounding evidence.")
 
     # Free-form Hindi query
@@ -94,7 +94,7 @@ def test_v3_backend_suites():
         borrower_context=ctx,
         language="TAMIL",
     )
-    assert "TVS" in ta_res["response"]
+    assert "GeoKisaan" in ta_res["response"] or "TVS" in ta_res["response"]
     assert ta_res["language"] == "TAMIL"
     assert ta_res["grounding_confidence_score"] >= 0.85
     assert len(ta_res["suggested_follow_ups"]) == 3
@@ -127,7 +127,7 @@ def test_v3_backend_suites():
     )
     assert ood_res["intent"] == "OUT_OF_DOMAIN_REDIRECT"
     assert ood_res["grounded"] is False
-    assert "TVS" in ood_res["response"]
+    assert "GeoKisaan" in ood_res["response"] or "TVS" in ood_res["response"]
     print("  [OK] Out-of-domain query safely intercepted and redirected.")
 
     # Adversarial Guardrail: Prompt Injection Defense
@@ -143,7 +143,7 @@ def test_v3_backend_suites():
     # Multi-turn conversational memory & co-reference resolution
     s_id = "test_conv_turn_1"
     t1 = assistant.answer_query(
-        user_message="Tell me about TVS Tractor Loan",
+        user_message="Tell me about GeoKisaan Tractor Loan",
         borrower_context=ctx,
         language="ENGLISH",
         session_id=s_id,

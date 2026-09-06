@@ -44,7 +44,7 @@ interface ApplicationRow {
 
 const RECENT_APPLICATIONS: ApplicationRow[] = [
   {
-    id: 'TVS-2026-0891',
+    id: 'GK-2026-0891',
     borrower: 'Rajeshwar Sahu',
     village: 'Abhanpur, Raipur',
     acres: 4.5,
@@ -56,7 +56,7 @@ const RECENT_APPLICATIONS: ApplicationRow[] = [
     time: '12 mins ago',
   },
   {
-    id: 'TVS-2026-0890',
+    id: 'GK-2026-0890',
     borrower: 'Sukhram Markam',
     village: 'Tokapal, Bastar',
     acres: 3.2,
@@ -68,7 +68,7 @@ const RECENT_APPLICATIONS: ApplicationRow[] = [
     time: '38 mins ago',
   },
   {
-    id: 'TVS-2026-0889',
+    id: 'GK-2026-0889',
     borrower: 'Kavita Patel',
     village: 'Kota, Bilaspur',
     acres: 6.0,
@@ -80,7 +80,7 @@ const RECENT_APPLICATIONS: ApplicationRow[] = [
     time: '1 hour ago',
   },
   {
-    id: 'TVS-2026-0888',
+    id: 'GK-2026-0888',
     borrower: 'Durg Duplicate Claim',
     village: 'Patan, Durg',
     acres: 5.5,
@@ -92,7 +92,7 @@ const RECENT_APPLICATIONS: ApplicationRow[] = [
     time: '2 hours ago',
   },
   {
-    id: 'TVS-2026-0887',
+    id: 'GK-2026-0887',
     borrower: 'Manohar Lal Verma',
     village: 'Arang, Raipur',
     acres: 2.8,
@@ -219,15 +219,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <SidebarToggleIcon isOpen={!sidebarCollapsed} className="w-5 h-5 text-slate-700" />
           </button>
 
-          {/* TVS Credit Brand */}
+          {/* GeoKisaan Brand */}
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-[#0B2545] flex items-center justify-center text-white font-black text-sm shadow-xs">
-              TVS
+              GK
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-[#0B2545] text-base sm:text-lg tracking-tight">
-                  TVS Credit
+                  GeoKisaan
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#7342E2] text-white">
                   Admin Cockpit

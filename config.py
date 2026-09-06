@@ -15,10 +15,10 @@ MODELS_DIR = HUB_ROOT / "models_cache"
 for d in [DATA_DIR, OUTPUTS_DIR, MODELS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
-# TVS Loan Products
-TVS_LOAN_PRODUCTS = {
+# GeoKisaan Loan Products
+GEOKISAAN_LOAN_PRODUCTS = {
     "TRACTOR_NEW": {
-        "name": "TVS New Tractor Loan",
+        "name": "GeoKisaan New Tractor Loan",
         "min_amount": 250000,
         "max_amount": 1200000,
         "base_roi": 11.5,
@@ -27,7 +27,7 @@ TVS_LOAN_PRODUCTS = {
         "min_land_acres": 3.0,
     },
     "TRACTOR_USED": {
-        "name": "TVS Used Tractor Loan",
+        "name": "GeoKisaan Used Tractor Loan",
         "min_amount": 100000,
         "max_amount": 600000,
         "base_roi": 13.5,
@@ -36,7 +36,7 @@ TVS_LOAN_PRODUCTS = {
         "min_land_acres": 2.0,
     },
     "KISAN_TWO_WHEELER": {
-        "name": "TVS Kisan Rural Two-Wheeler Loan",
+        "name": "GeoKisaan Kisan Rural Two-Wheeler Loan",
         "min_amount": 35000,
         "max_amount": 140000,
         "base_roi": 14.0,
@@ -45,7 +45,7 @@ TVS_LOAN_PRODUCTS = {
         "min_land_acres": 0.5,
     },
     "AGRI_EQUIPMENT": {
-        "name": "TVS Farm Harvester & Implement Loan",
+        "name": "GeoKisaan Farm Harvester & Implement Loan",
         "min_amount": 80000,
         "max_amount": 800000,
         "base_roi": 12.5,
@@ -54,7 +54,7 @@ TVS_LOAN_PRODUCTS = {
         "min_land_acres": 2.5,
     },
     "CROP_INPUT_CREDIT": {
-        "name": "TVS Krishi Seasonal Input Line of Credit",
+        "name": "GeoKisaan Krishi Seasonal Input Line of Credit",
         "min_amount": 20000,
         "max_amount": 300000,
         "base_roi": 10.5,
@@ -63,6 +63,7 @@ TVS_LOAN_PRODUCTS = {
         "min_land_acres": 1.0,
     },
 }
+TVS_LOAN_PRODUCTS = GEOKISAAN_LOAN_PRODUCTS
 
 # Crop Harvest Schedules in India (Month numbers 1-12)
 CROP_CALENDARS = {

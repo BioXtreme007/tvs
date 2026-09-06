@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
               {/* Eyebrow badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100/90 border border-slate-200/80 text-[11px] font-semibold tracking-wider uppercase text-slate-600 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>TVS Credit E.P.I.C 8 · Hackathon Innovation</span>
+                <span>GeoKisaan E.P.I.C 8 · Hackathon Innovation</span>
               </div>
 
               {/* Main Heading with Classic Cool Standout Professional Font */}
@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
 
               {/* Project description aligned to hackathon with relaxed, breathable line height */}
               <p className="text-slate-600/90 text-sm sm:text-base leading-[1.85] max-w-xl font-normal tracking-normal">
-                Engineered for TVS Credit E.P.I.C 8. Uniting Sentinel-2 10m multispectral satellite remote sensing,
+                Engineered for GeoKisaan E.P.I.C 8. Uniting Sentinel-2 10m multispectral satellite remote sensing,
                 CloudGap-CG monsoon inpainting, Two-Tier cadastral anti-fraud defense, and grounded vernacular
                 voice AI for rural India&apos;s next-generation agricultural lending.
               </p>
@@ -70,7 +70,7 @@ export const Footer: React.FC = () => {
               {/* Contact Us button routing to sudheesh.singh02@gmail.com */}
               <div className="flex flex-wrap items-center gap-4 pt-3 sm:pt-4">
                 <a
-                  href="mailto:sudheesh.singh02@gmail.com?subject=TVS%20Credit%20EPIC%208%20-%20Team%20BioXtreme%20Inquiry"
+                  href="mailto:sudheesh.singh02@gmail.com?subject=GeoKisaan%20EPIC%208%20-%20Team%20BioXtreme%20Inquiry"
                   className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-[#0B2545] text-white hover:bg-[#133863] text-sm font-semibold transition-all duration-200 shadow-md hover:shadow-xl hover:-translate-y-0.5 cursor-pointer"
                   aria-label="Contact Team BioXtreme"
                 >
@@ -97,7 +97,7 @@ export const Footer: React.FC = () => {
 
         {/* ===================================================================
             LOWER 4-COLUMN FOOTER NAVIGATION & NEWSLETTER
-            Structured exactly like the reference design, aligned to TVS Credit & BioXtreme
+            Structured exactly like the reference design, aligned to GeoKisaan & BioXtreme
             =================================================================== */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pt-4">
           {/* Column 1: Brand & BioXtreme Attestation (Cols 1-4) */}
@@ -105,7 +105,7 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-2.5">
               <Logo />
               <span className="font-extrabold text-base tracking-tight text-[#0B2545]">
-                TVS Credit
+                GeoKisaan
               </span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#0B2545] text-white">
                 E.P.I.C 8
@@ -234,7 +234,7 @@ export const Footer: React.FC = () => {
             =================================================================== */}
         <div className="pt-8 border-t border-[#192837]/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
           <div>
-            © 2026 TVS Credit Services Ltd · Built by Team BioXtreme. All rights reserved.
+            © 2026 GeoKisaan Services Ltd · Built by Team BioXtreme. All rights reserved.
           </div>
           <div className="flex items-center gap-5 text-slate-500 font-medium">
             <span className="hover:text-slate-900 cursor-pointer">RBI Fair Lending Compliance</span>

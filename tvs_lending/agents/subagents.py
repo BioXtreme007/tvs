@@ -150,7 +150,7 @@ class CreditExplainabilityAgent:
         if shap_features.get("climate_resilience_score", 0) >= 0.70:
             positive_factors.append(f"Secure irrigation catchment with strong 40-year climate resilience ({shap_features.get('climate_resilience_score', 0):.2f}).")
 
-        memo = f"TVS CREDIT UNDERWRITING MEMORANDUM\n"
+        memo = f"GEOKISAAN SMART SANCTION MEMORANDUM\n"
         memo += f"Applicant: {applicant_name} | Agri-Credit Score: {score} ({tier})\n\n"
         memo += "Key Positive Drivers:\n" + "\n".join(f"  + {f}" for f in (positive_factors or ["Sufficient land collateral"])) + "\n\n"
         if negative_factors:

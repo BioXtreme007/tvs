@@ -48,7 +48,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
     if (active.current) return;
     setErrorMessage(null);
 
-    const emailToUse = overrideEmail || (signup ? signUpEmail.trim() : (signInEmail.trim() || 'rajeshwar.sharma@tvscredit.com'));
+    const emailToUse = overrideEmail || (signup ? signUpEmail.trim() : (signInEmail.trim() || 'rajeshwar.sharma@geokisaan.in'));
     const passwordToUse = overridePassword || (signup ? signUpPassword : (signInPassword || 'Underwrite@2026'));
 
     const controller = new AbortController();
@@ -96,6 +96,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
         // Offline / static hosting fallback (e.g. Vercel)
         const lowerEmail = emailToUse.toLowerCase();
         const isCreditTeam =
+          lowerEmail.includes('geokisaan') ||
           lowerEmail.includes('tvscredit') ||
           lowerEmail.includes('credit') ||
           lowerEmail.includes('underwrite') ||
@@ -152,16 +153,16 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
     const lowerName = name.toLowerCase();
 
     const isCreditTeam =
+      lowerEmail.includes('geokisaan') ||
       lowerEmail.includes('tvscredit') ||
       lowerEmail.includes('credit') ||
-      lowerName.includes('credit') ||
-      lowerName.includes('underwrite') ||
-      lowerName.includes('admin') ||
-      lowerName.includes('rajeshwar') ||
-      lowerName.includes('sunil');
+      lowerEmail.includes('underwrite') ||
+      lowerEmail.includes('admin') ||
+      lowerEmail.includes('rajeshwar') ||
+      lowerEmail.includes('sunil');
 
     const safeRole = isCreditTeam ? 'Agri Underwriter' : 'Agri Partner';
-    const safeName = name.trim() || (isCreditTeam ? 'TVS Credit Team (Rajeshwar Sharma)' : 'Agri Partner');
+    const safeName = name.trim() || (isCreditTeam ? 'GeoKisaan Team (Rajeshwar Sharma)' : 'Agri Partner');
 
     const googleUser = {
       user_id: (isCreditTeam ? 'CREDIT-' : 'AGRI-') + Math.random().toString(36).substring(2, 9).toUpperCase(),
@@ -223,7 +224,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
         <div className="flex items-center gap-3">
           <Logo />
           <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#192837] text-white">
-            TVS Credit
+            GeoKisaan
           </span>
           <span className="hidden sm:inline-block text-xs font-semibold text-slate-500">
             E.P.I.C 8 Decision Hub
@@ -403,7 +404,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
                 Create Account
               </h1>
               <p className="text-[15px] text-[#797979] text-center mt-2 mb-6">
-                <strong className="text-[#2c3343] font-bold">Sign up</strong> to access TVS Credit smart lending tools.
+                <strong className="text-[#2c3343] font-bold">Sign up</strong> to access GeoKisaan smart lending tools.
               </p>
 
               <form onSubmit={handleSignUpSubmit} className="space-y-3.5">
@@ -421,7 +422,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
                   required
                   value={signUpEmail}
                   onChange={(e) => setSignUpEmail(e.target.value)}
-                  placeholder="Work Email (e.g. rajeshwar@tvscredit.com)"
+                  placeholder="Work Email (e.g. rajeshwar@geokisaan.in)"
                   className="w-full h-[50px] px-4 rounded-xl bg-[#fafafa] border border-[#acacae] text-[14.5px] text-[#1e293b] placeholder:text-[#797979] focus:outline-none focus:border-[#283139] focus:bg-white transition-all"
                 />
 
@@ -540,7 +541,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
                 </svg>
                 <div>
                   <h3 className="text-[17px] font-semibold text-slate-900 tracking-tight">Sign in with Google</h3>
-                  <p className="text-xs text-slate-500">to continue to TVS Credit Decision Hub</p>
+                  <p className="text-xs text-slate-500">to continue to GeoKisaan Decision Hub</p>
                 </div>
               </div>
               <button
@@ -605,21 +606,21 @@ export const SignInPage: React.FC<SignInPageProps> = ({ onBack, onSuccess }) => 
                     </svg>
                   </button>
 
-                  {/* Option 3: TVS Credit Corporate Account (Admin) */}
+                  {/* Option 3: GeoKisaan Corporate Account (Admin) */}
                   <button
                     type="button"
-                    onClick={() => completeGoogleAuth('TVS Credit Team', 'credit.desk@tvscredit.com')}
+                    onClick={() => completeGoogleAuth('GeoKisaan Team', 'credit.desk@geokisaan.in')}
                     className="w-full flex items-center gap-3.5 p-3 rounded-xl hover:bg-slate-50 active:bg-slate-100 border border-slate-200 transition-all text-left group cursor-pointer"
                   >
                     <div className="w-9 h-9 rounded-full bg-[#0B2545] text-white font-black flex items-center justify-center text-sm shadow-xs">
-                      T
+                      G
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-black text-slate-900 group-hover:text-indigo-700 truncate">TVS Credit Team</span>
+                        <span className="text-sm font-black text-slate-900 group-hover:text-indigo-700 truncate">GeoKisaan Team</span>
                         <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">Admin</span>
                       </div>
-                      <div className="text-xs text-slate-500 truncate">credit.desk@tvscredit.com · Opens Admin Dashboard</div>
+                      <div className="text-xs text-slate-500 truncate">credit.desk@geokisaan.in · Opens Admin Dashboard</div>
                     </div>
                     <svg className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

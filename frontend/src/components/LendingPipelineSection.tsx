@@ -30,7 +30,7 @@ const pipelineSteps: PipelineStep[] = [
     title: 'Cadastral & Biometric Ingestion',
     subtitle: 'Zero Physical Patwari Verification',
     description:
-      'Farmer provides Aadhaar number and land parcel Khasra 142/1. TVS API instantly queries Bhuvan CG Cadastral Registry and Land Records to verify geofenced boundaries and clear title in real time.',
+      'Farmer provides Aadhaar number and land parcel Khasra 142/1. GeoKisaan API instantly queries Bhuvan CG Cadastral Registry and Land Records to verify geofenced boundaries and clear title in real time.',
     icon: FileCheck,
     badge: 'Instant Ingestion',
     badgeColor: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -81,7 +81,7 @@ const pipelineSteps: PipelineStep[] = [
     title: 'Seasonally-Aligned Sanction & Payout',
     subtitle: 'Harvest-Linked Repayment Architecture',
     description:
-      'Sanction letter is generated instantly with TVS Seasonally-Aligned Harvest EMI schedule: ₹1,500/mo maintenance fee during sowing, and full bullet payment deferred until post-mandi crop liquidation.',
+      'Sanction letter is generated instantly with GeoKisaan Seasonally-Aligned Harvest EMI schedule: ₹1,500/mo maintenance fee during sowing, and full bullet payment deferred until post-mandi crop liquidation.',
     icon: CheckCircle2,
     badge: 'Instant Sanction',
     badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
@@ -90,7 +90,7 @@ const pipelineSteps: PipelineStep[] = [
       { label: 'Sanction Amount', value: '₹5,50,000' },
       { label: 'Total Turnaround', value: '< 3 Minutes' },
     ],
-    highlight: 'Disburses credit directly to TVS tractor dealer with zero farmer cash strain.',
+    highlight: 'Disburses credit directly to authorized tractor dealer with zero farmer cash strain.',
   },
 ];
 
@@ -256,7 +256,7 @@ export const LendingPipelineSection: React.FC = () => {
                 <div className="mt-5 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
                   <span className="flex items-center gap-1">
                     <ShieldCheck size={14} className="text-emerald-600" />
-                    Audited TVS E.P.I.C 8 Model
+                    Audited GeoKisaan E.P.I.C 8 Model
                   </span>
                   <span className="font-mono text-[11px]">SLA &lt; 180s</span>
                 </div>

@@ -40,11 +40,11 @@ def _build_system_instruction(language: str, user_context: Dict[str, Any]) -> st
     
     instruction = (
         f"{base_prompt}\n\n"
-        "VOICE PROTOCOL FOR TVS KRISHI SAATHI (GEMINI LIVE):\n"
-        "1. You are Krishi Saathi, a warm, respectful, practical farm-lending companion for TVS Credit.\n"
+        "VOICE PROTOCOL FOR GEOKISAAN KRISHI SAATHI (GEMINI LIVE):\n"
+        "1. You are Krishi Saathi, a warm, respectful, practical farm-lending companion for GeoKisaan.\n"
         f"2. You are speaking with {user_name}. Default loan reference is {app_id}.\n"
         f"3. Speak naturally, warmly, and concisely in {language}. Keep spoken answers strictly to 2 or 3 short sentences, then ask one helpful question.\n"
-        "4. GROUNDED REALITY & TOOLS: You have direct access to TVS Credit databases and policies via tools:\n"
+        "4. GROUNDED REALITY & TOOLS: You have direct access to GeoKisaan databases and policies via tools:\n"
         "   - get_document_checklist: official required documentation for tractor/crop loans.\n"
         "   - get_authorized_application_status: check live sanction verdict, loan amount, and credit tier.\n"
         "   - get_authorized_repayment_schedule: explain Seasonally-Aligned Harvest EMI (lean maintenance vs harvest bullet).\n"
@@ -244,7 +244,7 @@ async def saathi_live_voice_websocket(
         "provider": "local_fallback",
         "session_id": session_id,
         "language": active_language,
-        "notice": "Operating on TVS high-resiliency local conversational engine.",
+        "notice": "Operating on GeoKisaan high-resiliency local conversational engine.",
     })
 
     audio_pcm_buffer = bytearray()

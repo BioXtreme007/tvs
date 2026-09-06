@@ -1,5 +1,5 @@
 """
-TVS Krishi Saathi: Enterprise Conversational Agentic RAG Assistant
+GeoKisaan Krishi Saathi: Enterprise Conversational Agentic RAG Assistant
 Supports English, Hindi, Chhattisgarhi dialects, and Tamil.
 
 Features:
@@ -16,8 +16,13 @@ import os
 import json
 import re
 import uuid
+import time
 from pathlib import Path
 from typing import Dict, Any, Optional, List, Tuple
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
 from .vernacular_prompts import SYSTEM_PROMPTS
 
 KNOWLEDGE_PATH = (
@@ -442,8 +447,8 @@ class KrishiSaathiAssistant:
         base_prompt = SYSTEM_PROMPTS.get(lang, SYSTEM_PROMPTS["ENGLISH"])
         system_instruction = (
             f"{base_prompt}\n\n"
-            "CRITICAL INSTRUCTIONS FOR TVS KRISHI SAATHI:\n"
-            "1. You are a warm, helpful rural lending expert for TVS Credit. Talk naturally and conversationally.\n"
+            "CRITICAL INSTRUCTIONS FOR GeoKisaan KRISHI SAATHI:\n"
+            "1. You are a warm, helpful rural lending expert for GeoKisaan. Talk naturally and conversationally.\n"
             "2. Whenever discussing loan amounts, interest rates, credit scores, or satellite metrics, extract numbers STRICTLY from <BORROWER_PROFILE>.\n"
             "3. If <BORROWER_PROFILE> is empty or has no active application, DO NOT invent an applicant name, credit score, or loan amount. Politely explain that no application is selected and invite the user to check their eligibility in the Smart Sanction Cockpit.\n"
             "4. Whenever discussing loan products, harvest EMIs, or cloud removal, rely on <VERIFIED_POLICY_KNOWLEDGE>.\n"
@@ -521,7 +526,7 @@ class KrishiSaathiAssistant:
                 "model": os.environ.get("OLLAMA_MODEL", "qwen2.5:1.5b"),
             })
 
-        if not providers:
+        if OpenAI is None or not providers:
             return None
 
         messages = [{"role": "system", "content": system_instruction}]
@@ -572,9 +577,9 @@ class KrishiSaathiAssistant:
 
         if has_pronoun and last_assistant:
             if "two-wheeler" in last_assistant or "bike" in last_assistant or "टू-व्हीलर" in last_assistant:
-                return f"{query} (Context: TVS Kisan Two-Wheeler Loan)"
+                return f"{query} (Context: GeoKisaan Kisan Two-Wheeler Loan)"
             if "tractor" in last_assistant or "ट्रैक्टर" in last_assistant or "டிராக்டர்" in last_assistant:
-                return f"{query} (Context: TVS Tractor Loan)"
+                return f"{query} (Context: GeoKisaan Tractor Loan)"
             if "harvest" in last_assistant or "किस्त" in last_assistant or "emi" in last_assistant or "அறுவடை" in last_assistant:
                 return f"{query} (Context: Seasonally-Aligned Harvest EMI)"
             if "satellite" in last_assistant or "सैटेलाइट" in last_assistant or "செயற்கைக்கோள்" in last_assistant:
@@ -589,15 +594,15 @@ class KrishiSaathiAssistant:
         lang_u = (lang or "ENGLISH").upper()
         prompts = {
             "LOAN_ELIGIBILITY": {
-                "HINDI": ["TVS फसल कटाई (हार्वेस्ट) EMI क्या है?", "लोन के लिए क्या दस्तावेज चाहिए?", "सैटेलाइट से खेत की जांच कैसे होती है?"],
-                "CHHATTISGARHI": ["TVS फसल कटाई किस्त कइसे काम करथे?", "लोन बर का का कागज लगही?", "सैटेलाइट ले खेत के जांच कइसे होथे?"],
-                "TAMIL": ["TVS அறுவடை சீசனல் EMI எவ்வாறு செயல்படுகிறது?", "விவசாய கடனுக்கு தேவையான ஆவணங்கள் என்ன?", "செயற்கைக்கோள் மூலம் நில ஆய்வு எவ்வாறு செய்யப்படுகிறது?"],
-                "TELUGU": ["TVS హార్వెస్ట్ EMI ఎలా పనిచేస్తుంది?", "రుణం కోసం ఏ పత్రాలు కావాలి?", "శాటిలైట్ ద్వారా భూమి తనిఖీ ఎలా జరుగుతుంది?"],
-                "MARATHI": ["TVS हार्वेस्ट ईएमआय कसे काम करते?", "कर्जासाठी कोणती कागदपत्रे लागतात?", "उपग्रहाद्वारे शेताची तपासणी कशी होते?"],
-                "KANNADA": ["TVS ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?", "ಸಾಲಕ್ಕೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?", "ಉಪಗ್ರಹದ ಮೂಲಕ ಜಮೀನು ತಪಾಸಣೆ ಹೇಗೆ ನಡೆಯುತ್ತದೆ?"],
-                "BENGALI": ["TVS হার্ভেস্ট ইএমআই কীভাবে কাজ করে?", "লোনের জন্য কী নথি প্রয়োজন?", "স্যাটেলাইটের মাধ্যমে জমি যাচাই কীভাবে হয়?"],
-                "HINGLISH": ["TVS Harvest EMI kaise kaam karti hai?", "Loan ke liye kya documents chahiye?", "Satellite se khet ki jaanch kaise hoti hai?"],
-                "ENGLISH": ["How does TVS Seasonally-Aligned Harvest EMI work?", "What documents are required for loan approval?", "How does satellite remote sensing verify land?"],
+                "HINDI": ["GeoKisaan फसल कटाई (हार्वेस्ट) EMI क्या है?", "लोन के लिए क्या दस्तावेज चाहिए?", "सैटेलाइट से खेत की जांच कैसे होती है?"],
+                "CHHATTISGARHI": ["GeoKisaan फसल कटाई किस्त कइसे काम करथे?", "लोन बर का का कागज लगही?", "सैटेलाइट ले खेत के जांच कइसे होथे?"],
+                "TAMIL": ["GeoKisaan அறுவடை சீசனல் EMI எவ்வாறு செயல்படுகிறது?", "விவசாய கடனுக்கு தேவையான ஆவணங்கள் என்ன?", "செயற்கைக்கோள் மூலம் நில ஆய்வு எவ்வாறு செய்யப்படுகிறது?"],
+                "TELUGU": ["GeoKisaan హార్వెస్ట్ EMI ఎలా పనిచేస్తుంది?", "రుణం కోసం ఏ పత్రాలు కావాలి?", "శాటిలైట్ ద్వారా భూమి తనిఖీ ఎలా జరుగుతుంది?"],
+                "MARATHI": ["GeoKisaan हार्वेस्ट ईएमआय कसे काम करते?", "कर्जासाठी कोणती कागदपत्रे लागतात?", "उपग्रहाद्वारे शेताची तपासणी कशी होते?"],
+                "KANNADA": ["GeoKisaan ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?", "ಸಾಲಕ್ಕೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?", "ಉಪಗ್ರಹದ ಮೂಲಕ ಜಮೀನು ತಪಾಸಣೆ ಹೇಗೆ ನಡೆಯುತ್ತದೆ?"],
+                "BENGALI": ["GeoKisaan হার্ভেস্ট ইএমআই কীভাবে কাজ করে?", "লোনের জন্য কী নথি প্রয়োজন?", "স্যাটেলাইটের মাধ্যমে জমি যাচাই কীভাবে হয়?"],
+                "HINGLISH": ["GeoKisaan Harvest EMI kaise kaam karti hai?", "Loan ke liye kya documents chahiye?", "Satellite se khet ki jaanch kaise hoti hai?"],
+                "ENGLISH": ["How does GeoKisaan Seasonally-Aligned Harvest EMI work?", "What documents are required for loan approval?", "How does satellite remote sensing verify land?"],
             },
             "HARVEST_EMI_SCHEDULE": {
                 "HINDI": ["बुआई के समय ₹1,500 रखरखाव किस्त कैसे काम करती है?", "सूखा या कम बारिश में ईएमआई राहत कैसे मिलती है?", "मंडी में धान बिकने के बाद मुख्य किस्त कब है?"],
@@ -611,37 +616,37 @@ class KrishiSaathiAssistant:
                 "ENGLISH": ["How does the ₹1,500 sowing maintenance EMI work?", "What is the 60-day drought restructuring buffer?", "When is the post-harvest bullet installment due?"],
             },
             "SATELLITE_SOIL_HEALTH": {
-                "HINDI": ["मेरे खेत की वनस्पति हरियाली (NDVI) कितनी है?", "मानसून के बादलों में CloudGap कैसे काम करता है?", "TVS लोन में पटवारी सत्यापन क्यों नहीं लगता?"],
-                "CHHATTISGARHI": ["मोर खेत के हरियरी (NDVI) कतेक हे?", "बादर छाए रहे म CloudGap कइसे देखथे?", "TVS लोन बर पटवारी के जरूरत हे का?"],
-                "TAMIL": ["என் நிலத்தின் பயிர் பசுமை (NDVI) குறியீடு என்ன?", "மழைக்கால மேகமூட்டத்தை CloudGap எவ்வாறு நீக்குகிறது?", "TVS விவசாய கடனுக்கு கிராம நிர்வாக அதிகாரி ஆய்வு தேவையா?"],
-                "TELUGU": ["నా పొలం పచ్చదనం (NDVI) స్కోరు ఎంత?", "వర్షాకాల మేఘాల్లో CloudGap ఎలా పనిచేస్తుంది?", "TVS రుణానికి భౌతిక తనిఖీ ఎందుకు అవసరం లేదు?"],
-                "MARATHI": ["माझ्या शेताची हिरवळ (NDVI) किती आहे?", "ढगाळ हवामानात CloudGap कसे काम करते?", "TVS कर्जासाठी प्रत्यक्ष पाहणीची गरज का नाही?"],
-                "KANNADA": ["ನನ್ನ ಜಮೀನಿನ ಹಸಿರು (NDVI) ಸೂಚ್ಯಂಕ ಎಷ್ಟು?", "ಮೋಡ ಕವಿದಾಗ CloudGap ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?", "TVS ಸಾಲಕ್ಕೆ ಭೌತಿಕ ಪರಿಶೀಲನೆ ಏಕೆ ಅಗತ್ಯವಿಲ್ಲ?"],
-                "BENGALI": ["আমার জমির ফসলের সবুজ সূচক (NDVI) কত?", "মেঘলা দিনে CloudGap কীভাবে কাজ করে?", "TVS লোনে শারীরিক পরিদর্শনের প্রয়োজন নেই কেন?"],
-                "HINGLISH": ["Mere khet ka satellite greenness (NDVI) kitna hai?", "Monsoon badalon me CloudGap kaise kaam karta hai?", "TVS loan me physical patwari verification kyun nahi lagta?"],
+                "HINDI": ["मेरे खेत की वनस्पति हरियाली (NDVI) कितनी है?", "मानसून के बादलों में CloudGap कैसे काम करता है?", "GeoKisaan लोन में पटवारी सत्यापन क्यों नहीं लगता?"],
+                "CHHATTISGARHI": ["मोर खेत के हरियरी (NDVI) कतेक हे?", "बादर छाए रहे म CloudGap कइसे देखथे?", "GeoKisaan लोन बर पटवारी के जरूरत हे का?"],
+                "TAMIL": ["என் நிலத்தின் பயிர் பசுமை (NDVI) குறியீடு என்ன?", "மழைக்கால மேகமூட்டத்தை CloudGap எவ்வாறு நீக்குகிறது?", "GeoKisaan விவசாய கடனுக்கு கிராம நிர்வாக அதிகாரி ஆய்வு தேவையா?"],
+                "TELUGU": ["నా పొలం పచ్చదనం (NDVI) స్కోరు ఎంత?", "వర్షాకాల మేఘాల్లో CloudGap ఎలా పనిచేస్తుంది?", "GeoKisaan రుణానికి భౌతిక తనిఖీ ఎందుకు అవసరం లేదు?"],
+                "MARATHI": ["माझ्या शेताची हिरवळ (NDVI) किती आहे?", "ढगाळ हवामानात CloudGap कसे काम करते?", "GeoKisaan कर्जासाठी प्रत्यक्ष पाहणीची गरज का नाही?"],
+                "KANNADA": ["ನನ್ನ ಜಮೀನಿನ ಹಸಿರು (NDVI) ಸೂಚ್ಯಂಕ ಎಷ್ಟು?", "ಮೋಡ ಕವಿದಾಗ CloudGap ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ?", "GeoKisaan ಸಾಲಕ್ಕೆ ಭೌತಿಕ ಪರಿಶೀಲನೆ ಏಕೆ ಅಗತ್ಯವಿಲ್ಲ?"],
+                "BENGALI": ["আমার জমির ফসলের সবুজ সূচক (NDVI) কত?", "মেঘলা দিনে CloudGap কীভাবে কাজ করে?", "GeoKisaan লোনে শারীরিক পরিদর্শনের প্রয়োজন নেই কেন?"],
+                "HINGLISH": ["Mere khet ka satellite greenness (NDVI) kitna hai?", "Monsoon badalon me CloudGap kaise kaam karta hai?", "GeoKisaan loan me physical patwari verification kyun nahi lagta?"],
                 "ENGLISH": ["What is my plot vegetative vigor (NDVI) score?", "How does CloudGap reconstruct cloudy monsoon pixels?", "Why is no physical patwari inspection required?"],
             },
             "PMFBY_INSURANCE_CLAIM": {
-                "HINDI": ["72 घंटे में PMFBY फसल बीमा दावा कैसे दर्ज करें?", "TVS फील्ड रिलेशनशिप ऑफिसर से सीधे बात करें", "सूखा EWS अलर्ट में क्या राहत मिलती है?"],
-                "CHHATTISGARHI": ["72 घंटा म PMFBY बीमा क्लेम कइसे दर्ज करबो?", "TVS फील्ड अफसर ले सीधा बात करना हे", "सूखा EWS अलर्ट म का राहत मिलही?"],
-                "TAMIL": ["72 மணி நேரத்திற்குள் PMFBY பயிர் காப்பீடு கோருவது எப்படி?", "TVS நேரடி கடன் அதிகாரியுடன் பேசுங்கள்", "வறட்சி முன்னெச்சரிக்கை விழிப்பூட்டலில் என்ன பலன் கிடைக்கும்?"],
-                "TELUGU": ["72 గంటల్లో PMFBY పంట బీమా క్లెయిమ్ ఎలా చేయాలి?", "TVS ఫీల్డ్ అధికారితో నేరుగా మాట్లాడండి", "కరువు EWS హెచ్చరికలో ఏ ఉపశమనం లభిస్తుంది?"],
-                "MARATHI": ["७२ तासांत PMFBY पीक विमा क्लेम कसा नोंदवावा?", "TVS फील्ड अधिकाऱ्याशी थेट संपर्क साधा", "दुष्काळ EWS अलर्टमध्ये काय सवलत मिळते?"],
-                "KANNADA": ["72 ಗಂಟೆಗಳಲ್ಲಿ PMFBY ಬೆಳೆ ವಿಮೆ ಕ್ಲೈಮ್ ಮಾಡುವುದು ಹೇಗೆ?", "TVS ಕ್ಷೇತ್ರ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ನೇರವಾಗಿ ಮಾತನಾಡಿ", "ಬರಗಾಲ EWS ಎಚ್ಚರಿಕೆಯಲ್ಲಿ ಏನು ಪರಿಹಾರ ದೊರೆಯುತ್ತದೆ?"],
-                "BENGALI": ["৭২ ঘণ্টার মধ্যে PMFBY ফসল বীমা দাবি কীভাবে করব?", "TVS ফিল্ড অফিসারের সাথে সরাসরি কথা বলুন", "খরা EWS সতর্কতায় কী সুবিধা পাওয়া যায়?"],
-                "HINGLISH": ["72 ghante me PMFBY crop insurance claim kaise karein?", "TVS Field Relationship Officer se connect karein", "Drought EWS alert me kya relief milti hai?"],
-                "ENGLISH": ["How do I file a PMFBY crop loss claim within 72 hours?", "Connect directly with TVS Field Relationship Officer", "What relief is triggered under EWS drought alerts?"],
+                "HINDI": ["72 घंटे में PMFBY फसल बीमा दावा कैसे दर्ज करें?", "GeoKisaan फील्ड रिलेशनशिप ऑफिसर से सीधे बात करें", "सूखा EWS अलर्ट में क्या राहत मिलती है?"],
+                "CHHATTISGARHI": ["72 घंटा म PMFBY बीमा क्लेम कइसे दर्ज करबो?", "GeoKisaan फील्ड अफसर ले सीधा बात करना हे", "सूखा EWS अलर्ट म का राहत मिलही?"],
+                "TAMIL": ["72 மணி நேரத்திற்குள் PMFBY பயிர் காப்பீடு கோருவது எப்படி?", "GeoKisaan நேரடி கடன் அதிகாரியுடன் பேசுங்கள்", "வறட்சி முன்னெச்சரிக்கை விழிப்பூட்டலில் என்ன பலன் கிடைக்கும்?"],
+                "TELUGU": ["72 గంటల్లో PMFBY పంట బీమా క్లెయిమ్ ఎలా చేయాలి?", "GeoKisaan ఫీల్డ్ అధికారితో నేరుగా మాట్లాడండి", "కరువు EWS హెచ్చరికలో ఏ ఉపశమనం లభిస్తుంది?"],
+                "MARATHI": ["७२ तासांत PMFBY पीक विमा क्लेम कसा नोंदवावा?", "GeoKisaan फील्ड अधिकाऱ्याशी थेट संपर्क साधा", "दुष्काळ EWS अलर्टमध्ये काय सवलत मिळते?"],
+                "KANNADA": ["72 ಗಂಟೆಗಳಲ್ಲಿ PMFBY ಬೆಳೆ ವಿಮೆ ಕ್ಲೈಮ್ ಮಾಡುವುದು ಹೇಗೆ?", "GeoKisaan ಕ್ಷೇತ್ರ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ನೇರವಾಗಿ ಮಾತನಾಡಿ", "ಬರಗಾಲ EWS ಎಚ್ಚರಿಕೆಯಲ್ಲಿ ಏನು ಪರಿಹಾರ ದೊರೆಯುತ್ತದೆ?"],
+                "BENGALI": ["৭২ ঘণ্টার মধ্যে PMFBY ফসল বীমা দাবি কীভাবে করব?", "GeoKisaan ফিল্ড অফিসারের সাথে সরাসরি কথা বলুন", "খরা EWS সতর্কতায় কী সুবিধা পাওয়া যায়?"],
+                "HINGLISH": ["72 ghante me PMFBY crop insurance claim kaise karein?", "GeoKisaan Field Relationship Officer se connect karein", "Drought EWS alert me kya relief milti hai?"],
+                "ENGLISH": ["How do I file a PMFBY crop loss claim within 72 hours?", "Connect directly with GeoKisaan Field Relationship Officer", "What relief is triggered under EWS drought alerts?"],
             },
             "GENERAL": {
-                "HINDI": ["मेरा क्रेडिट स्कोर और लोन पात्रता बताएं", "TVS फसल कटाई (हार्वेस्ट) ईएमआई क्या है?", "खेत की उपग्रह जांच रिपोर्ट दिखाएं"],
-                "CHHATTISGARHI": ["मोर क्रेडिट स्कोर अउ लोन पात्रता बताओ", "TVS फसल कटाई किस्त कइसे काम करथे?", "खेत के सैटेलाइट रिपोर्ट दिखावव"],
-                "TAMIL": ["எனது விவசாய கடன் தகுதி மற்றும் ஒப்புதலை சரிபார்க்கவும்", "TVS அறுவடை தவணை திட்டத்தை விளக்குங்கள்", "செயற்கைக்கோள் பயிர் ஆரோக்கியத்தை காண்க"],
-                "TELUGU": ["నా అగ్రి-క్రెడిట్ స్కోరు మరియు లోన్ అర్హత తెలపండి", "TVS సీజనల్ హార్వెస్ట్ EMI వివరించండి", "శాటిలైట్ భూమి ఆరోగ్య నివేదిక చూపించండి"],
-                "MARATHI": ["माझा क्रेडिट स्कोर आणि कर्ज पात्रता सांगा", "TVS हंगामी हार्वेस्ट ईएमआय पद्धत समजावून सांगा", "उपग्रह पीक तपासणी अहवाल दाखवा"],
-                "KANNADA": ["ನನ್ನ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ ಮತ್ತು ಸಾಲದ ಅರ್ಹತೆ ತಿಳಿಸಿ", "TVS ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ವಿವರಿಸಿ", "ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ ವರದಿ ವೀಕ್ಷಿಸಿ"],
-                "BENGALI": ["আমার ক্রেডিট স্কোর ও ঋণের যোগ্যতা জানান", "TVS হার্ভেস্ট ইএমআই পদ্ধতি বুঝিয়ে বলুন", "উপগ্রহ ফসল স্বাস্থ্য রিপোর্ট দেখুন"],
-                "HINGLISH": ["Mera Agri-Credit Score aur loan sanction check karein", "TVS Seasonally-Aligned Harvest EMI samjhayein", "10m satellite soil health aur NDVI review karein"],
-                "ENGLISH": ["Check my Agri-Credit Score and loan sanction", "Explain TVS Seasonally-Aligned Harvest EMIs", "Review 10m satellite soil health and NDVI"],
+                "HINDI": ["मेरा क्रेडिट स्कोर और लोन पात्रता बताएं", "GeoKisaan फसल कटाई (हार्वेस्ट) ईएमआई क्या है?", "खेत की उपग्रह जांच रिपोर्ट दिखाएं"],
+                "CHHATTISGARHI": ["मोर क्रेडिट स्कोर अउ लोन पात्रता बताओ", "GeoKisaan फसल कटाई किस्त कइसे काम करथे?", "खेत के सैटेलाइट रिपोर्ट दिखावव"],
+                "TAMIL": ["எனது விவசாய கடன் தகுதி மற்றும் ஒப்புதலை சரிபார்க்கவும்", "GeoKisaan அறுவடை தவணை திட்டத்தை விளக்குங்கள்", "செயற்கைக்கோள் பயிர் ஆரோக்கியத்தை காண்க"],
+                "TELUGU": ["నా అగ్రి-క్రెడిట్ స్కోరు మరియు లోన్ అర్హత తెలపండి", "GeoKisaan సీజనల్ హార్వెస్ట్ EMI వివరించండి", "శాటిలైట్ భూమి ఆరోగ్య నివేదిక చూపించండి"],
+                "MARATHI": ["माझा क्रेडिट स्कोर आणि कर्ज पात्रता सांगा", "GeoKisaan हंगामी हार्वेस्ट ईएमआय पद्धत समजावून सांगा", "उपग्रह पीक तपासणी अहवाल दाखवा"],
+                "KANNADA": ["ನನ್ನ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ ಮತ್ತು ಸಾಲದ ಅರ್ಹತೆ ತಿಳಿಸಿ", "GeoKisaan ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ವಿವರಿಸಿ", "ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ ವರದಿ ವೀಕ್ಷಿಸಿ"],
+                "BENGALI": ["আমার ক্রেডিট স্কোর ও ঋণের যোগ্যতা জানান", "GeoKisaan হার্ভেস্ট ইএমআই পদ্ধতি বুঝিয়ে বলুন", "উপগ্রহ ফসল স্বাস্থ্য রিপোর্ট দেখুন"],
+                "HINGLISH": ["Mera Agri-Credit Score aur loan sanction check karein", "GeoKisaan Seasonally-Aligned Harvest EMI samjhayein", "10m satellite soil health aur NDVI review karein"],
+                "ENGLISH": ["Check my Agri-Credit Score and loan sanction", "Explain GeoKisaan Seasonally-Aligned Harvest EMIs", "Review 10m satellite soil health and NDVI"],
             }
         }
         cat = "GENERAL"
@@ -723,7 +728,7 @@ class KrishiSaathiAssistant:
         # 5. Search Scorecard Rules & Weights
         scorecard_rules = self.knowledge.get("scorecard_rules", {})
         if any(k in query for k in ["weight", "scorecard", "tier", "वजन", "नियम", "prime", "good", "மதிப்பெண்"]):
-            hits.append({"title": "TVS Multi-Modal Scorecard Rules & Tiers", "category": "UNDERWRITING_RULES", "score": 0.92, "data": scorecard_rules})
+            hits.append({"title": "GeoKisaan Multi-Modal Scorecard Rules & Tiers", "category": "UNDERWRITING_RULES", "score": 0.92, "data": scorecard_rules})
 
         return hits
 
@@ -782,7 +787,7 @@ class KrishiSaathiAssistant:
         score = ctx.get("agri_credit_score") if has_borrower_context else None
         raw_decision = ctx.get("underwriting_decision", ctx.get("decision"))
         decision = str(raw_decision).replace("_", " ") if raw_decision else "PENDING_ASSESSMENT"
-        product = ctx.get("recommended_product", "TVS New Tractor Loan")
+        product = ctx.get("recommended_product", "GeoKisaan New Tractor Loan")
         amount = ctx.get("max_sanction_amount_inr", ctx.get("sanctioned_amount_inr")) if has_borrower_context else None
         roi = float(ctx.get("interest_rate_pct") or ctx.get("risk_adjusted_roi_pct") or 10.5)
         raw_ndvi = ctx.get("satellite_ndvi")
@@ -808,26 +813,26 @@ class KrishiSaathiAssistant:
         ]
         if any(p in query for p in injection_patterns):
             intent = "ADVERSARIAL_POLICY_GUARD"
-            evidence = [{"source": "TVS Credit Security Policy", "rule": "Immutable Smart Sanction Guardrails"}]
+            evidence = [{"source": "GeoKisaan Security Policy", "rule": "Immutable Smart Sanction Guardrails"}]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = "TVS क्रेडिट के ऋण नियम और स्वीकृतियां उपग्रह सत्यापन, ब्यूरो रिकॉर्ड और स्वचालित ऋण निर्णय मॉडल द्वारा निर्धारित होते हैं। इन्हें चैट द्वारा परिवर्तित या बाईपास नहीं किया जा सकता। कृपया अपने वास्तविक ऋण विकल्पों के बारे में पूछें।"
+                resp = "GeoKisaan क्रेडिट के ऋण नियम और स्वीकृतियां उपग्रह सत्यापन, ब्यूरो रिकॉर्ड और स्वचालित ऋण निर्णय मॉडल द्वारा निर्धारित होते हैं। इन्हें चैट द्वारा परिवर्तित या बाईपास नहीं किया जा सकता। कृपया अपने वास्तविक ऋण विकल्पों के बारे में पूछें।"
             elif lang == "CHHATTISGARHI":
-                resp = "TVS क्रेडिट म लोन स्वीकृति अउ ब्याज दर ह सैटेलाइट जांच अउ बैंक खाता के आधार म कंप्यूटर ले तय होथे संगवारी। एला बात-चीत म बदले नई जा सकय। अपन सही लोन पात्रता बर पूछव!"
+                resp = "GeoKisaan क्रेडिट म लोन स्वीकृति अउ ब्याज दर ह सैटेलाइट जांच अउ बैंक खाता के आधार म कंप्यूटर ले तय होथे संगवारी। एला बात-चीत म बदले नई जा सकय। अपन सही लोन पात्रता बर पूछव!"
             elif lang == "TAMIL":
-                resp = "TVS கிரெடிட் கடன் ஒப்புதல்கள் மற்றும் வட்டி விகிதங்கள் செயற்கைக்கோள் சரிபார்ப்பு மற்றும் தானியங்கி விதிமுறைகளின்படி மட்டுமே தீர்மானிக்கப்படுகின்றன. இதனை மாற்ற முடியாது. உங்கள் உண்மையான கடன் தகுதி பற்றி கேளுங்கள்."
+                resp = "GeoKisaan கிரெடிட் கடன் ஒப்புதல்கள் மற்றும் வட்டி விகிதங்கள் செயற்கைக்கோள் சரிபார்ப்பு மற்றும் தானியங்கி விதிமுறைகளின்படி மட்டுமே தீர்மானிக்கப்படுகின்றன. இதனை மாற்ற முடியாது. உங்கள் உண்மையான கடன் தகுதி பற்றி கேளுங்கள்."
             elif lang == "TELUGU":
-                resp = "TVS క్రెడిట్ లోన్ నిబంధనలు, ఆమోదాలు మరియు వడ్డీ రేట్లు శాటిలైట్ పరిశీలన మరియు ఆటోమేటెడ్ రిస్క్ మోడల్స్ ద్వారా మాత్రమే నిర్ణయించబడతాయి. వీటిని చాట్ ద్వారా మార్చడం సాధ్యం కాదు. మీ ధృవీకరించబడిన లోన్ ఎంపికల గురించి అడగండి."
+                resp = "GeoKisaan క్రెడిట్ లోన్ నిబంధనలు, ఆమోదాలు మరియు వడ్డీ రేట్లు శాటిలైట్ పరిశీలన మరియు ఆటోమేటెడ్ రిస్క్ మోడల్స్ ద్వారా మాత్రమే నిర్ణయించబడతాయి. వీటిని చాట్ ద్వారా మార్చడం సాధ్యం కాదు. మీ ధృవీకరించబడిన లోన్ ఎంపికల గురించి అడగండి."
             elif lang == "MARATHI":
-                resp = "TVS क्रेडिटचे कर्ज नियम, मंजुरी आणि व्याजदर हे उपग्रह पडताळणी व स्वयंचलित स्मार्ट मंजुरी मॉडेलद्वारे ठरवले जातात. ते चॅटद्वारे बदलता येत नाहीत. कृपया आपल्या अधिकृत कर्ज पर्यायांबद्दल विचारा."
+                resp = "GeoKisaan क्रेडिटचे कर्ज नियम, मंजुरी आणि व्याजदर हे उपग्रह पडताळणी व स्वयंचलित स्मार्ट मंजुरी मॉडेलद्वारे ठरवले जातात. ते चॅटद्वारे बदलता येत नाहीत. कृपया आपल्या अधिकृत कर्ज पर्यायांबद्दल विचारा."
             elif lang == "KANNADA":
-                resp = "TVS ಕ್ರೆಡಿಟ್ ಸಾಲದ ನಿಯಮಗಳು, ಅನುಮೋದನೆಗಳು ಮತ್ತು ಬಡ್ಡಿದರಗಳು ಉಪಗ್ರಹ ಪರಿಶೀಲನೆ ಮತ್ತು ಸ್ವಯಂಚಾಲಿತ ಮಾದರಿಗಳಿಂದ ನಿರ್ಧರಿಸಲ್ಪಡುತ್ತವೆ. ಇವುಗಳನ್ನು ಚಾಟ್ ಮೂಲಕ ಬದಲಾಯಿಸಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ನಿಜವಾದ ಸಾಲದ ಆಯ್ಕೆಗಳ ಬಗ್ಗೆ ಕೇಳಿ."
+                resp = "GeoKisaan ಕ್ರೆಡಿಟ್ ಸಾಲದ ನಿಯಮಗಳು, ಅನುಮೋದನೆಗಳು ಮತ್ತು ಬಡ್ಡಿದರಗಳು ಉಪಗ್ರಹ ಪರಿಶೀಲನೆ ಮತ್ತು ಸ್ವಯಂಚಾಲಿತ ಮಾದರಿಗಳಿಂದ ನಿರ್ಧರಿಸಲ್ಪಡುತ್ತವೆ. ಇವುಗಳನ್ನು ಚಾಟ್ ಮೂಲಕ ಬದಲಾಯಿಸಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ನಿಜವಾದ ಸಾಲದ ಆಯ್ಕೆಗಳ ಬಗ್ಗೆ ಕೇಳಿ."
             elif lang == "BENGALI":
-                resp = "TVS ক্রেডিট ঋণের নিয়মাবলী, অনুমোদন এবং সুদের হার উপগ্রহ যাচাই ও স্বয়ংক্রিয় মডেল দ্বারা নির্ধারিত হয়। চ্যাটের মাধ্যমে এগুলো পরিবর্তন করা সম্ভব নয়। অনুগ্রহ করে আপনার অনুমোদিত ঋণের বিকল্প সম্পর্কে জিজ্ঞাসা করুন।"
+                resp = "GeoKisaan ক্রেডিট ঋণের নিয়মাবলী, অনুমোদন এবং সুদের হার উপগ্রহ যাচাই ও স্বয়ংক্রিয় মডেল দ্বারা নির্ধারিত হয়। চ্যাটের মাধ্যমে এগুলো পরিবর্তন করা সম্ভব নয়। অনুগ্রহ করে আপনার অনুমোদিত ঋণের বিকল্প সম্পর্কে জিজ্ঞাসা করুন।"
             elif lang == "HINGLISH":
-                resp = "TVS Credit ke loan rules, sanctions aur interest rates satellite telemetry, bureau records aur automated multimodal risk models dwara decide hote hain. Inhe chat me bypass ya modify nahi kiya ja sakta. Kripya apne verified loan options ke bare me puchein."
+                resp = "GeoKisaan ke loan rules, sanctions aur interest rates satellite telemetry, bureau records aur automated multimodal risk models dwara decide hote hain. Inhe chat me bypass ya modify nahi kiya ja sakta. Kripya apne verified loan options ke bare me puchein."
             else:
-                resp = "TVS Credit loan sanctions, interest rates, and autonomous credit decisions are governed by verified multimodal risk models and cannot be overridden or modified via chat. You may inquire about your verified loan eligibility or harvest EMI terms."
+                resp = "GeoKisaan loan sanctions, interest rates, and autonomous credit decisions are governed by verified multimodal risk models and cannot be overridden or modified via chat. You may inquire about your verified loan eligibility or harvest EMI terms."
             return resp, intent, evidence, 0.99, follow_ups
 
         # ---------------------------------------------------------------------
@@ -840,26 +845,26 @@ class KrishiSaathiAssistant:
         ]
         if any(w in query for w in out_of_domain_terms):
             intent = "OUT_OF_DOMAIN_REDIRECT"
-            evidence = [{"source": "Domain Scope", "focus": "TVS Credit Agricultural Lending & Farm Health"}]
+            evidence = [{"source": "Domain Scope", "focus": "GeoKisaan Agricultural Lending & Farm Health"}]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"क्षमा करें{hi_salutation}! मैं टीवीएस कृषि साथी हूँ और केवल टीवीएस कृषि ऋण, ट्रैक्टर लोन, 10m सैटेलाइट खेत स्वास्थ्य और फसल कटाई आधारित किस्तों में विशेषज्ञता रखता हूँ। मैं शेयर बाजार, क्रिप्टो या गैर-कृषि विषयों पर सलाह नहीं दे सकता। क्या आप अपनी लोन पात्रता या खेत रिपोर्ट देखना चाहते हैं?"
+                resp = f"क्षमा करें{hi_salutation}! मैं जियोकिसान कृषि साथी हूँ और केवल जियोकिसान कृषि ऋण, ट्रैक्टर लोन, 10m सैटेलाइट खेत स्वास्थ्य और फसल कटाई आधारित किस्तों में विशेषज्ञता रखता हूँ। मैं शेयर बाजार, क्रिप्टो या गैर-कृषि विषयों पर सलाह नहीं दे सकता। क्या आप अपनी लोन पात्रता या खेत रिपोर्ट देखना चाहते हैं?"
             elif lang == "CHHATTISGARHI":
-                resp = f"माफ करिया{cg_salutation}! मैं टीवीएस कृषि साथी हंव, अउ खाली टीवीएस ट्रैक्टर लोन, खेत के सैटेलाइट जांच, अउ फसल कटाई किस्त म तुंहर मदद कर सकत हंव। मैं शेयर बाजार या दूसरा बात म सलाह नई देवंव। का तुमन अपन लोन पात्रता जानना चाहत हव?"
+                resp = f"माफ करिया{cg_salutation}! मैं जियोकिसान कृषि साथी हंव, अउ खाली जियोकिसान ट्रैक्टर लोन, खेत के सैटेलाइट जांच, अउ फसल कटाई किस्त म तुंहर मदद कर सकत हंव। मैं शेयर बाजार या दूसरा बात म सलाह नई देवंव। का तुमन अपन लोन पात्रता जानना चाहत हव?"
             elif lang == "TAMIL":
-                resp = f"மன்னிக்கவும்! நான் TVS கிரிஷி சாதி. TVS விவசாய கடன், டிராக்டர் நிதி, செயற்கைக்கோள் பயிர் நலம் மற்றும் அறுவடை சார்ந்த EMI திட்டங்களில் மட்டுமே உதவ முடியும். பங்குச்சந்தை அல்லது பிற தலைப்புகளில் ஆலோசனை வழங்க இயலாது. உங்கள் கடன் தகுதியை அறிய விரும்புகிறீர்களா?"
+                resp = f"மன்னிக்கவும்! நான் GeoKisaan கிரிஷி சாதி. GeoKisaan விவசாய கடன், டிராக்டர் நிதி, செயற்கைக்கோள் பயிர் நலம் மற்றும் அறுவடை சார்ந்த EMI திட்டங்களில் மட்டுமே உதவ முடியும். பங்குச்சந்தை அல்லது பிற தலைப்புகளில் ஆலோசனை வழங்க இயலாது. உங்கள் கடன் தகுதியை அறிய விரும்புகிறீர்களா?"
             elif lang == "TELUGU":
-                resp = f"క్షమించండి! నేను TVS కృషి సాథిని. నేను కేవలం TVS వ్యవసాయ రుణాలు, ట్రాక్టర్ ఫైనాన్స్, శాటిలైట్ పంట ఆరోగ్యం మరియు సీజనల్ హార్వెస్ట్ EMIలలో మాత్రమే సహాయం చేయగలను. స్టాక్ మార్కెట్ లేదా ఇతర విషయాలపై సలహా ఇవ్వలేను. మీ లోన్ అర్హత గురించి తెలుసుకోవాలనుకుంటున్నారా?"
+                resp = f"క్షమించండి! నేను GeoKisaan కృషి సాథిని. నేను కేవలం GeoKisaan వ్యవసాయ రుణాలు, ట్రాక్టర్ ఫైనాన్స్, శాటిలైట్ పంట ఆరోగ్యం మరియు సీజనల్ హార్వెస్ట్ EMIలలో మాత్రమే సహాయం చేయగలను. స్టాక్ మార్కెట్ లేదా ఇతర విషయాలపై సలహా ఇవ్వలేను. మీ లోన్ అర్హత గురించి తెలుసుకోవాలనుకుంటున్నారా?"
             elif lang == "MARATHI":
-                resp = f"क्षमा करा! मी TVS कृषी साथी आहे आणि केवळ कृषी कर्ज, ट्रॅक्टर कर्ज, उपग्रह पीक पाहणी आणि हार्वेस्ट ईएमआय विषयांवरच मार्गदर्शन करतो. शेअर बाजार किंवा इतर गैर-कृषी विषयांवर सल्ला देऊ शकत नाही. आपण आपली कर्ज पात्रता तपासू इच्छिता?"
+                resp = f"क्षमा करा! मी GeoKisaan कृषी साथी आहे आणि केवळ कृषी कर्ज, ट्रॅक्टर कर्ज, उपग्रह पीक पाहणी आणि हार्वेस्ट ईएमआय विषयांवरच मार्गदर्शन करतो. शेअर बाजार किंवा इतर गैर-कृषी विषयांवर सल्ला देऊ शकत नाही. आपण आपली कर्ज पात्रता तपासू इच्छिता?"
             elif lang == "KANNADA":
-                resp = f"ಕ್ಷಮಿಸಿ! ನಾನು TVS ಕೃಷಿ ಸಾಥಿ. ಕೃಷಿ ಸಾಲ, ಟ್ರ್ಯಾಕ್ಟರ್ ಫೈನಾನ್ಸ್, ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ ಮತ್ತು ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ವಿಷಯಗಳಲ್ಲಿ ಮಾತ್ರ ಮಾರ್ಗದರ್ಶನ ನೀಡಬಲ್ಲೆ. ಷೇರು ಮಾರುಕಟ್ಟೆ ಅಥವಾ ಇತರ ವಿಷಯಗಳ ಬಗ್ಗೆ ಸಲಹೆ ನೀಡಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಸಾಲದ ಅರ್ಹತೆಯನ್ನು ತಿಳಿಯಲು ಬಯಸುವಿರಾ?"
+                resp = f"ಕ್ಷಮಿಸಿ! ನಾನು GeoKisaan ಕೃಷಿ ಸಾಥಿ. ಕೃಷಿ ಸಾಲ, ಟ್ರ್ಯಾಕ್ಟರ್ ಫೈನಾನ್ಸ್, ಉಪಗ್ರಹ ಬೆಳೆ ಆರೋಗ್ಯ ಮತ್ತು ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ವಿಷಯಗಳಲ್ಲಿ ಮಾತ್ರ ಮಾರ್ಗದರ್ಶನ ನೀಡಬಲ್ಲೆ. ಷೇರು ಮಾರುಕಟ್ಟೆ ಅಥವಾ ಇತರ ವಿಷಯಗಳ ಬಗ್ಗೆ ಸಲಹೆ ನೀಡಲಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಸಾಲದ ಅರ್ಹತೆಯನ್ನು ತಿಳಿಯಲು ಬಯಸುವಿರಾ?"
             elif lang == "BENGALI":
-                resp = f"ক্ষমা করবেন! আমি TVS কৃষি সাথী এবং কেবল TVS কৃষি ঋণ, ট্র্যাক্টর অর্থায়ন, স্যাটেলাইট ফসল স্বাস্থ্য এবং হার্ভেস্ট ইএমআই সম্পর্কে সহায়তা দিতে পারি। শেয়ার বাজার বা অন্যান্য বিষয়ে পরামর্শ দিতে অক্ষম। আপনি কি আপনার ঋণ যোগ্যতা জানতে চান?"
+                resp = f"ক্ষমা করবেন! আমি GeoKisaan কৃষি সাথী এবং কেবল GeoKisaan কৃষি ঋণ, ট্র্যাক্টর অর্থায়ন, স্যাটেলাইট ফসল স্বাস্থ্য এবং হার্ভেস্ট ইএমআই সম্পর্কে সহায়তা দিতে পারি। শেয়ার বাজার বা অন্যান্য বিষয়ে পরামর্শ দিতে অক্ষম। আপনি কি আপনার ঋণ যোগ্যতা জানতে চান?"
             elif lang == "HINGLISH":
-                resp = f"Kshama karein! Main TVS Krishi Saathi hoon aur strictly TVS agricultural credit, tractor loans, 10m Sentinel-2 satellite farm health aur Seasonally-Aligned Harvest EMIs me specialize karta hoon. Main share market, crypto ya non-agriculture topics par salah nahi de sakta. Kya aap apni approved loan eligibility ya satellite khet report dekhna chahte hain?"
+                resp = f"Kshama karein! Main GeoKisaan Krishi Saathi hoon aur strictly GeoKisaan agricultural credit, tractor loans, 10m Sentinel-2 satellite farm health aur Seasonally-Aligned Harvest EMIs me specialize karta hoon. Main share market, crypto ya non-agriculture topics par salah nahi de sakta. Kya aap apni approved loan eligibility ya satellite khet report dekhna chahte hain?"
             else:
-                resp = f"I apologize{en_salutation}! As TVS Krishi Saathi, I am strictly specialized in TVS agricultural credit, tractor financing, 10m Sentinel-2 farm verification, and Seasonally-Aligned Harvest EMIs. I do not provide stock market, cryptocurrency, or non-agricultural advice. Would you like to check your approved loan sanction or farm vigor score?"
+                resp = f"I apologize{en_salutation}! As GeoKisaan Krishi Saathi, I am strictly specialized in GeoKisaan agricultural credit, tractor financing, 10m Sentinel-2 farm verification, and Seasonally-Aligned Harvest EMIs. I do not provide stock market, cryptocurrency, or non-agricultural advice. Would you like to check your approved loan sanction or farm vigor score?"
             return resp, intent, evidence, 0.95, follow_ups
 
         # ---------------------------------------------------------------------
@@ -874,23 +879,23 @@ class KrishiSaathiAssistant:
                 resp = self._get_welcome_greeting(ctx, lang)
             else:
                 if lang == "HINDI":
-                    resp = f"नमस्ते {first_name} जी! मैं टीवीएस कृषि साथी हूँ। आज मैं आपकी क्या सहायता कर सकता हूँ? आप मुझसे अपनी ऋण पात्रता, फसल कटाई आधारित EMI, या खेत की उपग्रह जांच के बारे में पूछ सकते हैं।"
+                    resp = f"नमस्ते {first_name} जी! मैं जियोकिसान कृषि साथी हूँ। आज मैं आपकी क्या सहायता कर सकता हूँ? आप मुझसे अपनी ऋण पात्रता, फसल कटाई आधारित EMI, या खेत की उपग्रह जांच के बारे में पूछ सकते हैं।"
                 elif lang == "CHHATTISGARHI":
-                    resp = f"जय जोहार {first_name} भइया! मैं टीवीएस कृषि साथी हंव। आज तुंहर का सेवा कर सकत हंव? तुमन अपन लोन पात्रता, फसल कटाई किस्त, या खेत के सैटेलाइट जांच बर पूछ सकत हव।"
+                    resp = f"जय जोहार {first_name} भइया! मैं जियोकिसान कृषि साथी हंव। आज तुंहर का सेवा कर सकत हंव? तुमन अपन लोन पात्रता, फसल कटाई किस्त, या खेत के सैटेलाइट जांच बर पूछ सकत हव।"
                 elif lang == "TAMIL":
-                    resp = f"வணக்கம் {first_name}! நான் TVS கிரிஷி சாதி, உங்கள் டிஜிட்டல் விவசாய கடன் உதவியாளர். இன்று நான் உங்களுக்கு எவ்வாறு உதவ முடியும்? உங்கள் கடன் தகுதி, அறுவடை EMI, அல்லது செயற்கைக்கோள் நில ஆய்வை பற்றி நீங்கள் கேட்கலாம்."
+                    resp = f"வணக்கம் {first_name}! நான் GeoKisaan கிரிஷி சாதி, உங்கள் டிஜிட்டல் விவசாய கடன் உதவியாளர். இன்று நான் உங்களுக்கு எவ்வாறு உதவ முடியும்? உங்கள் கடன் தகுதி, அறுவடை EMI, அல்லது செயற்கைக்கோள் நில ஆய்வை பற்றி நீங்கள் கேட்கலாம்."
                 elif lang == "TELUGU":
-                    resp = f"నమస్కారం {first_name} గారు! నేను TVS కృషి సాథి డిజిటల్ అసిస్టెంట్‌ని. ఈరోజు నేను మీకు ఎలా సహాయపడగలను? మీ లోన్ అర్హత, హార్వెస్ట్ EMI షెడ్యూల్ లేదా శాటిలైట్ భూమి నివేదిక గురించి అడగవచ్చు."
+                    resp = f"నమస్కారం {first_name} గారు! నేను GeoKisaan కృషి సాథి డిజిటల్ అసిస్టెంట్‌ని. ఈరోజు నేను మీకు ఎలా సహాయపడగలను? మీ లోన్ అర్హత, హార్వెస్ట్ EMI షెడ్యూల్ లేదా శాటిలైట్ భూమి నివేదిక గురించి అడగవచ్చు."
                 elif lang == "MARATHI":
-                    resp = f"नमस्कार {first_name} जी! मी TVS कृषी साथी डिजिटल सहाय्यक आहे. आज मी आपली काय मदत करू शकतो? आपण कर्ज पात्रता, हार्वेस्ट ईएमआय किंवा उपग्रह शेत पाहणी अहवालाबद्दल विचारू शकता."
+                    resp = f"नमस्कार {first_name} जी! मी GeoKisaan कृषी साथी डिजिटल सहाय्यक आहे. आज मी आपली काय मदत करू शकतो? आपण कर्ज पात्रता, हार्वेस्ट ईएमआय किंवा उपग्रह शेत पाहणी अहवालाबद्दल विचारू शकता."
                 elif lang == "KANNADA":
-                    resp = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ! ನಾನು TVS ಕೃಷಿ ಸಾಥಿ ಡಿಜಿಟಲ್ ಸಹಾಯಕ. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ? ನಿಮ್ಮ ಸಾಲದ ಅರ್ಹತೆ, ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಅಥವಾ ಉಪಗ್ರಹ ಬೆಳೆ ವರದಿಯ ಬಗ್ಗೆ ಕೇಳಬಹುದು."
+                    resp = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ! ನಾನು GeoKisaan ಕೃಷಿ ಸಾಥಿ ಡಿಜಿಟಲ್ ಸಹಾಯಕ. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಲಿ? ನಿಮ್ಮ ಸಾಲದ ಅರ್ಹತೆ, ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಅಥವಾ ಉಪಗ್ರಹ ಬೆಳೆ ವರದಿಯ ಬಗ್ಗೆ ಕೇಳಬಹುದು."
                 elif lang == "BENGALI":
-                    resp = f"নমস্কার {first_name} বাবু! আমি TVS কৃষি সাথী ডিজিটাল সহকারী। আজ আপনাকে কীভাবে সাহায্য করতে পারি? আপনার ঋণ অনুমোদন, হার্ভেস্ট ইএমআই বা স্যাটেলাইট ফসল রিপোর্ট সম্পর্কে জিজ্ঞাসা করতে পারেন।"
+                    resp = f"নমস্কার {first_name} বাবু! আমি GeoKisaan কৃষি সাথী ডিজিটাল সহকারী। আজ আপনাকে কীভাবে সাহায্য করতে পারি? আপনার ঋণ অনুমোদন, হার্ভেস্ট ইএমআই বা স্যাটেলাইট ফসল রিপোর্ট সম্পর্কে জিজ্ঞাসা করতে পারেন।"
                 elif lang == "HINGLISH":
-                    resp = f"Namaste {first_name} ji! Main TVS Krishi Saathi AI Copilot hoon. Aaj main aapki kya sahayata kar sakta hoon? Aap mujhse apni tractor loan eligibility, Seasonally-Aligned Harvest EMI, ya 10m satellite khet report ke bare me puch sakte hain."
+                    resp = f"Namaste {first_name} ji! Main GeoKisaan Krishi Saathi AI Copilot hoon. Aaj main aapki kya sahayata kar sakta hoon? Aap mujhse apni tractor loan eligibility, Seasonally-Aligned Harvest EMI, ya 10m satellite khet report ke bare me puch sakte hain."
                 else:
-                    resp = f"Hello {first_name}! I am TVS Krishi Saathi, your digital rural loan assistant. How can I help you today? You can ask me about your loan eligibility, check your harvest EMI schedule, or explore your satellite farm health report."
+                    resp = f"Hello {first_name}! I am GeoKisaan Krishi Saathi, your digital rural loan assistant. How can I help you today? You can ask me about your loan eligibility, check your harvest EMI schedule, or explore your satellite farm health report."
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["applicant_name"] if has_borrower_context else [], 0.98)
             return resp, intent, evidence, conf, follow_ups
 
@@ -901,33 +906,33 @@ class KrishiSaathiAssistant:
         if (any(w in confusions for w in words) and len(words) <= 3) or "what do you mean" in query or "समझ नहीं आया" in query or "விளங்கவில்லை" in query:
             intent = "CONFUSION_HANDLING"
             if not has_borrower_context or amount is None:
-                evidence = [{"source": "TVS Seasonally-Aligned Harvest EMI Model", "overview": "Sowing fee ~₹1,500/mo, Harvest bullet payment"}]
+                evidence = [{"source": "GeoKisaan Seasonally-Aligned Harvest EMI Model", "overview": "Sowing fee ~₹1,500/mo, Harvest bullet payment"}]
                 follow_ups = self._get_suggested_follow_ups(intent, lang)
                 if lang == "HINDI":
-                    resp = f"संक्षेप में: टीवीएस क्रेडिट किसानों को आधुनिक कृषि ऋण और 'हार्वेस्ट EMI' की सुविधा देता है। बुआई के समय केवल ₹1,500/माह का नाममात्र रखरखाव देना होता है और मुख्य किस्त फसल बिकने के बाद। अपना विशिष्ट ऋण प्रस्ताव जानने के लिए स्मार्ट सैंक्शन कॉकपिट में अपना विवरण दर्ज करें।"
+                    resp = f"संक्षेप में: जियोकिसान किसानों को आधुनिक कृषि ऋण और 'हार्वेस्ट EMI' की सुविधा देता है। बुआई के समय केवल ₹1,500/माह का नाममात्र रखरखाव देना होता है और मुख्य किस्त फसल बिकने के बाद। अपना विशिष्ट ऋण प्रस्ताव जानने के लिए स्मार्ट सैंक्शन कॉकपिट में अपना विवरण दर्ज करें।"
                 elif lang == "CHHATTISGARHI":
-                    resp = f"बात ये हे संगवारी कि टीवीएस क्रेडिट म किसान मन ला फसल कटाई EMI के सुविधा मिलथे—बोआई म खाली ₹1,500 अउ बाकी धान बिकाए के बाद। अपन लोन पात्रता जाने बर स्मार्ट सैंक्शन कॉकपिट म अपन खसरा अउ जमीन दर्ज करव!"
+                    resp = f"बात ये हे संगवारी कि जियोकिसान म किसान मन ला फसल कटाई EMI के सुविधा मिलथे—बोआई म खाली ₹1,500 अउ बाकी धान बिकाए के बाद। अपन लोन पात्रता जाने बर स्मार्ट सैंक्शन कॉकपिट म अपन खसरा अउ जमीन दर्ज करव!"
                 elif lang == "TAMIL":
-                    resp = f"சுருக்கமாக: TVS கிரெடிட் மூலம் விவசாயிகளுக்கு சீசனல் அறுவடை EMI வழங்கப்படுகிறது. விதைப்பு காலத்தில் ₹1,500 மட்டுமே பராமரிப்பு தவணை, முக்கிய தவணை அறுவடைக்கு பிறகே. உங்கள் கடன் தகுதியை அறிய காக்பிட்டில் நில விவரங்களை உள்ளிடவும்."
+                    resp = f"சுருக்கமாக: GeoKisaan கிரெடிட் மூலம் விவசாயிகளுக்கு சீசனல் அறுவடை EMI வழங்கப்படுகிறது. விதைப்பு காலத்தில் ₹1,500 மட்டுமே பராமரிப்பு தவணை, முக்கிய தவணை அறுவடைக்கு பிறகே. உங்கள் கடன் தகுதியை அறிய காக்பிட்டில் நில விவரங்களை உள்ளிடவும்."
                 elif lang == "TELUGU":
-                    resp = f"క్లుప్తంగా: TVS క్రెడిట్ సీజనల్ హార్వెస్ట్ EMI సదుపాయాన్ని అందిస్తుంది. విత్తే సమయంలో కేవలం ₹1,500/నెల, పంట అమ్మిన తర్వాతే ప్రధాన కిస్తు. మీ లోన్ అర్హతను తెలుసుకోవడానికి కాక్‌పిట్‌లో వివరాలను నమోదు చేయండి."
+                    resp = f"క్లుప్తంగా: GeoKisaan క్రెడిట్ సీజనల్ హార్వెస్ట్ EMI సదుపాయాన్ని అందిస్తుంది. విత్తే సమయంలో కేవలం ₹1,500/నెల, పంట అమ్మిన తర్వాతే ప్రధాన కిస్తు. మీ లోన్ అర్హతను తెలుసుకోవడానికి కాక్‌పిట్‌లో వివరాలను నమోదు చేయండి."
                 elif lang == "MARATHI":
-                    resp = f"थोडक्यात: TVS क्रेडिट शेतकऱ्यांना हंगामी हार्वेस्ट ईएमआय सुविधा देते. पेरणीच्या वेळी केवळ ₹१,५०० हप्ता आणि पीक विकल्यानंतर मुख्य हप्ता असतो. आपली पात्रता जाणून घेण्यासाठी कॉकपिटमध्ये तपशील भरा."
+                    resp = f"थोडक्यात: GeoKisaan क्रेडिट शेतकऱ्यांना हंगामी हार्वेस्ट ईएमआय सुविधा देते. पेरणीच्या वेळी केवळ ₹१,५०० हप्ता आणि पीक विकल्यानंतर मुख्य हप्ता असतो. आपली पात्रता जाणून घेण्यासाठी कॉकपिटमध्ये तपशील भरा."
                 elif lang == "KANNADA":
-                    resp = f"ಸಂಕ್ಷಿಪ್ತವಾಗಿ: TVS ಕ್ರೆಡಿಟ್ ರೈತರಿಗೆ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ನೀಡುತ್ತದೆ. ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ಕೇವಲ ₹1,500 ಕಂತು, ಕೊಯ್ಲಿನ ನಂತರ ಮುಖ್ಯ ಕಂತು. ನಿಮ್ಮ ಅರ್ಹತೆ ತಿಳಿಯಲು ಕಾಕ್‌ಪಿಟ್‌ನಲ್ಲಿ ವಿವರ ನಮೂದಿಸಿ."
+                    resp = f"ಸಂಕ್ಷಿಪ್ತವಾಗಿ: GeoKisaan ಕ್ರೆಡಿಟ್ ರೈತರಿಗೆ ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ನೀಡುತ್ತದೆ. ಬಿತ್ತನೆ ಸಮಯದಲ್ಲಿ ಕೇವಲ ₹1,500 ಕಂತು, ಕೊಯ್ಲಿನ ನಂತರ ಮುಖ್ಯ ಕಂತು. ನಿಮ್ಮ ಅರ್ಹತೆ ತಿಳಿಯಲು ಕಾಕ್‌ಪಿಟ್‌ನಲ್ಲಿ ವಿವರ ನಮೂದಿಸಿ."
                 elif lang == "BENGALI":
-                    resp = f"সংক্ষেপে: TVS ক্রেডিট কৃষকদের জন্য হার্ভেস্ট ইএমআই প্রদান করে। বপনের সময় মাত্র ₹১,৫০০ কিস্তি, বাকিটা ফসল বিক্রির পর। আপনার ঋণের যোগ্যতা জানতে ককপিটে তথ্য দিন।"
+                    resp = f"সংক্ষেপে: GeoKisaan ক্রেডিট কৃষকদের জন্য হার্ভেস্ট ইএমআই প্রদান করে। বপনের সময় মাত্র ₹১,৫০০ কিস্তি, বাকিটা ফসল বিক্রির পর। আপনার ঋণের যোগ্যতা জানতে ককপিটে তথ্য দিন।"
                 elif lang == "HINGLISH":
-                    resp = f"Summary me: TVS Credit kisanon ko Seasonally-Aligned Harvest EMI provide karta hai—buwai ke waqt sirf ~₹1,500/month aur main bullet installment dhaan mandi me bikne ke baad. Apni personalized eligibility janne ke liye Sanction Cockpit me land details enter karein."
+                    resp = f"Summary me: GeoKisaan kisanon ko Seasonally-Aligned Harvest EMI provide karta hai—buwai ke waqt sirf ~₹1,500/month aur main bullet installment dhaan mandi me bikne ke baad. Apni personalized eligibility janne ke liye Sanction Cockpit me land details enter karein."
                 else:
-                    resp = f"In summary: TVS Credit offers Seasonally-Aligned Harvest EMIs where you pay a nominal fee (~₹1,500/mo) during sowing and the main installment only after harvest Mandi sales. Please submit your land details in the Smart Sanction Cockpit to generate your personalized loan decision."
+                    resp = f"In summary: GeoKisaan offers Seasonally-Aligned Harvest EMIs where you pay a nominal fee (~₹1,500/mo) during sowing and the main installment only after harvest Mandi sales. Please submit your land details in the Smart Sanction Cockpit to generate your personalized loan decision."
                 conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.94)
                 return resp, intent, evidence, conf, follow_ups
 
             evidence = [{"source": "Smart Sanction Decision", "approved_amount_inr": amount, "product": product}]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"क्षमा करें यदि बात स्पष्ट नहीं हुई {first_name} जी! संक्षेप में: आपके खेत की उपग्रह जांच और बैंक रिकॉर्ड के आधार पर आपको ₹{amount:,} तक का '{product}' स्वीकृत है। इसमें टीवीएस की 'हार्वेस्ट EMI' सुविधा है, यानी बुआई के समय केवल ₹1,500/माह देना होगा और मुख्य किस्त फसल बिकने के बाद। आप इसके किस हिस्से के बारे में विस्तार से जानना चाहते हैं?"
+                resp = f"क्षमा करें यदि बात स्पष्ट नहीं हुई {first_name} जी! संक्षेप में: आपके खेत की उपग्रह जांच और बैंक रिकॉर्ड के आधार पर आपको ₹{amount:,} तक का '{product}' स्वीकृत है। इसमें जियोकिसान की 'हार्वेस्ट EMI' सुविधा है, यानी बुआई के समय केवल ₹1,500/माह देना होगा और मुख्य किस्त फसल बिकने के बाद। आप इसके किस हिस्से के बारे में विस्तार से जानना चाहते हैं?"
             elif lang == "CHHATTISGARHI":
                 resp = f"माफ करिया {first_name} भइया अगर बात समझ म नई आइस! बात ये हे कि तुंहर खेत के सैटेलाइट जांच ले तुमन ला ₹{amount:,} के लोन पास हो गे हे। एमा फसल कटाई EMI के सुविधा हे—बोआई म खाली ₹1,500 अउ बाकी धान बिकाए के बाद। तुमन ला एकर बारे म का जानना हे?"
             elif lang == "TAMIL":
@@ -941,7 +946,7 @@ class KrishiSaathiAssistant:
             elif lang == "BENGALI":
                 resp = f"বিষয়টি পরিষ্কার না হলে দুঃখিত {first_name} বাবু! সংক্ষেপে: আপনার জমির স্যাটেলাইট স্ক্যান অনুযায়ী ₹{amount:,} মূল্যের '{product}' প্রাক-অনুমোদিত। বপনের সময় মাত্র ₹১,৫০০ কিস্তি, বাকিটা ফসল বিক্রির পর। এ বিষয়ে আপনি কী জানতে চান?"
             elif lang == "HINGLISH":
-                resp = f"Kshama karein agar baat clear nahi hui {first_name} ji! Summary me: Aapke khet ke satellite scan aur banking records ke aadhar par aapko ₹{amount:,} tak ka '{product}' pre-approved hai. Isme TVS ki 'Harvest EMI' suvidha hai—buwai ke waqt sirf ~₹1,500/month aur main installment dhaan mandi me bikne ke baad. Aap iske bare me kya janna chahte hain?"
+                resp = f"Kshama karein agar baat clear nahi hui {first_name} ji! Summary me: Aapke khet ke satellite scan aur banking records ke aadhar par aapko ₹{amount:,} tak ka '{product}' pre-approved hai. Isme GeoKisaan ki 'Harvest EMI' suvidha hai—buwai ke waqt sirf ~₹1,500/month aur main installment dhaan mandi me bikne ke baad. Aap iske bare me kya janna chahte hain?"
             else:
                 resp = f"I apologize if that sounded confusing, {first_name}! Let me break it down simply: Based on your farm's satellite scan and banking profile, you are pre-approved for up to ₹{amount:,} on the {product}. We also offer Seasonally-Aligned Harvest EMIs, meaning you pay a nominal fee (~₹1,500/mo) during sowing and pay the main installment only after harvest sales. What specific question can I answer for you?"
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["max_sanction_amount_inr", "recommended_product"], 0.94)
@@ -953,28 +958,28 @@ class KrishiSaathiAssistant:
         if any(w in query for w in ["two wheeler", "two-wheeler", "bike", "motorcycle", "स्कूटर", "बाइक", "गाड़ी", "மோட்டார்", "ரோட்டாவேட்டர்", "harvester", "rotavator", "equipment", "implement", "यंत्र", "उपकरण"]):
             intent = "TWO_WHEELER_OR_EQUIPMENT_LOAN"
             evidence = [
-                {"source": "Product Catalog", "product": "TVS Kisan Rural Two-Wheeler Loan", "max_amount": 140000, "ltv": "90%"},
-                {"source": "Product Catalog", "product": "TVS Farm Harvester & Implement Loan", "max_amount": 800000, "ltv": "80%"}
+                {"source": "Product Catalog", "product": "GeoKisaan Kisan Rural Two-Wheeler Loan", "max_amount": 140000, "ltv": "90%"},
+                {"source": "Product Catalog", "product": "GeoKisaan Farm Harvester & Implement Loan", "max_amount": 800000, "ltv": "80%"}
             ]
             follow_ups = self._get_suggested_follow_ups("LOAN_ELIGIBILITY", lang)
             if lang == "HINDI":
-                resp = f"हाँ {first_name} जी! टीवीएस क्रेडिट ट्रैक्टर के अलावा दोपहिया और कृषि उपकरण भी उपलब्ध कराता है: 1) 'TVS किसान टू-व्हीलर लोन': ₹35,000 से ₹1,40,000 तक (90% LTV), बुआई के समय आसान किस्तों के साथ। 2) 'TVS फार्म इंप्लीमेंट लोन': रोटावेटर, कंबाइन हार्वेस्टर और सोलर पंप के लिए ₹80,000 से ₹8,00,000 तक का ऋण 48 महीनों की अवधि में उपलब्ध है।"
+                resp = f"हाँ {first_name} जी! जियोकिसान ट्रैक्टर के अलावा दोपहिया और कृषि उपकरण भी उपलब्ध कराता है: 1) 'GeoKisaan किसान टू-व्हीलर लोन': ₹35,000 से ₹1,40,000 तक (90% LTV), बुआई के समय आसान किस्तों के साथ। 2) 'GeoKisaan फार्म इंप्लीमेंट लोन': रोटावेटर, कंबाइन हार्वेस्टर और सोलर पंप के लिए ₹80,000 से ₹8,00,000 तक का ऋण 48 महीनों की अवधि में उपलब्ध है।"
             elif lang == "CHHATTISGARHI":
-                resp = f"हव {first_name} भइया! टीवीएस क्रेडिट म ट्रैक्टर के अलावा बाइक अउ कृषि यंत्र बर घलो लोन मिलथे: 1) 'TVS किसान टू-व्हीलर लोन': मंडी आवे-जाए बर ₹35,000 ले ₹1,40,000 तक। 2) 'TVS फार्म इंप्लीमेंट लोन': रोटावेटर, हार्वेस्टर अउ सोलर पंप बर ₹8,00,000 तक के लोन आसान किस्त म मिल जाथे।"
+                resp = f"हव {first_name} भइया! जियोकिसान म ट्रैक्टर के अलावा बाइक अउ कृषि यंत्र बर घलो लोन मिलथे: 1) 'GeoKisaan किसान टू-व्हीलर लोन': मंडी आवे-जाए बर ₹35,000 ले ₹1,40,000 तक। 2) 'GeoKisaan फार्म इंप्लीमेंट लोन': रोटावेटर, हार्वेस्टर अउ सोलर पंप बर ₹8,00,000 तक के लोन आसान किस्त म मिल जाथे।"
             elif lang == "TAMIL":
-                resp = f"ஆம் {first_name}! TVS கிரெடிட் மூலம் டிராக்டர் தவிர பிற கடன்களும் உள்ளன: 1) 'TVS கிசான் இருசக்கர வாகன கடன்': ₹35,000 முதல் ₹1,40,000 வரை (90% LTV வரை). 2) 'TVS பண்ணை உபகரண கடன்': அறுவடை இயந்திரம், ரோட்டாவேட்டர், சோலார் பம்புகளுக்கு ₹8,00,000 வரை தவணை முறையில் கிடைக்கும்."
+                resp = f"ஆம் {first_name}! GeoKisaan கிரெடிட் மூலம் டிராக்டர் தவிர பிற கடன்களும் உள்ளன: 1) 'GeoKisaan கிசான் இருசக்கர வாகன கடன்': ₹35,000 முதல் ₹1,40,000 வரை (90% LTV வரை). 2) 'GeoKisaan பண்ணை உபகரண கடன்': அறுவடை இயந்திரம், ரோட்டாவேட்டர், சோலார் பம்புகளுக்கு ₹8,00,000 வரை தவணை முறையில் கிடைக்கும்."
             elif lang == "TELUGU":
-                resp = f"అవును {first_name} గారు! TVS క్రెడిట్ ట్రాక్టర్లే కాకుండా ద్విచక్ర వాహనాలు మరియు వ్యవసాయ పరికరాలకు కూడా రుణాలు అందిస్తుంది: 1) 'TVS కిసాన్ టూ-వీలర్ లోన్': ₹35,000 నుండి ₹1,40,000 వరకు. 2) 'TVS అగ్రి ఎక్విప్‌మెంట్ లోన్': రోటవేటర్, హార్వెస్టర్ మరియు సోలార్ పంపుల కోసం ₹8,00,000 వరకు సులభ వాయిదాలలో లభిస్తుంది."
+                resp = f"అవును {first_name} గారు! GeoKisaan క్రెడిట్ ట్రాక్టర్లే కాకుండా ద్విచక్ర వాహనాలు మరియు వ్యవసాయ పరికరాలకు కూడా రుణాలు అందిస్తుంది: 1) 'GeoKisaan కిసాన్ టూ-వీలర్ లోన్': ₹35,000 నుండి ₹1,40,000 వరకు. 2) 'GeoKisaan అగ్రి ఎక్విప్‌మెంట్ లోన్': రోటవేటర్, హార్వెస్టర్ మరియు సోలార్ పంపుల కోసం ₹8,00,000 వరకు సులభ వాయిదాలలో లభిస్తుంది."
             elif lang == "MARATHI":
-                resp = f"होय {first_name} जी! TVS क्रेडिट ट्रॅक्टरव्यतिरिक्त दुचाकी आणि कृषी अवजारांसाठीही कर्ज देते: १) 'TVS किसान टू-व्हीलर लोन': ₹३५,००० ते ₹१,४०,००० पर्यंत. २) 'TVS कृषी उपकरण कर्ज': रोटाव्हेटर, हार्वेस्टर आणि सोलर पंपासाठी ₹८,००,००० पर्यंत सुलभ हप्त्यांमध्ये कर्ज मिळते."
+                resp = f"होय {first_name} जी! GeoKisaan क्रेडिट ट्रॅक्टरव्यतिरिक्त दुचाकी आणि कृषी अवजारांसाठीही कर्ज देते: १) 'GeoKisaan किसान टू-व्हीलर लोन': ₹३५,००० ते ₹१,४०,००० पर्यंत. २) 'GeoKisaan कृषी उपकरण कर्ज': रोटाव्हेटर, हार्वेस्टर आणि सोलर पंपासाठी ₹८,००,००० पर्यंत सुलभ हप्त्यांमध्ये कर्ज मिळते."
             elif lang == "KANNADA":
-                resp = f"ಹೌದು {first_name} ಅವರೇ! TVS ಕ್ರೆಡಿಟ್ ಟ್ರ್ಯಾಕ್ಟರ್ ಹೊರತುಪಡಿಸಿ ದ್ವಿಚಕ್ರ ವಾಹನ ಹಾಗೂ ಕೃಷಿ ಉಪಕರಣ ಸಾಲಗಳನ್ನೂ ನೀಡುತ್ತದೆ: ೧) 'TVS ಕಿಸಾನ್ ಟೂ-ವೀಲರ್ ಸಾಲ': ₹35,000 ರಿಂದ ₹1,40,000 ವರೆಗೆ. ೨) 'TVS ಕೃಷಿ ಸಲಕರಣೆ ಸಾಲ': ರೋಟಾವೇಟರ್, ಹಾರ್ವೆಸ್ಟರ್ ಮತ್ತು ಸೋಲಾರ್ ಪಂಪ್‌ಗಳಿಗೆ ₹8,00,000 ವರೆಗೆ ಲಭ್ಯವಿದೆ."
+                resp = f"ಹೌದು {first_name} ಅವರೇ! GeoKisaan ಕ್ರೆಡಿಟ್ ಟ್ರ್ಯಾಕ್ಟರ್ ಹೊರತುಪಡಿಸಿ ದ್ವಿಚಕ್ರ ವಾಹನ ಹಾಗೂ ಕೃಷಿ ಉಪಕರಣ ಸಾಲಗಳನ್ನೂ ನೀಡುತ್ತದೆ: ೧) 'GeoKisaan ಕಿಸಾನ್ ಟೂ-ವೀಲರ್ ಸಾಲ': ₹35,000 ರಿಂದ ₹1,40,000 ವರೆಗೆ. ೨) 'GeoKisaan ಕೃಷಿ ಸಲಕರಣೆ ಸಾಲ': ರೋಟಾವೇಟರ್, ಹಾರ್ವೆಸ್ಟರ್ ಮತ್ತು ಸೋಲಾರ್ ಪಂಪ್‌ಗಳಿಗೆ ₹8,00,000 ವರೆಗೆ ಲಭ್ಯವಿದೆ."
             elif lang == "BENGALI":
-                resp = f"হ্যাঁ {first_name} বাবু! TVS ক্রেডিট ট্র্যাক্টর ছাড়াও টু-হুইলার ও কৃষি সরঞ্জামের জন্য লোন প্রদান করে: ১) 'TVS কিসান টু-হুইলার লোন': ₹৩৫,০০০ থেকে ₹১,৪০,০০০ পর্যন্ত। ২) 'TVS কৃষি সরঞ্জাম লোন': রোটাভেটর, হার্ভেস্টার এবং সোলার পাম্পের জন্য ₹৮,০০,০০০ পর্যন্ত সহজ কিস্তিতে পাওয়া যায়।"
+                resp = f"হ্যাঁ {first_name} বাবু! GeoKisaan ক্রেডিট ট্র্যাক্টর ছাড়াও টু-হুইলার ও কৃষি সরঞ্জামের জন্য লোন প্রদান করে: ১) 'GeoKisaan কিসান টু-হুইলার লোন': ₹৩৫,০০০ থেকে ₹১,৪০,০০০ পর্যন্ত। ২) 'GeoKisaan কৃষি সরঞ্জাম লোন': রোটাভেটর, হার্ভেস্টার এবং সোলার পাম্পের জন্য ₹৮,০০,০০০ পর্যন্ত সহজ কিস্তিতে পাওয়া যায়।"
             elif lang == "HINGLISH":
-                resp = f"Haan {first_name} ji! TVS Credit tractor ke alawa do-pahia (two-wheeler) aur agriculture equipment bhi finance karta hai: 1) 'TVS Kisan Rural Two-Wheeler Loan': ₹35,000 se ₹1,40,000 tak (90% LTV tak). 2) 'TVS Farm Harvester & Implement Loan': rotavator, combine harvester aur solar pump ke liye ₹80,000 se ₹8,00,000 tak aasan kiston me uplabdh hai."
+                resp = f"Haan {first_name} ji! GeoKisaan tractor ke alawa do-pahia (two-wheeler) aur agriculture equipment bhi finance karta hai: 1) 'GeoKisaan Kisan Rural Two-Wheeler Loan': ₹35,000 se ₹1,40,000 tak (90% LTV tak). 2) 'GeoKisaan Farm Harvester & Implement Loan': rotavator, combine harvester aur solar pump ke liye ₹80,000 se ₹8,00,000 tak aasan kiston me uplabdh hai."
             else:
-                resp = f"Yes {first_name}! Beyond tractor financing, TVS Credit offers: 1) 'TVS Kisan Rural Two-Wheeler Loan': ₹35,000 to ₹1,40,000 (up to 90% LTV) with seasonal grace periods for Mandi transport. 2) 'TVS Farm Harvester & Implement Loan': ₹80,000 to ₹8,00,000 for rotavators, combine harvesters, and solar pumps with post-harvest customized repayments."
+                resp = f"Yes {first_name}! Beyond tractor financing, GeoKisaan offers: 1) 'GeoKisaan Kisan Rural Two-Wheeler Loan': ₹35,000 to ₹1,40,000 (up to 90% LTV) with seasonal grace periods for Mandi transport. 2) 'GeoKisaan Farm Harvester & Implement Loan': ₹80,000 to ₹8,00,000 for rotavators, combine harvesters, and solar pumps with post-harvest customized repayments."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.95)
             return resp, intent, evidence, conf, follow_ups
 
@@ -990,23 +995,23 @@ class KrishiSaathiAssistant:
             ]
             follow_ups = self._get_suggested_follow_ups("HARVEST_EMI_SCHEDULE", lang)
             if lang == "HINDI":
-                resp = f"वर्तमान खरीफ सीजन के लिए छत्तीसगढ़ में धान का न्यूनतम समर्थन मूल्य (MSP) ₹2,300/क्विंटल (सोयाबीन ₹4,892/क्विंटल) निर्धारित है। मंडियों में सरकारी धान खरीदी दिसंबर-जनवरी में चरम पर होती है। टीवीएस क्रेडिट की हार्वेस्ट EMI इसी मंडी नकदी प्रवाह से जुड़ी है, ताकि किसान फसल बिक्री से सीधे बड़ी किस्त चुका सकें।"
+                resp = f"वर्तमान खरीफ सीजन के लिए छत्तीसगढ़ में धान का न्यूनतम समर्थन मूल्य (MSP) ₹2,300/क्विंटल (सोयाबीन ₹4,892/क्विंटल) निर्धारित है। मंडियों में सरकारी धान खरीदी दिसंबर-जनवरी में चरम पर होती है। जियोकिसान की हार्वेस्ट EMI इसी मंडी नकदी प्रवाह से जुड़ी है, ताकि किसान फसल बिक्री से सीधे बड़ी किस्त चुका सकें।"
             elif lang == "CHHATTISGARHI":
-                resp = f"छत्तीसगढ़ म धान के सरकारी समर्थन मूल्य (MSP) ₹2,300 प्रति क्विंटल हे (अउ सोयाबीन ₹4,892)। धान के सरकारी खरीदी दिसंबर ले जनवरी म होथे। टीवीएस के फसल कटाई EMI एकरे सेती बनाए गे हे, ताकि जब मंडी म धान बिकाही, तब किसान भइया मन आसानी ले अपन बड़का किस्त भर सकंय।"
+                resp = f"छत्तीसगढ़ म धान के सरकारी समर्थन मूल्य (MSP) ₹2,300 प्रति क्विंटल हे (अउ सोयाबीन ₹4,892)। धान के सरकारी खरीदी दिसंबर ले जनवरी म होथे। जियोकिसान के फसल कटाई EMI एकरे सेती बनाए गे हे, ताकि जब मंडी म धान बिकाही, तब किसान भइया मन आसानी ले अपन बड़का किस्त भर सकंय।"
             elif lang == "TAMIL":
-                resp = f"நடப்பு காரிஃப் பருவத்தில் நெல் குறைந்தபட்ச ஆதரவு விலை (MSP) குவிண்டாலுக்கு ₹2,300 ஆகவும் சோயாபீன் ₹4,892 ஆகவும் உள்ளது. டிசம்பர்-ஜனவரி மாத மண்டி விற்பனையை அடிப்படையாகக் கொண்டே TVS அறுவடை EMI அட்டவணை திட்டமிடப்பட்டுள்ளது."
+                resp = f"நடப்பு காரிஃப் பருவத்தில் நெல் குறைந்தபட்ச ஆதரவு விலை (MSP) குவிண்டாலுக்கு ₹2,300 ஆகவும் சோயாபீன் ₹4,892 ஆகவும் உள்ளது. டிசம்பர்-ஜனவரி மாத மண்டி விற்பனையை அடிப்படையாகக் கொண்டே GeoKisaan அறுவடை EMI அட்டவணை திட்டமிடப்பட்டுள்ளது."
             elif lang == "TELUGU":
-                resp = f"ప్రస్తుత ఖరీఫ్ సీజన్‌కు ధాన్యం కనీస మద్దతు ధర (MSP) క్వింటాల్‌కు ₹2,300 మరియు సోయాబీన్ ₹4,892. మండిల్లో ప్రభుత్వ ధాన్యం కొనుగోళ్లు డిసెంబర్-జనవరిలో జరుగుతాయి. TVS హార్వెస్ట్ EMI ఈ మండి అమ్మకాల సమయానికి అనుగుణంగా రూపొందించబడింది."
+                resp = f"ప్రస్తుత ఖరీఫ్ సీజన్‌కు ధాన్యం కనీస మద్దతు ధర (MSP) క్వింటాల్‌కు ₹2,300 మరియు సోయాబీన్ ₹4,892. మండిల్లో ప్రభుత్వ ధాన్యం కొనుగోళ్లు డిసెంబర్-జనవరిలో జరుగుతాయి. GeoKisaan హార్వెస్ట్ EMI ఈ మండి అమ్మకాల సమయానికి అనుగుణంగా రూపొందించబడింది."
             elif lang == "MARATHI":
-                resp = f"सध्याच्या खरीप हंगामासाठी धानाचा किमान आधारभूत भाव (MSP) ₹२,३००/क्विंटल (सोयाबीन ₹४,८९२/क्विंटल) आहे. कृषी उत्पन्न बाजार समित्यांमध्ये धान खरेदी डिसेंबर-जानेवारीत होते. TVS हार्वेस्ट ईएमआय थेट या विक्रीशी जोडलेली आहे."
+                resp = f"सध्याच्या खरीप हंगामासाठी धानाचा किमान आधारभूत भाव (MSP) ₹२,३००/क्विंटल (सोयाबीन ₹४,८९२/क्विंटल) आहे. कृषी उत्पन्न बाजार समित्यांमध्ये धान खरेदी डिसेंबर-जानेवारीत होते. GeoKisaan हार्वेस्ट ईएमआय थेट या विक्रीशी जोडलेली आहे."
             elif lang == "KANNADA":
-                resp = f"ಪ್ರಸಕ್ತ ಮುಂಗಾರು ಋತುವಿನಲ್ಲಿ ಭತ್ತದ ಕನಿಷ್ಠ ಬೆಂಬಲ ಬೆಲೆ (MSP) ಕ್ವಿಂಟಾಲ್‌ಗೆ ₹2,300 ಹಾಗೂ ಸೋಯಾಬೀನ್ ₹4,892 ಆಗಿದೆ. ಡಿಸೆಂಬರ್-ಜನವರಿಯಲ್ಲಿ ಮಂಡಿಗಳಲ್ಲಿ ಖರೀದಿ ನಡೆಯುತ್ತದೆ. TVS ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಈ ಮಂಡಿ ಮಾರಾಟಕ್ಕೆ ಹೊಂದಿಕೊಂಡಿದೆ."
+                resp = f"ಪ್ರಸಕ್ತ ಮುಂಗಾರು ಋತುವಿನಲ್ಲಿ ಭತ್ತದ ಕನಿಷ್ಠ ಬೆಂಬಲ ಬೆಲೆ (MSP) ಕ್ವಿಂಟಾಲ್‌ಗೆ ₹2,300 ಹಾಗೂ ಸೋಯಾಬೀನ್ ₹4,892 ಆಗಿದೆ. ಡಿಸೆಂಬರ್-ಜನವರಿಯಲ್ಲಿ ಮಂಡಿಗಳಲ್ಲಿ ಖರೀದಿ ನಡೆಯುತ್ತದೆ. GeoKisaan ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಈ ಮಂಡಿ ಮಾರಾಟಕ್ಕೆ ಹೊಂದಿಕೊಂಡಿದೆ."
             elif lang == "BENGALI":
-                resp = f"বর্তমান খরিফ মৌসুমে ধানের সরকারি সহায়ক মূল্য (MSP) প্রতি কুইন্টাল ₹২,৩০০ এবং সয়াবিন ₹৪,৮৯২। ডিসেম্বর-জানুয়ারিতে মান্ডিতে ফসল বিক্রির সময়ের সাথে সামঞ্জস্য রেখেই TVS হার্ভেস্ট ইএমআই তৈরি করা হয়েছে।"
+                resp = f"বর্তমান খরিফ মৌসুমে ধানের সরকারি সহায়ক মূল্য (MSP) প্রতি কুইন্টাল ₹২,৩০০ এবং সয়াবিন ₹৪,৮৯২। ডিসেম্বর-জানুয়ারিতে মান্ডিতে ফসল বিক্রির সময়ের সাথে সামঞ্জস্য রেখেই GeoKisaan হার্ভেস্ট ইএমআই তৈরি করা হয়েছে।"
             elif lang == "HINGLISH":
-                resp = f"Current Kharif season ke liye Chhattisgarh me Dhaan ka Government MSP ₹2,300/quintal (Soyabean ₹4,892/quintal) tay hai. Mandiyon me sarkari khareed December-January me peak par hoti hai. TVS Credit ki Harvest EMI isi mandi liquidity se linked hai, taaki kisan fasal bikri ke baad aaram se badi bullet installment chuka sakein."
+                resp = f"Current Kharif season ke liye Chhattisgarh me Dhaan ka Government MSP ₹2,300/quintal (Soyabean ₹4,892/quintal) tay hai. Mandiyon me sarkari khareed December-January me peak par hoti hai. GeoKisaan ki Harvest EMI isi mandi liquidity se linked hai, taaki kisan fasal bikri ke baad aaram se badi bullet installment chuka sakein."
             else:
-                resp = f"For the current Kharif season, Government MSP is ₹2,300/quintal for Paddy and ₹4,892/quintal for Soybean. Primary Mandi procurement occurs between December and January. TVS Credit syncs bullet loan installments directly with these Mandi liquidity windows, ensuring zero cashflow strain."
+                resp = f"For the current Kharif season, Government MSP is ₹2,300/quintal for Paddy and ₹4,892/quintal for Soybean. Primary Mandi procurement occurs between December and January. GeoKisaan syncs bullet loan installments directly with these Mandi liquidity windows, ensuring zero cashflow strain."
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["estimated_yield_tha"], 0.96)
             return resp, intent, evidence, conf, follow_ups
         # ---------------------------------------------------------------------
@@ -1019,23 +1024,23 @@ class KrishiSaathiAssistant:
             ]
             follow_ups = self._get_suggested_follow_ups("DROUGHT_MORATORIUM", lang)
             if lang == "HINDI":
-                resp = f"TVS क्रेडिट आरबीआई के नियमों के तहत समय पर भुगतान को प्रोत्साहित करता है: 1-30 दिन की देरी पर SMA-0 रिमाइंडर भेजा जाता है; 31-60 दिन (SMA-1) पर यदि सूखा या कीट आपदा हो तो EWS द्वारा 60-दिन की ईएमआई राहत और पुनर्गठन सुविधा दी जाती है। 90 दिन से अधिक विलंब पर खाता एनपीए (NPA) में जाता है। किसी भी समस्या के समय तुरंत फील्ड अधिकारी से संपर्क करें।"
+                resp = f"GeoKisaan क्रेडिट आरबीआई के नियमों के तहत समय पर भुगतान को प्रोत्साहित करता है: 1-30 दिन की देरी पर SMA-0 रिमाइंडर भेजा जाता है; 31-60 दिन (SMA-1) पर यदि सूखा या कीट आपदा हो तो EWS द्वारा 60-दिन की ईएमआई राहत और पुनर्गठन सुविधा दी जाती है। 90 दिन से अधिक विलंब पर खाता एनपीए (NPA) में जाता है। किसी भी समस्या के समय तुरंत फील्ड अधिकारी से संपर्क करें।"
             elif lang == "CHHATTISGARHI":
-                resp = f"अगर कोनो कारण ले किस्त लेट हो जाथे, त 1 ले 30 दिन म टीवीएस ले मैसेज आथे। अगर सूखा या फसल नुकसान के सेती 31 ले 60 दिन लेट होथे, त हमर EWS सिस्टम अपने आप 60 दिन बर किस्त बढ़ा देथे ताकि खाता खराब न होवय। 90 दिन ले जादा लेट होए म एनपीए (NPA) हो जाथे, एही सेती फील्ड अफसर ले तुरंत गोठियावव।"
+                resp = f"अगर कोनो कारण ले किस्त लेट हो जाथे, त 1 ले 30 दिन म जियोकिसान ले मैसेज आथे। अगर सूखा या फसल नुकसान के सेती 31 ले 60 दिन लेट होथे, त हमर EWS सिस्टम अपने आप 60 दिन बर किस्त बढ़ा देथे ताकि खाता खराब न होवय। 90 दिन ले जादा लेट होए म एनपीए (NPA) हो जाथे, एही सेती फील्ड अफसर ले तुरंत गोठियावव।"
             elif lang == "TAMIL":
-                resp = f"RBI விதிகளின்படி: 1-30 நாட்கள் தாமதம் SMA-0 விழிப்பூட்டல்; 31-60 நாட்கள் (SMA-1) வறட்சி அல்லது பூச்சி தாக்குதல் ஏற்பட்டால் EWS மூலம் 60 நாட்கள் கடன் மறுசீரமைப்பு சலுகை வழங்கப்படுகிறது. 90 நாட்களுக்கு மேல் நிலுவை நீடித்தால் வராக்கடனாக (NPA) மாறும். சிரமம் இருப்பின் உடனே TVS அலுவலரைத் தொடர்பு கொள்ளுங்கள்."
+                resp = f"RBI விதிகளின்படி: 1-30 நாட்கள் தாமதம் SMA-0 விழிப்பூட்டல்; 31-60 நாட்கள் (SMA-1) வறட்சி அல்லது பூச்சி தாக்குதல் ஏற்பட்டால் EWS மூலம் 60 நாட்கள் கடன் மறுசீரமைப்பு சலுகை வழங்கப்படுகிறது. 90 நாட்களுக்கு மேல் நிலுவை நீடித்தால் வராக்கடனாக (NPA) மாறும். சிரமம் இருப்பின் உடனே GeoKisaan அலுவலரைத் தொடர்பு கொள்ளுங்கள்."
             elif lang == "TELUGU":
-                resp = f"RBI మార్గదర్శకాల ప్రకారం: 1-30 రోజుల ఆలస్యానికి SMA-0 అలర్ట్ వస్తుంది; 31-60 రోజుల్లో (SMA-1) కరువు లేదా పంట నష్టం ఉంటే EWS ద్వారా 60 రోజుల వాయిదా మరియు రీస్ట్రక్చరింగ్ సదుపాయం లభిస్తుంది. 90 రోజులు దాటితే ఖాతా NPA అవుతుంది. ఏవైనా సమస్యలు ఉంటే వెంటనే TVS ఫీల్డ్ ఆఫీసర్‌ను సంప్రదించండి."
+                resp = f"RBI మార్గదర్శకాల ప్రకారం: 1-30 రోజుల ఆలస్యానికి SMA-0 అలర్ట్ వస్తుంది; 31-60 రోజుల్లో (SMA-1) కరువు లేదా పంట నష్టం ఉంటే EWS ద్వారా 60 రోజుల వాయిదా మరియు రీస్ట్రక్చరింగ్ సదుపాయం లభిస్తుంది. 90 రోజులు దాటితే ఖాతా NPA అవుతుంది. ఏవైనా సమస్యలు ఉంటే వెంటనే GeoKisaan ఫీల్డ్ ఆఫీసర్‌ను సంప్రదించండి."
             elif lang == "MARATHI":
-                resp = f"RBI नियमांनुसार: १-३० दिवसांच्या विलंबावर SMA-0 सूचना मिळते; ३१-६० दिवसांत (SMA-1) दुष्काळ किंवा पिकाचे नुकसान असल्यास EWS द्वारे ६० दिवसांची सवलत मिळते. ९० दिवसांपेक्षा जास्त विलंब झाल्यास खाते NPA होते. अडचणीच्या वेळी लगेच TVS अधिकाऱ्यांशी संपर्क साधा."
+                resp = f"RBI नियमांनुसार: १-३० दिवसांच्या विलंबावर SMA-0 सूचना मिळते; ३१-६० दिवसांत (SMA-1) दुष्काळ किंवा पिकाचे नुकसान असल्यास EWS द्वारे ६० दिवसांची सवलत मिळते. ९० दिवसांपेक्षा जास्त विलंब झाल्यास खाते NPA होते. अडचणीच्या वेळी लगेच GeoKisaan अधिकाऱ्यांशी संपर्क साधा."
             elif lang == "KANNADA":
                 resp = f"RBI ನಿಯಮಗಳ ಪ್ರಕಾರ: 1-30 ದಿನಗಳ ವಿಳಂಬಕ್ಕೆ SMA-0 ಎಚ್ಚರಿಕೆ ಬರುತ್ತದೆ; 31-60 ದಿನಗಳಲ್ಲಿ (SMA-1) ಬರಗಾಲ ಅಥವಾ ಬೆಳೆ ಹಾನಿಯಾಗಿದ್ದರೆ EWS ಮೂಲಕ 60 ದಿನಗಳ ಮರುಹೊಂದಾಣಿಕೆ ಸೌಲಭ್ಯ ಸಿಗುತ್ತದೆ. 90 ದಿನ ಮೀರಿದರೆ NPA ಆಗುತ್ತದೆ."
             elif lang == "BENGALI":
                 resp = f"RBI নির্দেশিকা অনুযায়ী: ১-৩০ দিনের দেরিতে SMA-0 সতর্কতা আসে; ৩১-৬০ দিনে (SMA-1) খরা বা ফসলের ক্ষতি হলে EWS-এর মাধ্যমে ৬০ দিনের ঋণ পুনর্গঠন সুবিধা মেলে। ৯০ দিনের বেশি বিলম্ব হলে একাউন্ট NPA হয়।"
             elif lang == "HINGLISH":
-                resp = f"TVS Credit RBI rules ke tehat timely repayment ko encourage karta hai: 1-30 days delay par SMA-0 SMS/call reminder aata hai; 31-60 days (SMA-1) par yadi sukha ya fasal damage ho to TVS EWS dwara 60-day EMI restructuring buffer diya jata hai. 90 days se zyada delay par account NPA mark hota hai. Kisi bhi issue me turant field officer se connect karein."
+                resp = f"GeoKisaan RBI rules ke tehat timely repayment ko encourage karta hai: 1-30 days delay par SMA-0 SMS/call reminder aata hai; 31-60 days (SMA-1) par yadi sukha ya fasal damage ho to GeoKisaan EWS dwara 60-day EMI restructuring buffer diya jata hai. 90 days se zyada delay par account NPA mark hota hai. Kisi bhi issue me turant field officer se connect karein."
             else:
-                resp = f"Under RBI prudential guidelines: Payments delayed 1–30 days enter SMA-0 (automated SMS/voice alerts). At 31–60 days (SMA-1), if crop failure or drought is detected by satellite telemetry, TVS EWS triggers a 60-day restructuring buffer. Delays exceeding 90 days classify as NPA. Please contact your loan officer early to activate drought protections."
+                resp = f"Under RBI prudential guidelines: Payments delayed 1–30 days enter SMA-0 (automated SMS/voice alerts). At 31–60 days (SMA-1), if crop failure or drought is detected by satellite telemetry, GeoKisaan EWS triggers a 60-day restructuring buffer. Delays exceeding 90 days classify as NPA. Please contact your loan officer early to activate drought protections."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.95)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1045,28 +1050,28 @@ class KrishiSaathiAssistant:
         if any(w in query for w in ["weight", "scorecard", "tier", "वजन", "क्रेडिट स्कोर नियम", "மதிப்பெண்"]):
             intent = "SCORECARD_TIER_EXPLANATION"
             evidence = [
-                {"source": "TVS Scorecard Weights", "bureau_banking": "40%", "satellite_land_health": "30%", "climate_resilience": "20%", "collateral": "10%"},
-                {"source": "TVS Tiers", "PRIME": "750-900", "GOOD": "680-749", "MODERATE": "600-679", "HIGH_RISK": "500-599"}
+                {"source": "GeoKisaan Scorecard Weights", "bureau_banking": "40%", "satellite_land_health": "30%", "climate_resilience": "20%", "collateral": "10%"},
+                {"source": "GeoKisaan Tiers", "PRIME": "750-900", "GOOD": "680-749", "MODERATE": "600-679", "HIGH_RISK": "500-599"}
             ]
             follow_ups = self._get_suggested_follow_ups("LOAN_ELIGIBILITY", lang)
             if lang == "HINDI":
-                resp = f"TVS एग्री-क्रेडिट स्कोर (300-900) 4 प्रमुख स्तंभों से मिलकर बनता है: 1) वित्तीय व बैंकिंग टर्नओवर (40%), 2) सेंटिनल-2 उपग्रह जमीन व मिट्टी स्वास्थ्य (30%), 3) 40-वर्षीय नासा मौसम सहिष्णुता (20%), 4) संपार्श्विक भूमि मूल्य (10%)। 750+ प्राइम टियर में 1.5% ब्याज छूट मिलती है, और 680-749 (गुड टियर) में तुरंत फास्ट-ट्रैक स्वीकृति मिलती है।"
+                resp = f"GeoKisaan एग्री-क्रेडिट स्कोर (300-900) 4 प्रमुख स्तंभों से मिलकर बनता है: 1) वित्तीय व बैंकिंग टर्नओवर (40%), 2) सेंटिनल-2 उपग्रह जमीन व मिट्टी स्वास्थ्य (30%), 3) 40-वर्षीय नासा मौसम सहिष्णुता (20%), 4) संपार्श्विक भूमि मूल्य (10%)। 750+ प्राइम टियर में 1.5% ब्याज छूट मिलती है, और 680-749 (गुड टियर) में तुरंत फास्ट-ट्रैक स्वीकृति मिलती है।"
             elif lang == "CHHATTISGARHI":
-                resp = f"TVS एग्री-क्रेडिट स्कोर (300 ले 900) 4 बात ले तय होथे: 1) बैंक टर्नओवर (40%), 2) खेत के सैटेलाइट हरियरी अउ माटी (30%), 3) सूखा-मौसम सहिष्णुता (20%), 4) जमीन के कीमत (10%)। 680 ले 749 स्कोर म तुरते लोन पास हो जाथे अउ 750+ म ब्याज म 1.5% के छूट मिलथे।"
+                resp = f"GeoKisaan एग्री-क्रेडिट स्कोर (300 ले 900) 4 बात ले तय होथे: 1) बैंक टर्नओवर (40%), 2) खेत के सैटेलाइट हरियरी अउ माटी (30%), 3) सूखा-मौसम सहिष्णुता (20%), 4) जमीन के कीमत (10%)। 680 ले 749 स्कोर म तुरते लोन पास हो जाथे अउ 750+ म ब्याज म 1.5% के छूट मिलथे।"
             elif lang == "TAMIL":
-                resp = f"TVS அக்ரி-கிரெடிட் ஸ்கோர் (300-900) 4 காரணிகளால் கணக்கிடப்படுகிறது: வங்கி வரவு செலவு (40%), செயற்கைக்கோள் மண் & பயிர் நலம் (30%), காலநிலை எதிர்ப்புத்திறன் (20%), நிலத்தின் மதிப்பு (10%). 750+ பெற்றால் 1.5% வட்டி தள்ளுபடி கிடைக்கும்."
+                resp = f"GeoKisaan அக்ரி-கிரெடிட் ஸ்கோர் (300-900) 4 காரணிகளால் கணக்கிடப்படுகிறது: வங்கி வரவு செலவு (40%), செயற்கைக்கோள் மண் & பயிர் நலம் (30%), காலநிலை எதிர்ப்புத்திறன் (20%), நிலத்தின் மதிப்பு (10%). 750+ பெற்றால் 1.5% வட்டி தள்ளுபடி கிடைக்கும்."
             elif lang == "TELUGU":
-                resp = f"TVS అగ్రి-క్రెడిట్ స్కోరు (300-900) 4 ప్రధాన అంశాల ఆధారంగా ఉంటుంది: బ్యాంకింగ్ టర్నోవర్ (40%), శాటిలైట్ భూమి ఆరోగ్యం (30%), వాతావరణ సమర్థత (20%), భూమి విలువ (10%). 750+ స్కోరు ఉన్నవారికి 1.5% వడ్డీ రాయితీ లభిస్తుంది."
+                resp = f"GeoKisaan అగ్రి-క్రెడిట్ స్కోరు (300-900) 4 ప్రధాన అంశాల ఆధారంగా ఉంటుంది: బ్యాంకింగ్ టర్నోవర్ (40%), శాటిలైట్ భూమి ఆరోగ్యం (30%), వాతావరణ సమర్థత (20%), భూమి విలువ (10%). 750+ స్కోరు ఉన్నవారికి 1.5% వడ్డీ రాయితీ లభిస్తుంది."
             elif lang == "MARATHI":
-                resp = f"TVS कृषी क्रेडिट स्कोर (३००-९००) ४ प्रमुख स्तंभांवर आधारित आहे: बँकिंग उलाढाल (४०%), उपग्रह जमीन आरोग्य (३०%), हवामान सहनशीलता (२०%), आणि जमिनीचे मूल्य (१०%). ७५०+ स्कोर असल्यास १.५% व्याज सवलत मिळते."
+                resp = f"GeoKisaan कृषी क्रेडिट स्कोर (३००-९००) ४ प्रमुख स्तंभांवर आधारित आहे: बँकिंग उलाढाल (४०%), उपग्रह जमीन आरोग्य (३०%), हवामान सहनशीलता (२०%), आणि जमिनीचे मूल्य (१०%). ७५०+ स्कोर असल्यास १.५% व्याज सवलत मिळते."
             elif lang == "KANNADA":
-                resp = f"TVS ಕೃಷಿ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ (300-900) 4 ಮುಖ್ಯ ಅಂಶಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಬ್ಯಾಂಕಿಂಗ್ ವಹಿವಾಟು (40%), ಉಪಗ್ರಹ ಜಮೀನು ಆರೋಗ್ಯ (30%), ಹವಾಮಾನ ಸ್ಥಿತಿಸ್ಥಾಪಕತ್ವ (20%), ಜಮೀನಿನ ಮೌಲ್ಯ (10%). 750+ ಸ್ಕೋರ್‌ಗೆ 1.5% ಬಡ್ಡಿ ರಿಯಾಯಿತಿ ದೊರೆಯುತ್ತದೆ."
+                resp = f"GeoKisaan ಕೃಷಿ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ (300-900) 4 ಮುಖ್ಯ ಅಂಶಗಳನ್ನು ಒಳಗೊಂಡಿದೆ: ಬ್ಯಾಂಕಿಂಗ್ ವಹಿವಾಟು (40%), ಉಪಗ್ರಹ ಜಮೀನು ಆರೋಗ್ಯ (30%), ಹವಾಮಾನ ಸ್ಥಿತಿಸ್ಥಾಪಕತ್ವ (20%), ಜಮೀನಿನ ಮೌಲ್ಯ (10%). 750+ ಸ್ಕೋರ್‌ಗೆ 1.5% ಬಡ್ಡಿ ರಿಯಾಯಿತಿ ದೊರೆಯುತ್ತದೆ."
             elif lang == "BENGALI":
-                resp = f"TVS এগ্রি-ক্রেডিট স্কোর (৩০০-৯০০) ৪টি বিষয়ের ওপর নির্ভর করে: ব্যাঙ্কিং লেনদেন (৪০%), স্যাটেলাইট জমি ও ফসল স্বাস্থ্য (৩০%), জলবায়ু সহনশীলতা (২০%) এবং জমির মূল্য (১০%)। ৭৫০+ স্কোরে ১.৫% অতিরিক্ত সুদের ছাড় পাওয়া যায়।"
+                resp = f"GeoKisaan এগ্রি-ক্রেডিট স্কোর (৩০০-৯০০) ৪টি বিষয়ের ওপর নির্ভর করে: ব্যাঙ্কিং লেনদেন (৪০%), স্যাটেলাইট জমি ও ফসল স্বাস্থ্য (৩০%), জলবায়ু সহনশীলতা (২০%) এবং জমির মূল্য (১০%)। ৭৫০+ স্কোরে ১.৫% অতিরিক্ত সুদের ছাড় পাওয়া যায়।"
             elif lang == "HINGLISH":
-                resp = f"TVS Agri-Credit Score (300-900) 4 major pillars se banta hai: 1) Banking Turnover & Bureau (40%), 2) Sentinel-2 Satellite Land Health (30%), 3) 40-year Climate & Drought Resilience (20%), 4) Land Collateral Valuation (10%). Scores of 680-749 receive Fast-Track Approval, aur Prime Tier (750+) par 1.5% special interest discount milta hai."
+                resp = f"GeoKisaan Agri-Credit Score (300-900) 4 major pillars se banta hai: 1) Banking Turnover & Bureau (40%), 2) Sentinel-2 Satellite Land Health (30%), 3) 40-year Climate & Drought Resilience (20%), 4) Land Collateral Valuation (10%). Scores of 680-749 receive Fast-Track Approval, aur Prime Tier (750+) par 1.5% special interest discount milta hai."
             else:
-                resp = f"The TVS Agri-Credit Score (300–900) is objectively computed across 4 pillars: 1) Banking Turnover & Bureau (40%), 2) Sentinel-2 Satellite Land Health (30%), 3) Climate & Drought Resilience (20%), 4) Land Collateral Valuation (10%). Scores of 680–749 receive Fast-Track Approval, while Prime Tier (750+) unlocks a 1.5% ROI discount."
+                resp = f"The GeoKisaan Agri-Credit Score (300–900) is objectively computed across 4 pillars: 1) Banking Turnover & Bureau (40%), 2) Sentinel-2 Satellite Land Health (30%), 3) Climate & Drought Resilience (20%), 4) Land Collateral Valuation (10%). Scores of 680–749 receive Fast-Track Approval, while Prime Tier (750+) unlocks a 1.5% ROI discount."
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["agri_credit_score"], 0.97)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1086,7 +1091,7 @@ class KrishiSaathiAssistant:
                 ]
                 follow_ups = self._get_suggested_follow_ups(intent, lang)
                 if lang == "HINDI":
-                    resp = f"वर्तमान में किसी विशिष्ट खसरे का डेटा लोड नहीं है। अपने खेत की 10m सेंटिनल-2 उपग्रह हरियाली (NDVI) और मिट्टी में जैविक कार्बन (SOC) देखने के लिए कृपया स्मार्ट सैंक्शन कॉकपिट में अपना खसरा नंबर और गांव दर्ज करें। टीवीएस का सिस्टम बादलों के बावजूद CloudGap-CG द्वारा सटीक फसल रिपोर्ट तैयार करता है।"
+                    resp = f"वर्तमान में किसी विशिष्ट खसरे का डेटा लोड नहीं है। अपने खेत की 10m सेंटिनल-2 उपग्रह हरियाली (NDVI) और मिट्टी में जैविक कार्बन (SOC) देखने के लिए कृपया स्मार्ट सैंक्शन कॉकपिट में अपना खसरा नंबर और गांव दर्ज करें। जियोकिसान का सिस्टम बादलों के बावजूद CloudGap-CG द्वारा सटीक फसल रिपोर्ट तैयार करता है।"
                 elif lang == "CHHATTISGARHI":
                     resp = f"अभी कोनो खेत के खसरा लोड नई हे संगवारी। अपन खेत के 10m सैटेलाइट हरियरी (NDVI) अउ माटी के ताकत देखे बर स्मार्ट सैंक्शन कॉकपिट म अपन खसरा नंबर अउ गांव दर्ज करव। बादर छाए रहे ले घलो हमर CloudGap तंत्र सटीक रिपोर्ट देथे!"
                 elif lang == "TAMIL":
@@ -1161,7 +1166,7 @@ class KrishiSaathiAssistant:
             est_capacity = int(extracted_acres * base_rate_per_acre)
             est_capacity = max(250000, min(900000, est_capacity))
 
-            tractor_type = "Used Tractor" if is_used_tractor else "TVS Tractor"
+            tractor_type = "Used Tractor" if is_used_tractor else "GeoKisaan Tractor"
             roi_disp = "13.5%" if is_used_tractor else "10.5%"
             down_pay_pct = "15% - 20%" if is_used_tractor else "10%"
             down_pay_inr = int(est_capacity * (0.18 if is_used_tractor else 0.10))
@@ -1169,7 +1174,7 @@ class KrishiSaathiAssistant:
 
             evidence = [
                 {"source": "Dynamic Land Capacity Model", "acres": extracted_acres, "district": extracted_district or "Durg", "est_sanction_inr": est_capacity},
-                {"source": "TVS Product Terms", "product": tractor_type, "roi": roi_disp, "down_payment": down_pay_pct, "est_down_payment_inr": down_pay_inr},
+                {"source": "GeoKisaan Product Terms", "product": tractor_type, "roi": roi_disp, "down_payment": down_pay_pct, "est_down_payment_inr": down_pay_inr},
                 {"source": "Repayment Structure", "plan": "Seasonally-Aligned Harvest EMI", "sowing_fee_inr": 1500}
             ]
             action = {
@@ -1184,7 +1189,7 @@ class KrishiSaathiAssistant:
                 }
             }
             follow_ups = [
-                "TVS फसल कटाई (हार्वेस्ट) EMI कैसे काम करती है?",
+                "GeoKisaan फसल कटाई (हार्वेस्ट) EMI कैसे काम करती है?",
                 "लोन के लिए क्या 4 दस्तावेज चाहिए?",
                 "स्मार्ट सैंक्शन कॉकपिट में आवेदन कैसे पूरा करें?"
             ] if lang in ["HINDI", "CHHATTISGARHI", "HINGLISH"] else [
@@ -1196,22 +1201,22 @@ class KrishiSaathiAssistant:
             if lang == "HINDI":
                 resp = (
                     f"हाँ किसान भाई! {loc_label} में आपके पास {extracted_acres} एकड़ जमीन है, "
-                    f"तो आप टीवीएस { 'यूज्ड (पुराने) ट्रैक्टर' if is_used_tractor else 'ट्रैक्टर' } ऋण के लिए पूरी तरह पात्र हैं। "
+                    f"तो आप जियोकिसान { 'यूज्ड (पुराने) ट्रैक्टर' if is_used_tractor else 'ट्रैक्टर' } ऋण के लिए पूरी तरह पात्र हैं। "
                     f"आपकी {extracted_acres} एकड़ जमीन की कृषि उत्पादकता के आधार पर आपको लगभग ₹{est_capacity:,} तक की ऋण स्वीकृति मिल सकती है। "
-                    f"{'पुराने ट्रैक्टर के लिए टीवीएस 80-85% तक ऑन-रोड फाइनेंस करता है, जिसमें केवल 15% से 20% (लगभग ₹' + f'{down_pay_inr:,}' + ') का डाउन पेमेंट देना होगा।' if is_used_tractor else 'नए ट्रैक्टर पर 90% तक फाइनेंस मिलता है और केवल 10% न्यूनतम डाउन पेमेंट लगता है।'} "
-                    f"ब्याज दर {roi_disp} प्रति वर्ष से शुरू होती है। साथ ही टीवीएस की 'हार्वेस्ट EMI' सुविधा के तहत बुआई के समय केवल ₹1,500/माह लगेगा और मुख्य किस्त दिसंबर में मंडी में धान बिकने के बाद चुकानी होगी। मैंने आपके लिए स्क्रीन पर सैंक्शन कॉकपिट तैयार कर दिया है!"
+                    f"{'पुराने ट्रैक्टर के लिए जियोकिसान 80-85% तक ऑन-रोड फाइनेंस करता है, जिसमें केवल 15% से 20% (लगभग ₹' + f'{down_pay_inr:,}' + ') का डाउन पेमेंट देना होगा।' if is_used_tractor else 'नए ट्रैक्टर पर 90% तक फाइनेंस मिलता है और केवल 10% न्यूनतम डाउन पेमेंट लगता है।'} "
+                    f"ब्याज दर {roi_disp} प्रति वर्ष से शुरू होती है। साथ ही जियोकिसान की 'हार्वेस्ट EMI' सुविधा के तहत बुआई के समय केवल ₹1,500/माह लगेगा और मुख्य किस्त दिसंबर में मंडी में धान बिकने के बाद चुकानी होगी। मैंने आपके लिए स्क्रीन पर सैंक्शन कॉकपिट तैयार कर दिया है!"
                 )
             elif lang == "CHHATTISGARHI":
                 resp = (
                     f"हव संगवारी! {loc_label} म तुंहर तीर {extracted_acres} एकड़ जमीन हे, "
-                    f"त तुमन टीवीएस { 'पुराना ट्रैक्टर' if is_used_tractor else 'ट्रैक्टर' } लोन बर पूरा पात्र हव। "
+                    f"त तुमन जियोकिसान { 'पुराना ट्रैक्टर' if is_used_tractor else 'ट्रैक्टर' } लोन बर पूरा पात्र हव। "
                     f"{extracted_acres} एकड़ जमीन के आधार म तुमन ला लगभग ₹{est_capacity:,} तक के लोन मिल सकत हे। "
-                    f"{'पुराना ट्रैक्टर बर खाली 15% ले 20% (लगभग ₹' + f'{down_pay_inr:,}' + ') के डाउन पेमेंट जमा करे बर लगही, बाकी 80-85% टीवीएस फाइनेंस करही।' if is_used_tractor else 'नवा ट्रैक्टर बर 90% तक लोन मिलथे अउ खाली 10% डाउन पेमेंट लगथे।'} "
+                    f"{'पुराना ट्रैक्टर बर खाली 15% ले 20% (लगभग ₹' + f'{down_pay_inr:,}' + ') के डाउन पेमेंट जमा करे बर लगही, बाकी 80-85% जियोकिसान फाइनेंस करही।' if is_used_tractor else 'नवा ट्रैक्टर बर 90% तक लोन मिलथे अउ खाली 10% डाउन पेमेंट लगथे।'} "
                     f"बोआई के बेरा खाली ₹1,500/महिना के किस्त लगही, अउ बड़का किस्त धान बिकाए के बाद दिसंबर म भरे बर लगही। मैं तुंहर बर स्क्रीन म सैंक्शन कॉकपिट खोल दे हंव!"
                 )
             elif lang == "TAMIL":
                 resp = (
-                    f"ஆம்! {loc_label} பகுதியில் {extracted_acres} ஏக்கர் நிலம் உள்ளதால், நீங்கள் TVS "
+                    f"ஆம்! {loc_label} பகுதியில் {extracted_acres} ஏக்கர் நிலம் உள்ளதால், நீங்கள் GeoKisaan "
                     f"{ 'பயன்படுத்திய டிராக்டர்' if is_used_tractor else 'புதிய டிராக்டர்' } கடனுக்கு முழு தகுதி பெற்றுள்ளீர்கள். "
                     f"உங்கள் நிலத்தின் அடிப்படையில் சுமார் ₹{est_capacity:,} வரை கடன் அங்கீகரிக்கப்படலாம். "
                     f"{'பயன்படுத்திய டிராக்டருக்கு 15% முதல் 20% வரை மட்டுமே முன்பணம் (சுமார் ₹' + f'{down_pay_inr:,}' + ') தேவைப்படும்.' if is_used_tractor else 'புதிய டிராக்டருக்கு 90% வரை நிதி உதவி கிடைக்கும், 10% மட்டுமே முன்பணம் தேவை.'} "
@@ -1220,17 +1225,17 @@ class KrishiSaathiAssistant:
             elif lang == "HINGLISH":
                 resp = (
                     f"Haan kisan bhai! {loc_label} me aapke paas {extracted_acres} acres land hai, "
-                    f"to aap TVS { 'Used (second-hand) Tractor' if is_used_tractor else 'Tractor' } Loan ke liye fully eligible hain. "
+                    f"to aap GeoKisaan { 'Used (second-hand) Tractor' if is_used_tractor else 'Tractor' } Loan ke liye fully eligible hain. "
                     f"Aapki {extracted_acres} acres zameen ki productivity ke hisaab se aapko approx ₹{est_capacity:,} tak ka loan sanction mil sakta hai. "
-                    f"{'Used tractor ke liye TVS 80-85% tak on-road finance karta hai, jisme sirf 15% to 20% (approx ₹' + f'{down_pay_inr:,}' + ') ka down payment dena hoga.' if is_used_tractor else 'New tractor par 90% LTV financing milti hai (sirf 10% down payment).' } "
-                    f"Interest rate {roi_disp} p.a. se shuru hoti hai. Aur TVS ki 'Harvest EMI' suvidha ke tehat buwai ke dauran sirf ~₹1,500/month lagega, aur main installment December me mandi me dhaan bikne ke baad schedule hogi. Maine aapke liye screen par Sanction Cockpit pre-fill kar diya hai!"
+                    f"{'Used tractor ke liye GeoKisaan 80-85% tak on-road finance karta hai, jisme sirf 15% to 20% (approx ₹' + f'{down_pay_inr:,}' + ') ka down payment dena hoga.' if is_used_tractor else 'New tractor par 90% LTV financing milti hai (sirf 10% down payment).' } "
+                    f"Interest rate {roi_disp} p.a. se shuru hoti hai. Aur GeoKisaan ki 'Harvest EMI' suvidha ke tehat buwai ke dauran sirf ~₹1,500/month lagega, aur main installment December me mandi me dhaan bikne ke baad schedule hogi. Maine aapke liye screen par Sanction Cockpit pre-fill kar diya hai!"
                 )
             else:
                 resp = (
                     f"Yes! With {extracted_acres} acres of agricultural land in {loc_label}, "
-                    f"you comfortably qualify for a TVS {tractor_type} Loan. "
+                    f"you comfortably qualify for a GeoKisaan {tractor_type} Loan. "
                     f"Based on your farm size and soil productivity, you are estimated for up to ₹{est_capacity:,} in sanctioned credit. "
-                    f"{'For a used tractor, TVS finances up to 80%–85% on-road, requiring only a 15% to 20% down payment (approx. ₹' + f'{down_pay_inr:,}' + ').' if is_used_tractor else 'For a new tractor, TVS finances up to 90% on-road (only 10% down payment required).' } "
+                    f"{'For a used tractor, GeoKisaan finances up to 80%–85% on-road, requiring only a 15% to 20% down payment (approx. ₹' + f'{down_pay_inr:,}' + ').' if is_used_tractor else 'For a new tractor, GeoKisaan finances up to 90% on-road (only 10% down payment required).' } "
                     f"Rates start from {roi_disp} p.a. Under our Seasonally-Aligned Harvest EMI, you only pay ~₹1,500/month during sowing, with the primary bullet installment due post-harvest after Mandi sales. I have guided your screen to the Decision Cockpit below!"
                 )
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.98)
@@ -1247,16 +1252,16 @@ class KrishiSaathiAssistant:
             intent = "LOAN_ELIGIBILITY"
             if not has_borrower_context or score is None or amount is None:
                 evidence = [
-                    {"source": "TVS Credit Policy", "score_range": "300 to 900", "tractor_ltv": "Up to 90% On-Road"},
+                    {"source": "GeoKisaan Policy", "score_range": "300 to 900", "tractor_ltv": "Up to 90% On-Road"},
                     {"source": "Assessment Gate", "status": "No borrower selected. Enter details in Sanction Cockpit."}
                 ]
                 follow_ups = self._get_suggested_follow_ups(intent, lang)
                 if lang == "HINDI":
-                    resp = f"वर्तमान में कोई सक्रिय ऋण आवेदन चयनित नहीं है। अपना व्यक्तिगत एग्री-क्रेडिट स्कोर (300-900) और स्वीकृत ऋण राशि जानने के लिए कृपया स्मार्ट सैंक्शन कॉकपिट में अपना नाम, खसरा नंबर और भूमि का आकार दर्ज करें। टीवीएस क्रेडिट नए ट्रैक्टरों पर 90% तक LTV और 10.5% से शुरू होने वाली प्रतिस्पर्धी ब्याज दरें प्रदान करता है।"
+                    resp = f"वर्तमान में कोई सक्रिय ऋण आवेदन चयनित नहीं है। अपना व्यक्तिगत एग्री-क्रेडिट स्कोर (300-900) और स्वीकृत ऋण राशि जानने के लिए कृपया स्मार्ट सैंक्शन कॉकपिट में अपना नाम, खसरा नंबर और भूमि का आकार दर्ज करें। जियोकिसान नए ट्रैक्टरों पर 90% तक LTV और 10.5% से शुरू होने वाली प्रतिस्पर्धी ब्याज दरें प्रदान करता है।"
                 elif lang == "CHHATTISGARHI":
-                    resp = f"अभी कोनो लोन आवेदन चुने नई हे संगवारी। अपन सही एग्री-क्रेडिट स्कोर (300 ले 900) अउ स्वीकृत लोन राशि जाने बर स्मार्ट सैंक्शन कॉकपिट म अपन नाम, खसरा अउ जमीन के रकबा दर्ज करव। टीवीएस म नवा ट्रैक्टर बर 90% तक लोन अउ 10.5% ले ब्याज दर मिलथे।"
+                    resp = f"अभी कोनो लोन आवेदन चुने नई हे संगवारी। अपन सही एग्री-क्रेडिट स्कोर (300 ले 900) अउ स्वीकृत लोन राशि जाने बर स्मार्ट सैंक्शन कॉकपिट म अपन नाम, खसरा अउ जमीन के रकबा दर्ज करव। जियोकिसान म नवा ट्रैक्टर बर 90% तक लोन अउ 10.5% ले ब्याज दर मिलथे।"
                 elif lang == "TAMIL":
-                    resp = f"தற்போது செயலில் உள்ள கடன் விண்ணப்பம் எதுவும் தேர்ந்தெடுக்கப்படவில்லை. உங்கள் தனிப்பயனாக்கப்பட்ட அக்ரி-கிரெடிட் ஸ்கோர் (300-900) மற்றும் அங்கீகரிக்கப்பட்ட கடன் தொகையை அறிய, ஸ்மார்ட் சாங்க்ஷன் காக்பிட்டில் உங்கள் விவரங்களை உள்ளிடவும். TVS கிரெடிட் 90% வரை LTV வழங்குகிறது."
+                    resp = f"தற்போது செயலில் உள்ள கடன் விண்ணப்பம் எதுவும் தேர்ந்தெடுக்கப்படவில்லை. உங்கள் தனிப்பயனாக்கப்பட்ட அக்ரி-கிரெடிட் ஸ்கோர் (300-900) மற்றும் அங்கீகரிக்கப்பட்ட கடன் தொகையை அறிய, ஸ்மார்ட் சாங்க்ஷன் காக்பிட்டில் உங்கள் விவரங்களை உள்ளிடவும். GeoKisaan கிரெடிட் 90% வரை LTV வழங்குகிறது."
                 elif lang == "TELUGU":
                     resp = f"ప్రస్తుతం ఎటువంటి సక్రియ లోన్ దరఖాస్తు ఎంపిక చేయబడలేదు. మీ వ్యక్తిగత అగ్రి-క్రెడిట్ స్కోరు (300-900) మరియు మంజూరైన లోన్ మొత్తాన్ని తెలుసుకోవడానికి, దయచేసి స్మార్ట్ శాంక్షన్ కాక్‌పిట్‌లో మీ వివరాలను నమోదు చేయండి."
                 elif lang == "MARATHI":
@@ -1266,9 +1271,9 @@ class KrishiSaathiAssistant:
                 elif lang == "BENGALI":
                     resp = f"বর্তমানে কোনও সক্রিয় ঋণ আবেদন নির্বাচিত নেই। আপনার ব্যক্তিগত ক্রেডিট স্কোর (৩০০-৯০০) এবং অনুমোদিত ঋণের পরিমাণ জানতে স্মার্ট স্যাংশন ককপিটে তথ্য দিন।"
                 elif lang == "HINGLISH":
-                    resp = f"Currently koi active loan application selected nahi hai. Apna personalized Agri-Credit Score (300-900) aur sanctioned loan amount janne ke liye please Smart Sanction Cockpit me apna naam, Khasra aur land size enter karein. TVS Credit tractors par up to 90% LTV aur 10.5% se shuru competitive interest rates offer karta hai."
+                    resp = f"Currently koi active loan application selected nahi hai. Apna personalized Agri-Credit Score (300-900) aur sanctioned loan amount janne ke liye please Smart Sanction Cockpit me apna naam, Khasra aur land size enter karein. GeoKisaan tractors par up to 90% LTV aur 10.5% se shuru competitive interest rates offer karta hai."
                 else:
-                    resp = f"No active loan application or borrower profile is currently selected. To generate your verified Agri-Credit Score (300–900) and sanctioned loan offer, please submit your applicant and land details in the TVS Smart Sanction Cockpit. TVS Credit finances up to 90% on-road on new tractors with rates starting from 10.5%."
+                    resp = f"No active loan application or borrower profile is currently selected. To generate your verified Agri-Credit Score (300–900) and sanctioned loan offer, please submit your applicant and land details in the GeoKisaan Smart Sanction Cockpit. GeoKisaan finances up to 90% on-road on new tractors with rates starting from 10.5%."
                 conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.95)
                 return resp, intent, evidence, conf, follow_ups
 
@@ -1278,23 +1283,23 @@ class KrishiSaathiAssistant:
             ]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"नमस्ते {first_name} जी! आपका टीवीएस एग्री-क्रेडिट स्कोर {score}/900 ({decision}) है। यह स्कोर आपके वित्तीय रिकॉर्ड, सैटेलाइट खेत स्वास्थ्य और मौसम सहिष्णुता को मिलाकर बनाया गया है। इसके तहत आप ₹{amount:,} तक के '{product}' के लिए {roi:.1f}% रियायती ब्याज दर पर पूर्ण पात्र हैं।"
+                resp = f"नमस्ते {first_name} जी! आपका जियोकिसान एग्री-क्रेडिट स्कोर {score}/900 ({decision}) है। यह स्कोर आपके वित्तीय रिकॉर्ड, सैटेलाइट खेत स्वास्थ्य और मौसम सहिष्णुता को मिलाकर बनाया गया है। इसके तहत आप ₹{amount:,} तक के '{product}' के लिए {roi:.1f}% रियायती ब्याज दर पर पूर्ण पात्र हैं।"
             elif lang == "CHHATTISGARHI":
-                resp = f"जय जोहार {first_name} भइया! तुंहर टीवीएस एग्री-क्रेडिट स्कोर {score}/900 ({decision}) हे। ए स्कोर के आधार म तुमन ला खाली {roi:.1f}% ब्याज म ₹{amount:,} तक के '{product}' आसानी ले मिल जाही।"
+                resp = f"जय जोहार {first_name} भइया! तुंहर जियोकिसान एग्री-क्रेडिट स्कोर {score}/900 ({decision}) हे। ए स्कोर के आधार म तुमन ला खाली {roi:.1f}% ब्याज म ₹{amount:,} तक के '{product}' आसानी ले मिल जाही।"
             elif lang == "TAMIL":
-                resp = f"வணக்கம் {first_name}! உங்கள் TVS அக்ரி-கிரெடிட் ஸ்கோர் {score}/900 ({decision}) ஆகும். இந்த ஸ்கோரின் அடிப்படையில், நீங்கள் {roi:.1f}% சிறப்பு வட்டி விகிதத்தில் ₹{amount:,} வரை '{product}' பெற முழு தகுதி பெற்றுள்ளீர்கள்."
+                resp = f"வணக்கம் {first_name}! உங்கள் GeoKisaan அக்ரி-கிரெடிட் ஸ்கோர் {score}/900 ({decision}) ஆகும். இந்த ஸ்கோரின் அடிப்படையில், நீங்கள் {roi:.1f}% சிறப்பு வட்டி விகிதத்தில் ₹{amount:,} வரை '{product}' பெற முழு தகுதி பெற்றுள்ளீர்கள்."
             elif lang == "TELUGU":
-                resp = f"నమస్కారం {first_name} గారు! మీ TVS అగ్రి-క్రెడిట్ స్కోరు {score}/900 ({decision}). దీని ఆధారంగా మీరు {roi:.1f}% రాయితీ వడ్డీ రేటుతో ₹{amount:,} వరకు '{product}' పొందడానికి పూర్తి అర్హత కలిగి ఉన్నారు."
+                resp = f"నమస్కారం {first_name} గారు! మీ GeoKisaan అగ్రి-క్రెడిట్ స్కోరు {score}/900 ({decision}). దీని ఆధారంగా మీరు {roi:.1f}% రాయితీ వడ్డీ రేటుతో ₹{amount:,} వరకు '{product}' పొందడానికి పూర్తి అర్హత కలిగి ఉన్నారు."
             elif lang == "MARATHI":
-                resp = f"नमस्कार {first_name} जी! आपला TVS कृषी क्रेडिट स्कोर {score}/900 ({decision}) आहे. या आधारे आपण {roi:.1f}% सवलतीच्या व्याजदरात ₹{amount:,} पर्यंतच्या '{product}' साठी पूर्ण पात्र आहात."
+                resp = f"नमस्कार {first_name} जी! आपला GeoKisaan कृषी क्रेडिट स्कोर {score}/900 ({decision}) आहे. या आधारे आपण {roi:.1f}% सवलतीच्या व्याजदरात ₹{amount:,} पर्यंतच्या '{product}' साठी पूर्ण पात्र आहात."
             elif lang == "KANNADA":
-                resp = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ! ನಿಮ್ಮ TVS ಕೃಷಿ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ {score}/900 ({decision}) ಆಗಿದೆ. ಈ ಆಧಾರದ ಮೇಲೆ ನೀವು {roi:.1f}% ರಿಯಾಯಿತಿ ಬಡ್ಡಿದರದಲ್ಲಿ ₹{amount:,} ವರೆಗೆ '{product}' ಪಡೆಯಲು ಸಂಪೂರ್ಣ ಅರ್ಹರಾಗಿದ್ದೀರಿ."
+                resp = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ! ನಿಮ್ಮ GeoKisaan ಕೃಷಿ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ {score}/900 ({decision}) ಆಗಿದೆ. ಈ ಆಧಾರದ ಮೇಲೆ ನೀವು {roi:.1f}% ರಿಯಾಯಿತಿ ಬಡ್ಡಿದರದಲ್ಲಿ ₹{amount:,} ವರೆಗೆ '{product}' ಪಡೆಯಲು ಸಂಪೂರ್ಣ ಅರ್ಹರಾಗಿದ್ದೀರಿ."
             elif lang == "BENGALI":
-                resp = f"নমস্কার {first_name} বাবু! আপনার TVS এগ্রি-ক্রেডিট স্কোর {score}/900 ({decision})। এর ভিত্তিতে আপনি {roi:.1f}% সুদের হারে ₹{amount:,} পর্যন্ত '{product}' পাওয়ার জন্য সম্পূর্ণ যোগ্য।"
+                resp = f"নমস্কার {first_name} বাবু! আপনার GeoKisaan এগ্রি-ক্রেডিট স্কোর {score}/900 ({decision})। এর ভিত্তিতে আপনি {roi:.1f}% সুদের হারে ₹{amount:,} পর্যন্ত '{product}' পাওয়ার জন্য সম্পূর্ণ যোগ্য।"
             elif lang == "HINGLISH":
-                resp = f"Namaste {first_name} ji! Aapka TVS Agri-Credit Score {score}/900 ({decision}) hai. Yeh score aapke banking records, 10m satellite khet health (NDVI {ndvi:.2f}) aur climate resilience ko combine karta hai. Iske tehat aap ₹{amount:,} tak ke '{product}' ke liye {roi:.1f}% preferential interest rate par fully eligible hain."
+                resp = f"Namaste {first_name} ji! Aapka GeoKisaan Agri-Credit Score {score}/900 ({decision}) hai. Yeh score aapke banking records, 10m satellite khet health (NDVI {ndvi:.2f}) aur climate resilience ko combine karta hai. Iske tehat aap ₹{amount:,} tak ke '{product}' ke liye {roi:.1f}% preferential interest rate par fully eligible hain."
             else:
-                resp = f"Hello {first_name}! Your TVS Agri-Credit Score is {score}/900 (Rating: {decision}). This multimodal score combines your banking turnover, satellite land health (NDVI: {ndvi:.2f}), and climate resilience. You are eligible for up to ₹{amount:,} at a preferential interest rate of {roi:.1f}% p.a."
+                resp = f"Hello {first_name}! Your GeoKisaan Agri-Credit Score is {score}/900 (Rating: {decision}). This multimodal score combines your banking turnover, satellite land health (NDVI: {ndvi:.2f}), and climate resilience. You are eligible for up to ₹{amount:,} at a preferential interest rate of {roi:.1f}% p.a."
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["agri_credit_score", "max_sanction_amount_inr", "interest_rate_pct"], 0.99)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1307,26 +1312,26 @@ class KrishiSaathiAssistant:
         ]
         if any(w in query for w in weather_keywords):
             intent = "DROUGHT_MORATORIUM"
-            evidence = [{"source": "TVS EWS Engine", "relief": "60-day Moratorium & Restructuring Buffer", "trigger": "Satellite Soil Moisture / Rainfall Deficit"}]
+            evidence = [{"source": "GeoKisaan EWS Engine", "relief": "60-day Moratorium & Restructuring Buffer", "trigger": "Satellite Soil Moisture / Rainfall Deficit"}]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"यदि कम वर्षा या सूखे के कारण फसल संकट उत्पन्न होता है, तो टीवीएस क्रेडिट का अर्ली वार्निंग सिस्टम (EWS) उपग्रह द्वारा मिट्टी की नमी मापकर स्वतः 60-दिन की ईएमआई राहत और पुनर्गठन (Rescheduling) सुविधा प्रदान करता है, ताकि किसानों पर कोई आर्थिक दबाव न पड़े।"
+                resp = f"यदि कम वर्षा या सूखे के कारण फसल संकट उत्पन्न होता है, तो जियोकिसान का अर्ली वार्निंग सिस्टम (EWS) उपग्रह द्वारा मिट्टी की नमी मापकर स्वतः 60-दिन की ईएमआई राहत और पुनर्गठन (Rescheduling) सुविधा प्रदान करता है, ताकि किसानों पर कोई आर्थिक दबाव न पड़े।"
             elif lang == "CHHATTISGARHI":
-                resp = f"अगर कम पानी गिरे या सूखा परे ले फसल कमजोर हो जाथे, त टीवीएस क्रेडिट के ईडब्ल्यूएस (EWS) सैटेलाइट जांच ले अपने आप तुंहर किस्त ला 60 दिन बर आगे बढ़ा देथे। एमा कोनो पेनल्टी नई लगय अउ किसान भाई मन ला पूरा राहत मिलथे।"
+                resp = f"अगर कम पानी गिरे या सूखा परे ले फसल कमजोर हो जाथे, त जियोकिसान के ईडब्ल्यूएस (EWS) सैटेलाइट जांच ले अपने आप तुंहर किस्त ला 60 दिन बर आगे बढ़ा देथे। एमा कोनो पेनल्टी नई लगय अउ किसान भाई मन ला पूरा राहत मिलथे।"
             elif lang == "TAMIL":
-                resp = f"மழைப்பொழிவு பற்றாக்குறை அல்லது வறட்சி ஏற்பட்டால், TVS கிரெடிட்டின் முன்கூட்டிய எச்சரிக்கை அமைப்பு (EWS) செயற்கைக்கோள் மூலம் மண்ணின் ஈரப்பதத்தை கண்காணித்து, தானாகவே 60 நாட்கள் EMI ஒத்திவைப்பு மற்றும் மறுசீரமைப்பு சலுகையை அபராதமின்றி வழங்குகிறது."
+                resp = f"மழைப்பொழிவு பற்றாக்குறை அல்லது வறட்சி ஏற்பட்டால், GeoKisaan கிரெடிட்டின் முன்கூட்டிய எச்சரிக்கை அமைப்பு (EWS) செயற்கைக்கோள் மூலம் மண்ணின் ஈரப்பதத்தை கண்காணித்து, தானாகவே 60 நாட்கள் EMI ஒத்திவைப்பு மற்றும் மறுசீரமைப்பு சலுகையை அபராதமின்றி வழங்குகிறது."
             elif lang == "TELUGU":
-                resp = f"తక్కువ వర్షపాతం లేదా కరువు ఏర్పడితే, TVS క్రెడిట్ యొక్క ఎర్లీ వార్నింగ్ సిస్టమ్ (EWS) ఉపగ్రహం ద్వారా మట్టి తేమను గుర్తించి, ఎటువంటి పెనాల్టీ లేకుండా స్వయంచాలకంగా 60 రోజుల EMI వాయిదా మరియు రీస్ట్రక్చరింగ్ సదుపాయాన్ని అందిస్తుంది."
+                resp = f"తక్కువ వర్షపాతం లేదా కరువు ఏర్పడితే, GeoKisaan క్రెడిట్ యొక్క ఎర్లీ వార్నింగ్ సిస్టమ్ (EWS) ఉపగ్రహం ద్వారా మట్టి తేమను గుర్తించి, ఎటువంటి పెనాల్టీ లేకుండా స్వయంచాలకంగా 60 రోజుల EMI వాయిదా మరియు రీస్ట్రక్చరింగ్ సదుపాయాన్ని అందిస్తుంది."
             elif lang == "MARATHI":
-                resp = f"कमी पाऊस किंवा दुष्काळ पडल्यास, TVS क्रेडिटची अर्ली वॉर्निंग सिस्टीम (EWS) उपग्रहाद्वारे मातीतील ओलावा तपासून विनादंड आपोआप ६० दिवसांची ईएमआय सवलत आणि कर्ज पुनर्रचना सुविधा देते."
+                resp = f"कमी पाऊस किंवा दुष्काळ पडल्यास, GeoKisaan क्रेडिटची अर्ली वॉर्निंग सिस्टीम (EWS) उपग्रहाद्वारे मातीतील ओलावा तपासून विनादंड आपोआप ६० दिवसांची ईएमआय सवलत आणि कर्ज पुनर्रचना सुविधा देते."
             elif lang == "KANNADA":
-                resp = f"ಮಳೆ ಕೊರತೆ ಅಥವಾ ಬರಗಾಲ ಉಂಟಾದರೆ, TVS ಕ್ರೆಡಿಟ್‌ನ ಅರ್ಲಿ ವಾರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ (EWS) ಉಪಗ್ರಹದ ಮೂಲಕ ಮಣ್ಣಿನ ತೇವಾಂಶವನ್ನು ಪತ್ತೆಹಚ್ಚಿ, ಯಾವುದೇ ದಂಡವಿಲ್ಲದೆ ಸ್ವಯಂಚಾಲಿತವಾಗಿ 60 ದಿನಗಳ ಇಎಂಐ ಮುಂದೂಡಿಕೆ ಸೌಲಭ್ಯವನ್ನು ನೀಡುತ್ತದೆ."
+                resp = f"ಮಳೆ ಕೊರತೆ ಅಥವಾ ಬರಗಾಲ ಉಂಟಾದರೆ, GeoKisaan ಕ್ರೆಡಿಟ್‌ನ ಅರ್ಲಿ ವಾರ್ನಿಂಗ್ ಸಿಸ್ಟಮ್ (EWS) ಉಪಗ್ರಹದ ಮೂಲಕ ಮಣ್ಣಿನ ತೇವಾಂಶವನ್ನು ಪತ್ತೆಹಚ್ಚಿ, ಯಾವುದೇ ದಂಡವಿಲ್ಲದೆ ಸ್ವಯಂಚಾಲಿತವಾಗಿ 60 ದಿನಗಳ ಇಎಂಐ ಮುಂದೂಡಿಕೆ ಸೌಲಭ್ಯವನ್ನು ನೀಡುತ್ತದೆ."
             elif lang == "BENGALI":
-                resp = f"কম বৃষ্টি বা খরা দেখা দিলে TVS ক্রেডিটের আর্লি ওয়ার্নিং সিস্টেম (EWS) উপগ্রহের মাধ্যমে মাটির আর্দ্রতা পরীক্ষা করে স্বয়ংক্রিয়ভাবে কোনও জরিমানা ছাড়াই ৬০ দিনের কিস্তি স্থগিত ও ঋণ পুনর্গঠনের সুবিধা প্রদান করে।"
+                resp = f"কম বৃষ্টি বা খরা দেখা দিলে GeoKisaan ক্রেডিটের আর্লি ওয়ার্নিং সিস্টেম (EWS) উপগ্রহের মাধ্যমে মাটির আর্দ্রতা পরীক্ষা করে স্বয়ংক্রিয়ভাবে কোনও জরিমানা ছাড়াই ৬০ দিনের কিস্তি স্থগিত ও ঋণ পুনর্গঠনের সুবিধা প্রদান করে।"
             elif lang == "HINGLISH":
-                resp = f"Yadi kam barish ya sukhe ke karan fasal par sankat aata hai, to TVS Credit ka Early Warning System (EWS) satellite dwara mitti ki moisture detect karke automatically 60-day EMI deferment aur restructuring buffer provide karta hai, jisse bina kisi penalty ke kisan ko rahat milti hai."
+                resp = f"Yadi kam barish ya sukhe ke karan fasal par sankat aata hai, to GeoKisaan ka Early Warning System (EWS) satellite dwara mitti ki moisture detect karke automatically 60-day EMI deferment aur restructuring buffer provide karta hai, jisse bina kisi penalty ke kisan ko rahat milti hai."
             else:
-                resp = f"If monsoon deficit or drought stresses your crop, TVS Credit's Early Warning System detects the moisture stress via satellite telemetry and automatically unlocks a 60-day EMI deferment and loan restructuring buffer, protecting you from penalty charges."
+                resp = f"If monsoon deficit or drought stresses your crop, GeoKisaan's Early Warning System detects the moisture stress via satellite telemetry and automatically unlocks a 60-day EMI deferment and loan restructuring buffer, protecting you from penalty charges."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.96)
             return resp, intent, evidence, conf, follow_ups
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.96)
@@ -1347,23 +1352,23 @@ class KrishiSaathiAssistant:
             ]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"यदि कीट प्रकोप, सूखा या बेमौसम बारिश से फसल का नुकसान होता है, तो टीवीएस क्रेडिट का ईडब्ल्यूएस (EWS) सिस्टम स्वतः अलर्ट जारी करता है। आप प्रधानमंत्री फसल बीमा योजना (PMFBY) के तहत 72 घंटे के भीतर टोल-फ्री 1800-180-1551 पर या टीवीएस रिलेशनशिप मैनेजर की मदद से क्लेम दर्ज कर सकते हैं। हमारी सैटेलाइट NDVI रिपोर्ट क्लेम के त्वरित निपटारे में साक्ष्य के रूप में काम आती है।"
+                resp = f"यदि कीट प्रकोप, सूखा या बेमौसम बारिश से फसल का नुकसान होता है, तो जियोकिसान का ईडब्ल्यूएस (EWS) सिस्टम स्वतः अलर्ट जारी करता है। आप प्रधानमंत्री फसल बीमा योजना (PMFBY) के तहत 72 घंटे के भीतर टोल-फ्री 1800-180-1551 पर या जियोकिसान रिलेशनशिप मैनेजर की मदद से क्लेम दर्ज कर सकते हैं। हमारी सैटेलाइट NDVI रिपोर्ट क्लेम के त्वरित निपटारे में साक्ष्य के रूप में काम आती है।"
             elif lang == "CHHATTISGARHI":
-                resp = f"अगर सूखा, कीड़ा लगे या बेमौसम पानी गिरे ले फसल के नुकसान होथे, त टीवीएस सिस्टम ह तुरते अलर्ट देथे। तुमन प्रधानमंत्री फसल बीमा योजना (PMFBY) म 72 घंटा के भीतर टोल-फ्री 1800-180-1551 म फोन करके या टीवीएस अफसर के मदद ले क्लेम दर्ज करा सकत हव। सैटेलाइट रिपोर्ट ले तुंहर क्लेम जल्दी पास हो जाही संगवारी!"
+                resp = f"अगर सूखा, कीड़ा लगे या बेमौसम पानी गिरे ले फसल के नुकसान होथे, त जियोकिसान सिस्टम ह तुरते अलर्ट देथे। तुमन प्रधानमंत्री फसल बीमा योजना (PMFBY) म 72 घंटा के भीतर टोल-फ्री 1800-180-1551 म फोन करके या जियोकिसान अफसर के मदद ले क्लेम दर्ज करा सकत हव। सैटेलाइट रिपोर्ट ले तुंहर क्लेम जल्दी पास हो जाही संगवारी!"
             elif lang == "TAMIL":
-                resp = f"பூச்சி தாக்குதல் அல்லது பருவம் தவறிய மழையால் பயிர் சேதமடைந்தால், 72 மணி நேரத்திற்குள் PMFBY இலவச உதவி எண் 1800-180-1551 அல்லது TVS கடன் அதிகாரி மூலம் காப்பீட்டுக் கோரிக்கையை பதிவு செய்யலாம். எங்கள் சென்டினல்-2 செயற்கைக்கோள் ஆய்வு அறிக்கை விரைவான இழப்பீட்டுக்கு சான்றாக அமையும்."
+                resp = f"பூச்சி தாக்குதல் அல்லது பருவம் தவறிய மழையால் பயிர் சேதமடைந்தால், 72 மணி நேரத்திற்குள் PMFBY இலவச உதவி எண் 1800-180-1551 அல்லது GeoKisaan கடன் அதிகாரி மூலம் காப்பீட்டுக் கோரிக்கையை பதிவு செய்யலாம். எங்கள் சென்டினல்-2 செயற்கைக்கோள் ஆய்வு அறிக்கை விரைவான இழப்பீட்டுக்கு சான்றாக அமையும்."
             elif lang == "TELUGU":
-                resp = f"తెగుళ్లు లేదా అకాల వర్షం వల్ల పంట దెబ్బతింటే, 72 గంటల్లోపు PMFBY టోల్-ఫ్రీ 1800-180-1551 లో లేదా TVS లోన్ అధికారి ద్వారా క్లెయిమ్ నమోదు చేసుకోవచ్చు. మా Sentinel-2 శాటిలైట్ NDVI నివేదిక క్లెయిమ్ వేగంగా పరిష్కారం కావడానికి సహాయపడుతుంది."
+                resp = f"తెగుళ్లు లేదా అకాల వర్షం వల్ల పంట దెబ్బతింటే, 72 గంటల్లోపు PMFBY టోల్-ఫ్రీ 1800-180-1551 లో లేదా GeoKisaan లోన్ అధికారి ద్వారా క్లెయిమ్ నమోదు చేసుకోవచ్చు. మా Sentinel-2 శాటిలైట్ NDVI నివేదిక క్లెయిమ్ వేగంగా పరిష్కారం కావడానికి సహాయపడుతుంది."
             elif lang == "MARATHI":
-                resp = f"कीड किंवा अवकाळी पावसामुळे पिकाचे नुकसान झाल्यास, ७२ तासांच्या आत PMFBY टोल-फ्री १८००-१८०-१५५१ वर किंवा TVS अधिकाऱ्यामार्फत विमा क्लेम नोंदवा. आमचा Sentinel-2 उपग्रह NDVI अहवाल भरपाई लवकर मिळण्यासाठी पुरावा म्हणून काम करतो."
+                resp = f"कीड किंवा अवकाळी पावसामुळे पिकाचे नुकसान झाल्यास, ७२ तासांच्या आत PMFBY टोल-फ्री १८००-१८०-१५५१ वर किंवा GeoKisaan अधिकाऱ्यामार्फत विमा क्लेम नोंदवा. आमचा Sentinel-2 उपग्रह NDVI अहवाल भरपाई लवकर मिळण्यासाठी पुरावा म्हणून काम करतो."
             elif lang == "KANNADA":
-                resp = f"ಕೀಟ ಬಾಧೆ ಅಥವಾ ಅಕಾಲಿಕ ಮಳೆಯಿಂದ ಬೆಳೆ ಹಾನಿಯಾದರೆ, 72 ಗಂಟೆಗಳೊಳಗೆ PMFBY ಟೋಲ್-ಫ್ರೀ 1800-180-1551 ಅಥವಾ TVS ಸಾಲ ಅಧಿಕಾರಿಯ ಮೂಲಕ ವಿಮಾ ಕ್ಲೈಮ್ ಸಲ್ಲಿಸಬಹುದು. ನಮ್ಮ Sentinel-2 ಉಪಗ್ರಹ NDVI ವರದಿಯು ಶೀಘ್ರ ಪರಿಹಾರಕ್ಕೆ ಸಾಕ್ಷಿಯಾಗಿದೆ."
+                resp = f"ಕೀಟ ಬಾಧೆ ಅಥವಾ ಅಕಾಲಿಕ ಮಳೆಯಿಂದ ಬೆಳೆ ಹಾನಿಯಾದರೆ, 72 ಗಂಟೆಗಳೊಳಗೆ PMFBY ಟೋಲ್-ಫ್ರೀ 1800-180-1551 ಅಥವಾ GeoKisaan ಸಾಲ ಅಧಿಕಾರಿಯ ಮೂಲಕ ವಿಮಾ ಕ್ಲೈಮ್ ಸಲ್ಲಿಸಬಹುದು. ನಮ್ಮ Sentinel-2 ಉಪಗ್ರಹ NDVI ವರದಿಯು ಶೀಘ್ರ ಪರಿಹಾರಕ್ಕೆ ಸಾಕ್ಷಿಯಾಗಿದೆ."
             elif lang == "BENGALI":
-                resp = f"কীটপতঙ্গ বা অকাল বৃষ্টির কারণে ফসলের ক্ষতি হলে ৭২ ঘণ্টার মধ্যে PMFBY টোল-ফ্রি ১৮০০-১৮০-১৫৫১ নম্বরে বা TVS লোন অফিসারের মাধ্যমে দাবি দায়ের করতে পারেন। আমাদের Sentinel-2 স্যাটেলাইট NDVI রিপোর্ট দ্রুত ক্ষতিপূরণ পাওয়ার প্রমাণ হিসাবে কাজ করে।"
+                resp = f"কীটপতঙ্গ বা অকাল বৃষ্টির কারণে ফসলের ক্ষতি হলে ৭২ ঘণ্টার মধ্যে PMFBY টোল-ফ্রি ১৮০০-১৮০-১৫৫১ নম্বরে বা GeoKisaan লোন অফিসারের মাধ্যমে দাবি দায়ের করতে পারেন। আমাদের Sentinel-2 স্যাটেলাইট NDVI রিপোর্ট দ্রুত ক্ষতিপূরণ পাওয়ার প্রমাণ হিসাবে কাজ করে।"
             elif lang == "HINGLISH":
-                resp = f"Agar sukha, keet prakop ya bemausam barish se fasal damage hoti hai, to TVS Credit EWS turant alert deta hai. Aap PMFBY ke tehat 72 ghante ke andar national helpline (1800-180-1551) par ya TVS field officer ki madad se claim register kar sakte hain. Humari Sentinel-2 satellite NDVI report claim settlement me verified proof ka kaam karti hai."
+                resp = f"Agar sukha, keet prakop ya bemausam barish se fasal damage hoti hai, to GeoKisaan EWS turant alert deta hai. Aap PMFBY ke tehat 72 ghante ke andar national helpline (1800-180-1551) par ya GeoKisaan field officer ki madad se claim register kar sakte hain. Humari Sentinel-2 satellite NDVI report claim settlement me verified proof ka kaam karti hai."
             else:
-                resp = f"In the event of localized crop damage due to drought, pests, or unseasonal rainfall, TVS Credit's Early Warning System (EWS) automatically flags the risk. You can file a Pradhan Mantri Fasal Bima Yojana (PMFBY) claim within 72 hours via the national helpline (1800-180-1551) or through your TVS loan officer. Our Sentinel-2 satellite NDVI report serves as verified proof to expedite your claim payout."
+                resp = f"In the event of localized crop damage due to drought, pests, or unseasonal rainfall, GeoKisaan's Early Warning System (EWS) automatically flags the risk. You can file a Pradhan Mantri Fasal Bima Yojana (PMFBY) claim within 72 hours via the national helpline (1800-180-1551) or through your GeoKisaan loan officer. Our Sentinel-2 satellite NDVI report serves as verified proof to expedite your claim payout."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.97)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1377,29 +1382,29 @@ class KrishiSaathiAssistant:
         if any(w in query for w in emi_terms):
             intent = "HARVEST_EMI_SCHEDULE"
             evidence = [
-                {"source": "TVS Credit Policy", "plan": "Seasonally-Aligned Harvest EMI"},
+                {"source": "GeoKisaan Policy", "plan": "Seasonally-Aligned Harvest EMI"},
                 {"source": "Sowing Lean Period", "monthly_emi_inr": 1500, "window": "June-October"},
                 {"source": "Harvest Bullet Window", "bullet_amount_inr": 55000, "window": "November-December"},
             ]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"TVS सीजनल-अलाइन्ड हार्वेस्ट EMI योजना पारंपरिक मासिक किस्तों से अलग है। बुआई के महीनों (जून से अक्टूबर) में जब आपके पास नकदी की कमी होती है, आपको केवल ₹1,500/माह का नाममात्र रखरखाव शुल्क देना होता है। मुख्य किस्त (~₹55,000) नवंबर-दिसंबर में धान कटाई और मंडी बिक्री के समय चुकानी होती है।"
+                resp = f"GeoKisaan सीजनल-अलाइन्ड हार्वेस्ट EMI योजना पारंपरिक मासिक किस्तों से अलग है। बुआई के महीनों (जून से अक्टूबर) में जब आपके पास नकदी की कमी होती है, आपको केवल ₹1,500/माह का नाममात्र रखरखाव शुल्क देना होता है। मुख्य किस्त (~₹55,000) नवंबर-दिसंबर में धान कटाई और मंडी बिक्री के समय चुकानी होती है।"
             elif lang == "CHHATTISGARHI":
-                resp = f"TVS के फसल कटाई EMI योजना म बोआई के बेरा (जून ले अक्टूबर) म खाली ₹1,500 के नानचुन किस्त देना पड़ही। बड़का किस्त ह धान मिंजाई के बाद जब मंडी म धान बिकाही, तब दिसंबर-जनवरी म भरे बर लगही। अइसन म डिफाल्ट के कोनो डर नई रहय!"
+                resp = f"GeoKisaan के फसल कटाई EMI योजना म बोआई के बेरा (जून ले अक्टूबर) म खाली ₹1,500 के नानचुन किस्त देना पड़ही। बड़का किस्त ह धान मिंजाई के बाद जब मंडी म धान बिकाही, तब दिसंबर-जनवरी म भरे बर लगही। अइसन म डिफाल्ट के कोनो डर नई रहय!"
             elif lang == "TAMIL":
-                resp = f"TVS சீசனல் அறுவடை EMI திட்டத்தில், பயிர் வளரும் காலங்களில் (ஜூன்-அக்டோபர்) மாதத்திற்கு சுமார் ₹1,500 மட்டுமே பராமரிப்பு தவணையாக செலுத்த வேண்டும். முக்கிய தவணை (~₹55,000) நவம்பர்-டிசம்பர் மாதங்களில் அறுவடை முடிந்து மண்டி விற்பனைக்கு பிறகே செலுத்தப்படும்."
+                resp = f"GeoKisaan சீசனல் அறுவடை EMI திட்டத்தில், பயிர் வளரும் காலங்களில் (ஜூன்-அக்டோபர்) மாதத்திற்கு சுமார் ₹1,500 மட்டுமே பராமரிப்பு தவணையாக செலுத்த வேண்டும். முக்கிய தவணை (~₹55,000) நவம்பர்-டிசம்பர் மாதங்களில் அறுவடை முடிந்து மண்டி விற்பனைக்கு பிறகே செலுத்தப்படும்."
             elif lang == "TELUGU":
-                resp = f"TVS సీజనల్ హార్వెస్ట్ EMI పద్ధతిలో, విత్తే కాలంలో (జూన్ నుండి అక్టోబర్ వరకు) కేవలం ₹1,500/నెల నామమాత్రపు నిర్వహణ కిస్తు మాత్రమే ఉంటుంది. ప్రధాన కిస్తు (~₹55,000) నవంబర్-డిసెంబర్‌లో ధాన్యం మండిలో అమ్ముడైన తర్వాత చెల్లించాలి."
+                resp = f"GeoKisaan సీజనల్ హార్వెస్ట్ EMI పద్ధతిలో, విత్తే కాలంలో (జూన్ నుండి అక్టోబర్ వరకు) కేవలం ₹1,500/నెల నామమాత్రపు నిర్వహణ కిస్తు మాత్రమే ఉంటుంది. ప్రధాన కిస్తు (~₹55,000) నవంబర్-డిసెంబర్‌లో ధాన్యం మండిలో అమ్ముడైన తర్వాత చెల్లించాలి."
             elif lang == "MARATHI":
-                resp = f"TVS हंगामी हार्वेस्ट ईएमआय योजनेत, पेरणीच्या काळात (जून ते ऑक्टोबर) दरमहा केवळ ₹१,५०० नाममात्र देखभाल हप्ता भरावा लागतो. मुख्य बुलेट हप्ता (~₹५५,०००) नोव्हेंबर-डिसेंबरमध्ये पीक मोंढ्यात विकल्यानंतरच भरायचा असतो."
+                resp = f"GeoKisaan हंगामी हार्वेस्ट ईएमआय योजनेत, पेरणीच्या काळात (जून ते ऑक्टोबर) दरमहा केवळ ₹१,५०० नाममात्र देखभाल हप्ता भरावा लागतो. मुख्य बुलेट हप्ता (~₹५५,०००) नोव्हेंबर-डिसेंबरमध्ये पीक मोंढ्यात विकल्यानंतरच भरायचा असतो."
             elif lang == "KANNADA":
-                resp = f"TVS ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಯೋಜನೆಯಲ್ಲಿ, ಬಿತ್ತನೆ ಕಾಲದಲ್ಲಿ (ಜೂನ್-ಅಕ್ಟೋಬರ್) ತಿಂಗಳಿಗೆ ಕೇವಲ ₹1,500 ನಿರ್ವಹಣಾ ಕಂತು ಇರುತ್ತದೆ. ಮುಖ್ಯ ಕಂತು (~₹55,000) ನವೆಂಬರ್-ಡಿಸೆಂಬರ್‌ನಲ್ಲಿ ಮಂಡಿಯಲ್ಲಿ ಬೆಳೆ ಮಾರಾಟವಾದ ನಂತರವೇ ಇರುತ್ತದೆ."
+                resp = f"GeoKisaan ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಯೋಜನೆಯಲ್ಲಿ, ಬಿತ್ತನೆ ಕಾಲದಲ್ಲಿ (ಜೂನ್-ಅಕ್ಟೋಬರ್) ತಿಂಗಳಿಗೆ ಕೇವಲ ₹1,500 ನಿರ್ವಹಣಾ ಕಂತು ಇರುತ್ತದೆ. ಮುಖ್ಯ ಕಂತು (~₹55,000) ನವೆಂಬರ್-ಡಿಸೆಂಬರ್‌ನಲ್ಲಿ ಮಂಡಿಯಲ್ಲಿ ಬೆಳೆ ಮಾರಾಟವಾದ ನಂತರವೇ ಇರುತ್ತದೆ."
             elif lang == "BENGALI":
-                resp = f"TVS সিজনাল হার্ভেস্ট ইএমআই প্রকল্পে, বপনের মাসগুলোতে (জুন থেকে অক্টোবর) প্রতি মাসে মাত্র প্রায় ₹১,৫০০ নামমাত্র রক্ষণাবেক্ষণ কিস্তি। প্রধান কিস্তি (~₹৫৫,০০০) ফসল কাটার পর নভেম্বর-ডিসেম্বরে মান্ডিতে বিক্রির পর দিতে হয়।"
+                resp = f"GeoKisaan সিজনাল হার্ভেস্ট ইএমআই প্রকল্পে, বপনের মাসগুলোতে (জুন থেকে অক্টোবর) প্রতি মাসে মাত্র প্রায় ₹১,৫০০ নামমাত্র রক্ষণাবেক্ষণ কিস্তি। প্রধান কিস্তি (~₹৫৫,০০০) ফসল কাটার পর নভেম্বর-ডিসেম্বরে মান্ডিতে বিক্রির পর দিতে হয়।"
             elif lang == "HINGLISH":
-                resp = f"TVS Seasonally-Aligned Harvest EMI traditional monthly installments se bohot alag hai. Buwai ke mahino (June se October) me jab kharche zyada hote hain, aapko sirf ~₹1,500/month nominal fee deni hoti hai. Main bullet installment (~₹55,000) November-December me dhaan katai aur mandi bikri ke baad deni hoti hai."
+                resp = f"GeoKisaan Seasonally-Aligned Harvest EMI traditional monthly installments se bohot alag hai. Buwai ke mahino (June se October) me jab kharche zyada hote hain, aapko sirf ~₹1,500/month nominal fee deni hoti hai. Main bullet installment (~₹55,000) November-December me dhaan katai aur mandi bikri ke baad deni hoti hai."
             else:
-                resp = f"Under TVS Seasonally-Aligned Harvest EMIs, during the lean crop-growing months (June–October), you pay a nominal maintenance installment of only ~₹1,500/month. Your primary bullet installment (~₹55,000) is scheduled during November–December after your harvest Mandi sales, preventing debt stress."
+                resp = f"Under GeoKisaan Seasonally-Aligned Harvest EMIs, during the lean crop-growing months (June–October), you pay a nominal maintenance installment of only ~₹1,500/month. Your primary bullet installment (~₹55,000) is scheduled during November–December after your harvest Mandi sales, preventing debt stress."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.98)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1442,28 +1447,28 @@ class KrishiSaathiAssistant:
         if any(w in query for w in doc_keywords) or ("tractor" in query and any(k in query for k in ["chahiye", "laghi", "lagte", "dastawez", "kaagaz"])):
             intent = "DOCUMENTATION_REQUIREMENTS"
             evidence = [
-                {"source": "TVS Policy", "policy": "Paperless Verification", "required_docs": ["Aadhaar/PAN", "Khasra 7/12 (Bhuiyan)", "6M Bank Statement", "Dealer Quotation"]},
+                {"source": "GeoKisaan Policy", "policy": "Paperless Verification", "required_docs": ["Aadhaar/PAN", "Khasra 7/12 (Bhuiyan)", "6M Bank Statement", "Dealer Quotation"]},
                 {"source": "Inspection SOP", "physical_patwari_required": False},
             ]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"TVS कृषि ऋण के लिए केवल 4 सरल दस्तावेजों की आवश्यकता होती है: 1) आधार कार्ड / पैन कार्ड, 2) खसरा 7/12 या भुइयां जमीन रिकॉर्ड, 3) 6 महीने का बैंक स्टेटमेंट या यूपीआई टर्नओवर, 4) अधिकृत डीलर से ट्रैक्टर कोटेशन। सैटेलाइट जांच के कारण किसी भौतिक पटवारी सत्यापन की आवश्यकता नहीं होती और 3 मिनट में स्वीकृति मिल जाती है।"
+                resp = f"GeoKisaan कृषि ऋण के लिए केवल 4 सरल दस्तावेजों की आवश्यकता होती है: 1) आधार कार्ड / पैन कार्ड, 2) खसरा 7/12 या भुइयां जमीन रिकॉर्ड, 3) 6 महीने का बैंक स्टेटमेंट या यूपीआई टर्नओवर, 4) अधिकृत डीलर से ट्रैक्टर कोटेशन। सैटेलाइट जांच के कारण किसी भौतिक पटवारी सत्यापन की आवश्यकता नहीं होती और 3 मिनट में स्वीकृति मिल जाती है।"
             elif lang == "CHHATTISGARHI":
-                resp = f"TVS लोन बर खाली 4 ठन कागज लगथे: 1) आधार कार्ड, 2) खसरा खतौनी / भुइयां रिकॉर्ड, 3) बैंक पासबुक या यूपीआई खाता, 4) ट्रैक्टर डीलर के कोटेशन। सैटेलाइट जांच ले कोनो पटवारी के चक्कर काटे के जरूरत नई पड़य अउ 3 मिनट म संस्वीकृति हो जाथे।"
+                resp = f"GeoKisaan लोन बर खाली 4 ठन कागज लगथे: 1) आधार कार्ड, 2) खसरा खतौनी / भुइयां रिकॉर्ड, 3) बैंक पासबुक या यूपीआई खाता, 4) ट्रैक्टर डीलर के कोटेशन। सैटेलाइट जांच ले कोनो पटवारी के चक्कर काटे के जरूरत नई पड़य अउ 3 मिनट म संस्वीकृति हो जाथे।"
             elif lang == "TAMIL":
-                resp = f"TVS விவசாய கடனுக்கு 4 எளிய ஆவணங்கள் மட்டுமே தேவை: 1) ஆதார் & பான் கார்டு, 2) நில உரிமை பட்டா / சிட்டா, 3) 6 மாத வங்கி கணக்கு அறிக்கை, 4) அங்கீகரிக்கப்பட்ட டீலரிடமிருந்து விலைப்பட்டியல். செயற்கைக்கோள் சரிபார்ப்பு காரணமாக நேரடி ஆய்வு இன்றி 3 நிமிடங்களில் ஒப்புதல் கிடைக்கும்."
+                resp = f"GeoKisaan விவசாய கடனுக்கு 4 எளிய ஆவணங்கள் மட்டுமே தேவை: 1) ஆதார் & பான் கார்டு, 2) நில உரிமை பட்டா / சிட்டா, 3) 6 மாத வங்கி கணக்கு அறிக்கை, 4) அங்கீகரிக்கப்பட்ட டீலரிடமிருந்து விலைப்பட்டியல். செயற்கைக்கோள் சரிபார்ப்பு காரணமாக நேரடி ஆய்வு இன்றி 3 நிமிடங்களில் ஒப்புதல் கிடைக்கும்."
             elif lang == "TELUGU":
-                resp = f"TVS వ్యవసాయ రుణానికి కేవలం 4 పత్రాలు మాత్రమే అవసరం: 1) ఆధార్/పాన్ కార్డు, 2) భూమి రికార్డు (ఖస్రా 142/1 లేదా పట్టాదారు పాస్ బుక్), 3) 6 నెలల బ్యాంక్ స్టేట్‌మెంట్, 4) అధికారిక డీలర్ కొటేషన్. శాటిలైట్ పరిశీలన వల్ల ప్రత్యక్ష విచారణ లేకుండా 3 నిమిషాల్లో ఆమోదం లభిస్తుంది."
+                resp = f"GeoKisaan వ్యవసాయ రుణానికి కేవలం 4 పత్రాలు మాత్రమే అవసరం: 1) ఆధార్/పాన్ కార్డు, 2) భూమి రికార్డు (ఖస్రా 142/1 లేదా పట్టాదారు పాస్ బుక్), 3) 6 నెలల బ్యాంక్ స్టేట్‌మెంట్, 4) అధికారిక డీలర్ కొటేషన్. శాటిలైట్ పరిశీలన వల్ల ప్రత్యక్ష విచారణ లేకుండా 3 నిమిషాల్లో ఆమోదం లభిస్తుంది."
             elif lang == "MARATHI":
-                resp = f"TVS कृषी कर्जासाठी केवळ ४ सोपी कागदपत्रे लागतात: १) आधार/पॅन कार्ड, २) खसरा ७/१२ जमीन उतारा, ३) ६ महिन्यांचे बँक स्टेटमेंट, ४) अधिकृत डीलरकडून ट्रॅक्टर कोटेशन. उपग्रह तपासणीमुळे कोणतीही प्रत्यक्ष पाहणी न करता ३ मिनिटांत मंजुरी मिळते."
+                resp = f"GeoKisaan कृषी कर्जासाठी केवळ ४ सोपी कागदपत्रे लागतात: १) आधार/पॅन कार्ड, २) खसरा ७/१२ जमीन उतारा, ३) ६ महिन्यांचे बँक स्टेटमेंट, ४) अधिकृत डीलरकडून ट्रॅक्टर कोटेशन. उपग्रह तपासणीमुळे कोणतीही प्रत्यक्ष पाहणी न करता ३ मिनिटांत मंजुरी मिळते."
             elif lang == "KANNADA":
-                resp = f"TVS ಕೃಷಿ ಸಾಲಕ್ಕೆ ಕೇವಲ ೪ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ: ೧) ಆಧಾರ್/ಪ್ಯಾನ್ ಕಾರ್ಡ್, ೨) ಕಸ್ರಾ 7/12 ಪಹಣಿ ಜಮೀನು ದಾಖಲೆ, ೩) ೬ ತಿಂಗಳ ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್‌ಮೆಂಟ್, ೪) ಅಧಿಕೃತ ಡೀಲರ್ ಕೊಟೇಶನ್. ಉಪಗ್ರಹ ಪರಿಶೀಲನೆಯಿಂದಾಗಿ ಕೇವಲ 3 ನಿಮಿಷಗಳಲ್ಲಿ ಸಾಲ ಮಂಜೂರಾಗುತ್ತದೆ."
+                resp = f"GeoKisaan ಕೃಷಿ ಸಾಲಕ್ಕೆ ಕೇವಲ ೪ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ: ೧) ಆಧಾರ್/ಪ್ಯಾನ್ ಕಾರ್ಡ್, ೨) ಕಸ್ರಾ 7/12 ಪಹಣಿ ಜಮೀನು ದಾಖಲೆ, ೩) ೬ ತಿಂಗಳ ಬ್ಯಾಂಕ್ ಸ್ಟೇಟ್‌ಮೆಂಟ್, ೪) ಅಧಿಕೃತ ಡೀಲರ್ ಕೊಟೇಶನ್. ಉಪಗ್ರಹ ಪರಿಶೀಲನೆಯಿಂದಾಗಿ ಕೇವಲ 3 ನಿಮಿಷಗಳಲ್ಲಿ ಸಾಲ ಮಂಜೂರಾಗುತ್ತದೆ."
             elif lang == "BENGALI":
-                resp = f"TVS কৃষি ঋণের জন্য মাত্র ৪টি কাগজপত্রের প্রয়োজন: ১) আধার ও প্যান কার্ড, ২) খসরা ৭/১২ জমির রেকর্ড, ৩) ৬ মাসের ব্যাঙ্ক স্টেটমেন্ট, ৪) অনুমোদিত ডিলারের কোটেশন। স্যাটেলাইট ভেরিফিকেশনের কারণে ৩ মিনিটে সরাসরি অনুমোদন পাওয়া যায়।"
+                resp = f"GeoKisaan কৃষি ঋণের জন্য মাত্র ৪টি কাগজপত্রের প্রয়োজন: ১) আধার ও প্যান কার্ড, ২) খসরা ৭/১২ জমির রেকর্ড, ৩) ৬ মাসের ব্যাঙ্ক স্টেটমেন্ট, ৪) অনুমোদিত ডিলারের কোটেশন। স্যাটেলাইট ভেরিফিকেশনের কারণে ৩ মিনিটে সরাসরি অনুমোদন পাওয়া যায়।"
             elif lang == "HINGLISH":
-                resp = f"TVS agricultural loan ke liye sirf 4 simple documents chahiye: 1) Aadhaar Card / PAN Card, 2) Khasra 7/12 (Bhuiyan land records), 3) 6-month bank statement ya UPI turnover, 4) Authorized dealer se tractor quotation. Sentinel-2 satellite verification ki wajah se physical patwari inspection ki koi zarurat nahi hoti aur 3-minute me loan sanction mil jata hai."
+                resp = f"GeoKisaan agricultural loan ke liye sirf 4 simple documents chahiye: 1) Aadhaar Card / PAN Card, 2) Khasra 7/12 (Bhuiyan land records), 3) 6-month bank statement ya UPI turnover, 4) Authorized dealer se tractor quotation. Sentinel-2 satellite verification ki wajah se physical patwari inspection ki koi zarurat nahi hoti aur 3-minute me loan sanction mil jata hai."
             else:
-                resp = f"Applying for a TVS Agricultural Loan requires just 4 documents: 1) Aadhaar & PAN Card, 2) Khasra 7/12 land records, 3) 6-month bank statement or UPI turnover history, 4) Tractor pro-forma invoice from an authorized dealer. Satellite verification eliminates manual on-site inspection delays, enabling 3-minute approvals."
+                resp = f"Applying for a GeoKisaan Agricultural Loan requires just 4 documents: 1) Aadhaar & PAN Card, 2) Khasra 7/12 land records, 3) 6-month bank statement or UPI turnover history, 4) Tractor pro-forma invoice from an authorized dealer. Satellite verification eliminates manual on-site inspection delays, enabling 3-minute approvals."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.98)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1479,23 +1484,23 @@ class KrishiSaathiAssistant:
                 ]
                 follow_ups = self._get_suggested_follow_ups(intent, lang)
                 if lang == "HINDI":
-                    resp = f"TVS क्रेडिट में न्यू ट्रैक्टर लोन 10.5% से 12.0% और यूज्ड ट्रैक्टर लोन 13.5% से शुरू होते हैं। प्राइम टियर (750+ स्कोर) के आवेदकों को 1.5% तक की विशेष ब्याज छूट मिलती है। अपनी जोखिम-समायोजित सटीक ब्याज दर जानने के लिए स्मार्ट सैंक्शन कॉकपिट में मूल्यांकन करें।"
+                    resp = f"GeoKisaan क्रेडिट में न्यू ट्रैक्टर लोन 10.5% से 12.0% और यूज्ड ट्रैक्टर लोन 13.5% से शुरू होते हैं। प्राइम टियर (750+ स्कोर) के आवेदकों को 1.5% तक की विशेष ब्याज छूट मिलती है। अपनी जोखिम-समायोजित सटीक ब्याज दर जानने के लिए स्मार्ट सैंक्शन कॉकपिट में मूल्यांकन करें।"
                 elif lang == "CHHATTISGARHI":
-                    resp = f"TVS क्रेडिट म नवा ट्रैक्टर लोन 10.5% ले 12.0% अउ पुराना ट्रैक्टर 13.5% ले मिलथे। बढ़िया स्कोर (750+) म 1.5% तक ब्याज छूट मिलथे। अपन सटीक ब्याज दर जाने बर स्मार्ट सैंक्शन कॉकपिट म जांच करव!"
+                    resp = f"GeoKisaan क्रेडिट म नवा ट्रैक्टर लोन 10.5% ले 12.0% अउ पुराना ट्रैक्टर 13.5% ले मिलथे। बढ़िया स्कोर (750+) म 1.5% तक ब्याज छूट मिलथे। अपन सटीक ब्याज दर जाने बर स्मार्ट सैंक्शन कॉकपिट म जांच करव!"
                 elif lang == "TAMIL":
-                    resp = f"TVS கிரெடிட் புதிய டிராக்டர் கடன் வட்டி விகிதங்கள் 10.5% முதல் 12.0% வரையிலும், பயன்படுத்திய டிராக்டருக்கு 13.5% முதலும் தொடங்குகின்றன. சிறந்த ஸ்கோர் உள்ளவர்களுக்கு 1.5% வட்டி தள்ளுபடி உண்டு."
+                    resp = f"GeoKisaan கிரெடிட் புதிய டிராக்டர் கடன் வட்டி விகிதங்கள் 10.5% முதல் 12.0% வரையிலும், பயன்படுத்திய டிராக்டருக்கு 13.5% முதலும் தொடங்குகின்றன. சிறந்த ஸ்கோர் உள்ளவர்களுக்கு 1.5% வட்டி தள்ளுபடி உண்டு."
                 elif lang == "TELUGU":
-                    resp = f"TVS క్రెడిట్ కొత్త ట్రాక్టర్ రుణాల వడ్డీ రేట్లు 10.5% నుండి 12.0% వరకు ఉంటాయి. ప్రైమ్ స్కోరు (750+) ఉన్నవారికి 1.5% వరకు వడ్డీ రాయితీ లభిస్తుంది."
+                    resp = f"GeoKisaan క్రెడిట్ కొత్త ట్రాక్టర్ రుణాల వడ్డీ రేట్లు 10.5% నుండి 12.0% వరకు ఉంటాయి. ప్రైమ్ స్కోరు (750+) ఉన్నవారికి 1.5% వరకు వడ్డీ రాయితీ లభిస్తుంది."
                 elif lang == "MARATHI":
-                    resp = f"TVS क्रेडिट नवीन ट्रॅक्टर कर्ज १०.५% ते १२.०% आणि जुन्या ट्रॅक्टरसाठी १३.५% ने सुरू होते. उत्तम स्कोर असल्यास १.५% पर्यंत व्याज सवलत मिळते."
+                    resp = f"GeoKisaan क्रेडिट नवीन ट्रॅक्टर कर्ज १०.५% ते १२.०% आणि जुन्या ट्रॅक्टरसाठी १३.५% ने सुरू होते. उत्तम स्कोर असल्यास १.५% पर्यंत व्याज सवलत मिळते."
                 elif lang == "KANNADA":
-                    resp = f"TVS ಕ್ರೆಡಿಟ್ ಹೊಸ ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲದ ಬಡ್ಡಿದರಗಳು 10.5% ರಿಂದ 12.0% ವರೆಗೆ ಇರುತ್ತವೆ. 750+ ಸ್ಕೋರ್‌ಗೆ 1.5% ರಿಯಾಯಿತಿ ದೊರೆಯುತ್ತದೆ."
+                    resp = f"GeoKisaan ಕ್ರೆಡಿಟ್ ಹೊಸ ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲದ ಬಡ್ಡಿದರಗಳು 10.5% ರಿಂದ 12.0% ವರೆಗೆ ಇರುತ್ತವೆ. 750+ ಸ್ಕೋರ್‌ಗೆ 1.5% ರಿಯಾಯಿತಿ ದೊರೆಯುತ್ತದೆ."
                 elif lang == "BENGALI":
-                    resp = f"TVS ক্রেডিট নতুন ট্র্যাক্টর ঋণের সুদের হার ১০.৫% থেকে ১২.০%। ৭৫০+ স্কোরে ১.৫% অতিরিক্ত সুদের ছাড় পাওয়া যায়।"
+                    resp = f"GeoKisaan ক্রেডিট নতুন ট্র্যাক্টর ঋণের সুদের হার ১০.৫% থেকে ১২.০%। ৭৫০+ স্কোরে ১.৫% অতিরিক্ত সুদের ছাড় পাওয়া যায়।"
                 elif lang == "HINGLISH":
-                    resp = f"TVS Credit agricultural loan interest rates New Tractors ke liye 10.5% se 12.0% aur Used Tractors ke liye 13.5% se shuru hoti hain. Prime Tier (score 750+) applicants ko up to 1.5% interest discount milta hai. Apni exact rate janne ke liye Sanction Cockpit me assessment run karein."
+                    resp = f"GeoKisaan agricultural loan interest rates New Tractors ke liye 10.5% se 12.0% aur Used Tractors ke liye 13.5% se shuru hoti hain. Prime Tier (score 750+) applicants ko up to 1.5% interest discount milta hai. Apni exact rate janne ke liye Sanction Cockpit me assessment run karein."
                 else:
-                    resp = f"TVS Credit agricultural interest rates range from 10.5% to 12.0% for New Tractors and start at 13.5% for Used Tractors. Prime Tier applicants (scores 750+) unlock up to a 1.5% interest concession. Submit an assessment in the Sanction Cockpit to calculate your personalized risk-adjusted rate."
+                    resp = f"GeoKisaan agricultural interest rates range from 10.5% to 12.0% for New Tractors and start at 13.5% for Used Tractors. Prime Tier applicants (scores 750+) unlock up to a 1.5% interest concession. Submit an assessment in the Sanction Cockpit to calculate your personalized risk-adjusted rate."
                 conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.95)
                 return resp, intent, evidence, conf, follow_ups
 
@@ -1505,23 +1510,23 @@ class KrishiSaathiAssistant:
             ]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"TVS क्रेडिट कृषि ऋण की ब्याज दरें जोखिम-आधारित हैं: न्यू ट्रैक्टर लोन 10.5% - 12.0% से शुरू होते हैं, और यूज्ड ट्रैक्टर 13.5% से। आपके मजबूत एग्री-क्रेडिट स्कोर ({score}) के कारण आप सबसे न्यूनतम {roi:.1f}% प्रति वर्ष की रियायती दर के लिए पात्र हैं।"
+                resp = f"GeoKisaan क्रेडिट कृषि ऋण की ब्याज दरें जोखिम-आधारित हैं: न्यू ट्रैक्टर लोन 10.5% - 12.0% से शुरू होते हैं, और यूज्ड ट्रैक्टर 13.5% से। आपके मजबूत एग्री-क्रेडिट स्कोर ({score}) के कारण आप सबसे न्यूनतम {roi:.1f}% प्रति वर्ष की रियायती दर के लिए पात्र हैं।"
             elif lang == "CHHATTISGARHI":
-                resp = f"TVS क्रेडिट म नवा ट्रैक्टर लोन 10.5% ले 12.0% के ब्याज म मिलथे। तुंहर स्कोर ({score}) बहुत बढ़िया हे, एही सेती तुमन ला खाली {roi:.1f}% के सबसे कम ब्याज दर म लोन मिलत हे।"
+                resp = f"GeoKisaan क्रेडिट म नवा ट्रैक्टर लोन 10.5% ले 12.0% के ब्याज म मिलथे। तुंहर स्कोर ({score}) बहुत बढ़िया हे, एही सेती तुमन ला खाली {roi:.1f}% के सबसे कम ब्याज दर म लोन मिलत हे।"
             elif lang == "TAMIL":
-                resp = f"TVS கிரெடிட் விவசாய கடன் வட்டி விகிதங்கள் 10.5% முதல் தொடங்குகின்றன. உங்கள் சிறந்த கிரெடிட் ஸ்கோர் ({score}/900) காரணமாக நீங்கள் மிகக்குறைந்த {roi:.1f}% சலுகை வட்டிக்கு தகுதி பெற்றுள்ளீர்கள்."
+                resp = f"GeoKisaan கிரெடிட் விவசாய கடன் வட்டி விகிதங்கள் 10.5% முதல் தொடங்குகின்றன. உங்கள் சிறந்த கிரெடிட் ஸ்கோர் ({score}/900) காரணமாக நீங்கள் மிகக்குறைந்த {roi:.1f}% சலுகை வட்டிக்கு தகுதி பெற்றுள்ளீர்கள்."
             elif lang == "TELUGU":
-                resp = f"TVS క్రెడిట్ వ్యవసాయ రుణాల వడ్డీ రేట్లు 10.5% నుండి ప్రారంభమవుతాయి. మీ బలమైన అగ్రి-క్రెడిట్ స్కోరు ({score}/900) ఆధారంగా మీరు అత్యల్పమైన {roi:.1f}% వార్షిక రాయితీ వడ్డీకి అర్హత పొందారు."
+                resp = f"GeoKisaan క్రెడిట్ వ్యవసాయ రుణాల వడ్డీ రేట్లు 10.5% నుండి ప్రారంభమవుతాయి. మీ బలమైన అగ్రి-క్రెడిట్ స్కోరు ({score}/900) ఆధారంగా మీరు అత్యల్పమైన {roi:.1f}% వార్షిక రాయితీ వడ్డీకి అర్హత పొందారు."
             elif lang == "MARATHI":
-                resp = f"TVS क्रेडिट कृषी कर्जाचे व्याजदर १०.५% पासून सुरू होतात. आपल्या उत्कृष्ट क्रेडिट स्कोरमुळे ({score}/900) आपण सर्वात कमी {roi:.1f}% प्रतिवर्ष सवलतीच्या व्याजदरासाठी पात्र आहात."
+                resp = f"GeoKisaan क्रेडिट कृषी कर्जाचे व्याजदर १०.५% पासून सुरू होतात. आपल्या उत्कृष्ट क्रेडिट स्कोरमुळे ({score}/900) आपण सर्वात कमी {roi:.1f}% प्रतिवर्ष सवलतीच्या व्याजदरासाठी पात्र आहात."
             elif lang == "KANNADA":
-                resp = f"TVS ಕ್ರೆಡಿಟ್ ಕೃಷಿ ಸಾಲದ ಬಡ್ಡಿದರಗಳು 10.5% ರಿಂದ ಪ್ರಾರಂಭವಾಗುತ್ತವೆ. ನಿಮ್ಮ ಉತ್ತಮ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್‌ನಿಂದಾಗಿ ({score}/900) ನೀವು ಅತ್ಯಂತ ಕಡಿಮೆ {roi:.1f}% ರಿಯಾಯಿತಿ ದರಕ್ಕೆ ಅರ್ಹರಾಗಿದ್ದೀರಿ."
+                resp = f"GeoKisaan ಕ್ರೆಡಿಟ್ ಕೃಷಿ ಸಾಲದ ಬಡ್ಡಿದರಗಳು 10.5% ರಿಂದ ಪ್ರಾರಂಭವಾಗುತ್ತವೆ. ನಿಮ್ಮ ಉತ್ತಮ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್‌ನಿಂದಾಗಿ ({score}/900) ನೀವು ಅತ್ಯಂತ ಕಡಿಮೆ {roi:.1f}% ರಿಯಾಯಿತಿ ದರಕ್ಕೆ ಅರ್ಹರಾಗಿದ್ದೀರಿ."
             elif lang == "BENGALI":
-                resp = f"TVS ক্রেডিট কৃষি ঋণের সুদের হার ১০.৫% থেকে শুরু হয়। আপনার চমৎকার ক্রেডিট স্কোরের ({score}/৯০০) কারণে আপনি সর্বনিম্ন {roi:.1f}% বার্ষিক সুদের হারের যোগ্য।"
+                resp = f"GeoKisaan ক্রেডিট কৃষি ঋণের সুদের হার ১০.৫% থেকে শুরু হয়। আপনার চমৎকার ক্রেডিট স্কোরের ({score}/৯০০) কারণে আপনি সর্বনিম্ন {roi:.1f}% বার্ষিক সুদের হারের যোগ্য।"
             elif lang == "HINGLISH":
-                resp = f"TVS Credit agricultural loan interest rates 10.5% se 12.0% (New Tractor) aur 13.5% (Used Tractor) se shuru hoti hain. Aapke strong Agri-Credit Score ({score}/900) ke karan aap sabse lowest {roi:.1f}% per annum preferential rate ke liye qualify karte hain."
+                resp = f"GeoKisaan agricultural loan interest rates 10.5% se 12.0% (New Tractor) aur 13.5% (Used Tractor) se shuru hoti hain. Aapke strong Agri-Credit Score ({score}/900) ke karan aap sabse lowest {roi:.1f}% per annum preferential rate ke liye qualify karte hain."
             else:
-                resp = f"TVS Credit agricultural loan interest rates range from 10.5% to 12.5% for New Tractors, and 13.5% for Used Tractors. Because of your strong Agri-Credit Score ({score}/900), you qualify for our lowest preferential rate of {roi:.1f}% p.a."
+                resp = f"GeoKisaan agricultural loan interest rates range from 10.5% to 12.5% for New Tractors, and 13.5% for Used Tractors. Because of your strong Agri-Credit Score ({score}/900), you qualify for our lowest preferential rate of {roi:.1f}% p.a."
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["interest_rate_pct", "agri_credit_score"], 0.97)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1532,27 +1537,27 @@ class KrishiSaathiAssistant:
         if any(w in query for w in tenure_terms):
             intent = "LOAN_TENURE_AND_DOWNPAYMENT"
             evidence = [
-                {"source": "TVS Credit Product Terms", "tenure": "12 to 60 Months", "ltv": "Up to 90% On-Road", "prepayment": "0% foreclosure fee after 12 months"}
+                {"source": "GeoKisaan Product Terms", "tenure": "12 to 60 Months", "ltv": "Up to 90% On-Road", "prepayment": "0% foreclosure fee after 12 months"}
             ]
             follow_ups = self._get_suggested_follow_ups("HARVEST_EMI_SCHEDULE", lang)
             if lang == "HINDI":
-                resp = f"TVS न्यू ट्रैक्टर लोन के तहत 12 से 60 महीने (5 वर्ष) तक की लचीली पुनर्भुगतान अवधि मिलती है। इसमें 90% तक ऑन-रोड फाइनेंसिंग (केवल 10% न्यूनतम डाउन पेमेंट) उपलब्ध है, और 12 महीने के नियमित भुगतान के बाद प्रीपेमेंट/फोरक्लोज़र पर 0% पेनल्टी शुल्क है।"
+                resp = f"GeoKisaan न्यू ट्रैक्टर लोन के तहत 12 से 60 महीने (5 वर्ष) तक की लचीली पुनर्भुगतान अवधि मिलती है। इसमें 90% तक ऑन-रोड फाइनेंसिंग (केवल 10% न्यूनतम डाउन पेमेंट) उपलब्ध है, और 12 महीने के नियमित भुगतान के बाद प्रीपेमेंट/फोरक्लोज़र पर 0% पेनल्टी शुल्क है।"
             elif lang == "CHHATTISGARHI":
-                resp = f"TVS ट्रैक्टर लोन म 12 ले 60 महिना (5 बछर) तक के समय मिलथे संगवारी। 90% तक के लोन मिल जाथे (खाली 10% मार्जिन जमा करना पड़ही)। 12 महिना के बाद कोनो फोरक्लोजर पेनल्टी नई लगय!"
+                resp = f"GeoKisaan ट्रैक्टर लोन म 12 ले 60 महिना (5 बछर) तक के समय मिलथे संगवारी। 90% तक के लोन मिल जाथे (खाली 10% मार्जिन जमा करना पड़ही)। 12 महिना के बाद कोनो फोरक्लोजर पेनल्टी नई लगय!"
             elif lang == "TAMIL":
-                resp = f"TVS டிராக்டர் கடனுக்கு 12 முதல் 60 மாதங்கள் (5 ஆண்டுகள்) வரை தவணை காலம் வழங்கப்படுகிறது. 90% வரை நிதி உதவி (10% முன்பணம் மட்டுமே). 12 மாதங்களுக்குப் பிறகு முன்கூட்டியே கடனை முடிக்க 0% அபராதக் கட்டணம்."
+                resp = f"GeoKisaan டிராக்டர் கடனுக்கு 12 முதல் 60 மாதங்கள் (5 ஆண்டுகள்) வரை தவணை காலம் வழங்கப்படுகிறது. 90% வரை நிதி உதவி (10% முன்பணம் மட்டுமே). 12 மாதங்களுக்குப் பிறகு முன்கூட்டியே கடனை முடிக்க 0% அபராதக் கட்டணம்."
             elif lang == "TELUGU":
-                resp = f"TVS ట్రాక్టర్ రుణాలకు 12 నుండి 60 నెలల (5 సంవత్సరాలు) సౌకర్యవంతమైన గడువు ఉంటుంది. 90% వరకు ఆన్-రోడ్ ఫైనాన్సింగ్ (కేవలం 10% డౌన్ పేమెంట్) లభిస్తుంది, 12 నెలల తర్వాత ముందస్తు చెల్లింపులపై 0% పెనాల్టీ ఉంటుంది."
+                resp = f"GeoKisaan ట్రాక్టర్ రుణాలకు 12 నుండి 60 నెలల (5 సంవత్సరాలు) సౌకర్యవంతమైన గడువు ఉంటుంది. 90% వరకు ఆన్-రోడ్ ఫైనాన్సింగ్ (కేవలం 10% డౌన్ పేమెంట్) లభిస్తుంది, 12 నెలల తర్వాత ముందస్తు చెల్లింపులపై 0% పెనాల్టీ ఉంటుంది."
             elif lang == "MARATHI":
-                resp = f"TVS ट्रॅक्टर कर्जासाठी १२ ते ६० महिन्यांची (५ वर्षे) लवचिक परतफेड मुदत मिळते. ९०% पर्यंत ऑन-रोड फायनान्स (फक्त १०% डाऊन पेमेंट) आणि १२ महिन्यांनंतर कर्ज मुदतीपूर्वी फेडल्यास ०% दंड आहे."
+                resp = f"GeoKisaan ट्रॅक्टर कर्जासाठी १२ ते ६० महिन्यांची (५ वर्षे) लवचिक परतफेड मुदत मिळते. ९०% पर्यंत ऑन-रोड फायनान्स (फक्त १०% डाऊन पेमेंट) आणि १२ महिन्यांनंतर कर्ज मुदतीपूर्वी फेडल्यास ०% दंड आहे."
             elif lang == "KANNADA":
-                resp = f"TVS ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲಗಳಿಗೆ 12 ರಿಂದ 60 ತಿಂಗಳ (5 ವರ್ಷ) ಮರುಪಾವತಿ ಅವಧಿ ನೀಡಲಾಗುತ್ತದೆ. 90% ರವರೆಗೆ ಸಾಲ (ಕೇವಲ 10% ಡೌನ್ ಪೇಮೆಂಟ್) ಮತ್ತು 12 ತಿಂಗಳ ನಂತರ ಮುಂಗಡ ಮರುಪಾವತಿಗೆ 0% ದಂಡವಿರುತ್ತದೆ."
+                resp = f"GeoKisaan ಟ್ರ್ಯಾಕ್ಟರ್ ಸಾಲಗಳಿಗೆ 12 ರಿಂದ 60 ತಿಂಗಳ (5 ವರ್ಷ) ಮರುಪಾವತಿ ಅವಧಿ ನೀಡಲಾಗುತ್ತದೆ. 90% ರವರೆಗೆ ಸಾಲ (ಕೇವಲ 10% ಡೌನ್ ಪೇಮೆಂಟ್) ಮತ್ತು 12 ತಿಂಗಳ ನಂತರ ಮುಂಗಡ ಮರುಪಾವತಿಗೆ 0% ದಂಡವಿರುತ್ತದೆ."
             elif lang == "BENGALI":
-                resp = f"TVS ট্র্যাক্টর লোনে ১২ থেকে ৬০ মাস (৫ বছর) পর্যন্ত নমনীয় পরিশোধের সময়সীমা পাওয়া যায়। ৯০% পর্যন্ত অন-রোড ফাইন্যান্সিং (মাত্র ১০% ডাউন পেমেন্ট) এবং ১২ মাস পর ঋণ পরিশোধে ০% পেনাল্টি চার্জ।"
+                resp = f"GeoKisaan ট্র্যাক্টর লোনে ১২ থেকে ৬০ মাস (৫ বছর) পর্যন্ত নমনীয় পরিশোধের সময়সীমা পাওয়া যায়। ৯০% পর্যন্ত অন-রোড ফাইন্যান্সিং (মাত্র ১০% ডাউন পেমেন্ট) এবং ১২ মাস পর ঋণ পরিশোধে ০% পেনাল্টি চার্জ।"
             elif lang == "HINGLISH":
-                resp = f"TVS New Tractor Loan me 12 se 60 months (5 saal) tak ki flexible repayment tenure milti hai. Isme 90% tak on-road financing (sirf 10% down payment) milti hai, aur 12 months ke regular payments ke baad foreclosure / prepayment par 0% penalty charge hota hai."
+                resp = f"GeoKisaan New Tractor Loan me 12 se 60 months (5 saal) tak ki flexible repayment tenure milti hai. Isme 90% tak on-road financing (sirf 10% down payment) milti hai, aur 12 months ke regular payments ke baad foreclosure / prepayment par 0% penalty charge hota hai."
             else:
-                resp = f"TVS New Tractor Loans offer flexible tenures from 12 to 60 months (up to 5 years). We provide up to 90% on-road financing (only 10% down payment required), and zero foreclosure penalty after 12 regular installments."
+                resp = f"GeoKisaan New Tractor Loans offer flexible tenures from 12 to 60 months (up to 5 years). We provide up to 90% on-road financing (only 10% down payment required), and zero foreclosure penalty after 12 regular installments."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.96)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1567,23 +1572,23 @@ class KrishiSaathiAssistant:
             ]
             follow_ups = self._get_suggested_follow_ups("LOAN_ELIGIBILITY", lang)
             if lang == "HINDI":
-                resp = f"TVS कृषि ऋण आरबीआई के प्राथमिकता क्षेत्र (PSL) दिशा-निर्देशों से संरेखित हैं, जिसके तहत पात्र किसानों को ब्याज सहायता (Interest Subvention) के साथ प्रभावी 8.4% की दर मिल सकती है। इसके अलावा छत्तीसगढ़ राज्य कृषि उपकरण सब्सिडी और पीएम-किसान सम्मान निधि से जुड़ी सुविधाएं भी उपलब्ध हैं।"
+                resp = f"GeoKisaan कृषि ऋण आरबीआई के प्राथमिकता क्षेत्र (PSL) दिशा-निर्देशों से संरेखित हैं, जिसके तहत पात्र किसानों को ब्याज सहायता (Interest Subvention) के साथ प्रभावी 8.4% की दर मिल सकती है। इसके अलावा छत्तीसगढ़ राज्य कृषि उपकरण सब्सिडी और पीएम-किसान सम्मान निधि से जुड़ी सुविधाएं भी उपलब्ध हैं।"
             elif lang == "CHHATTISGARHI":
-                resp = f"TVS एग्री लोन म सरकारी प्राथमिकता (PSL) के तहत ब्याज म भारी छूट मिलथे, जेकर से ब्याज दर 8.4% तक आ जाथे। संग म छत्तीसगढ़ सरकार के ट्रैक्टर यंत्र सब्सिडी के फायदा घलो ले सकत हव।"
+                resp = f"GeoKisaan एग्री लोन म सरकारी प्राथमिकता (PSL) के तहत ब्याज म भारी छूट मिलथे, जेकर से ब्याज दर 8.4% तक आ जाथे। संग म छत्तीसगढ़ सरकार के ट्रैक्टर यंत्र सब्सिडी के फायदा घलो ले सकत हव।"
             elif lang == "TAMIL":
-                resp = f"TVS விவசாய கடன்கள் ரிசர்வ் வங்கியின் முன்னுரிமைத் துறை (PSL) விதிகளின் கீழ் வருவதால், தகுதியான விவசாயிகளுக்கு 8.4% சலுகை வட்டி விகிதம் மற்றும் அரசு மானியப் பலன்கள் கிடைக்கின்றன."
+                resp = f"GeoKisaan விவசாய கடன்கள் ரிசர்வ் வங்கியின் முன்னுரிமைத் துறை (PSL) விதிகளின் கீழ் வருவதால், தகுதியான விவசாயிகளுக்கு 8.4% சலுகை வட்டி விகிதம் மற்றும் அரசு மானியப் பலன்கள் கிடைக்கின்றன."
             elif lang == "TELUGU":
-                resp = f"TVS వ్యవసాయ రుణాలు RBI ప్రాధాన్యతా రంగ (PSL) మార్గదర్శకాలకు అనుగుణంగా ఉంటాయి, దీని కింద వడ్డీ రాయితీతో ప్రభావవంతమైన 8.4% వడ్డీ రేటు లభిస్తుంది, అలాగే ట్రాక్టర్ యంత్రాల ప్రభుత్వ సబ్సిడీ ప్రయోజనాలు ఉంటాయి."
+                resp = f"GeoKisaan వ్యవసాయ రుణాలు RBI ప్రాధాన్యతా రంగ (PSL) మార్గదర్శకాలకు అనుగుణంగా ఉంటాయి, దీని కింద వడ్డీ రాయితీతో ప్రభావవంతమైన 8.4% వడ్డీ రేటు లభిస్తుంది, అలాగే ట్రాక్టర్ యంత్రాల ప్రభుత్వ సబ్సిడీ ప్రయోజనాలు ఉంటాయి."
             elif lang == "MARATHI":
-                resp = f"TVS कृषी कर्ज RBI प्राधान्य क्षेत्राच्या (PSL) नियमांनुसार असून पात्र शेतकऱ्यांना व्याज सवलतीसह प्रभावी ८.४% व्याजदर मिळू शकतो. सोबतच शासकीय ट्रॅक्टर उपकरण अनुदान योजनांचाही लाभ मिळतो."
+                resp = f"GeoKisaan कृषी कर्ज RBI प्राधान्य क्षेत्राच्या (PSL) नियमांनुसार असून पात्र शेतकऱ्यांना व्याज सवलतीसह प्रभावी ८.४% व्याजदर मिळू शकतो. सोबतच शासकीय ट्रॅक्टर उपकरण अनुदान योजनांचाही लाभ मिळतो."
             elif lang == "KANNADA":
-                resp = f"TVS ಕೃಷಿ ಸಾಲಗಳು RBI ಆದ್ಯತಾ ವಲಯದ (PSL) ನಿಯಮಗಳಿಗೆ ಅನುಗುಣವಾಗಿದ್ದು, ಬಡ್ಡಿ ಸಬ್ಸಿಡಿಯೊಂದಿಗೆ ಪರಿಣಾಮಕಾರಿ 8.4% ದರ ಲಭ್ಯವಿರುತ್ತದೆ ಹಾಗೂ ಸರ್ಕಾರಿ ಕೃಷಿ ಯಂತ್ರೋಪಕರಣಗಳ ಸಬ್ಸಿಡಿಯೂ ದೊರೆಯುತ್ತದೆ."
+                resp = f"GeoKisaan ಕೃಷಿ ಸಾಲಗಳು RBI ಆದ್ಯತಾ ವಲಯದ (PSL) ನಿಯಮಗಳಿಗೆ ಅನುಗುಣವಾಗಿದ್ದು, ಬಡ್ಡಿ ಸಬ್ಸಿಡಿಯೊಂದಿಗೆ ಪರಿಣಾಮಕಾರಿ 8.4% ದರ ಲಭ್ಯವಿರುತ್ತದೆ ಹಾಗೂ ಸರ್ಕಾರಿ ಕೃಷಿ ಯಂತ್ರೋಪಕರಣಗಳ ಸಬ್ಸಿಡಿಯೂ ದೊರೆಯುತ್ತದೆ."
             elif lang == "BENGALI":
-                resp = f"TVS কৃষি ঋণ RBI অগ্রাধিকার ক্ষেত্র (PSL) নির্দেশিকা মেনে চলে, যার ফলে সুদের ভর্তুকিসহ কার্যকর ৮.৪% সুদের হার এবং সরকারি কৃষি সরঞ্জাম ভর্তুকি সুবিধা পাওয়া যায়।"
+                resp = f"GeoKisaan কৃষি ঋণ RBI অগ্রাধিকার ক্ষেত্র (PSL) নির্দেশিকা মেনে চলে, যার ফলে সুদের ভর্তুকিসহ কার্যকর ৮.৪% সুদের হার এবং সরকারি কৃষি সরঞ্জাম ভর্তুকি সুবিধা পাওয়া যায়।"
             elif lang == "HINGLISH":
-                resp = f"TVS Agri Loans RBI ke Priority Sector Lending (PSL) guidelines ke tehat aate hain, jisme eligible farmers ko interest subvention ke sath effective 8.4% preferential rate mil sakti hai. Iske sath Chhattisgarh state farm implement subsidy aur PM-Kisan linkage ka benefit bhi milta hai."
+                resp = f"GeoKisaan Agri Loans RBI ke Priority Sector Lending (PSL) guidelines ke tehat aate hain, jisme eligible farmers ko interest subvention ke sath effective 8.4% preferential rate mil sakti hai. Iske sath Chhattisgarh state farm implement subsidy aur PM-Kisan linkage ka benefit bhi milta hai."
             else:
-                resp = f"TVS Agricultural Loans comply with RBI Priority Sector Lending (PSL) norms, allowing eligible farmers to avail interest subvention down to an effective 8.4% rate, alongside Chhattisgarh State Farm Equipment subsidies and PM-Kisan liquidity."
+                resp = f"GeoKisaan Agricultural Loans comply with RBI Priority Sector Lending (PSL) norms, allowing eligible farmers to avail interest subvention down to an effective 8.4% rate, alongside Chhattisgarh State Farm Equipment subsidies and PM-Kisan liquidity."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.96)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1592,30 +1597,30 @@ class KrishiSaathiAssistant:
         # ---------------------------------------------------------------------
         if any(w in query for w in ["agent", "human", "officer", "call", "phone", "help", "madad", "मदद", "अधिकारी", "अफसर", "गोठियाना", "அதிகாரி"]):
             intent = "HUMAN_OFFICER_ESCALATION"
-            app_ref = ctx.get("application_id") or (f"TVS-APP-{ctx.get('id')}" if ctx.get("id") else None)
+            app_ref = ctx.get("application_id") or (f"GK-APP-{ctx.get('id')}" if ctx.get("id") else None)
             ref_msg_hi = f" आपका आवेदन संदर्भ क्रमांक '{app_ref}' है।" if app_ref else ""
             ref_msg_cg = f" तुंहर संदर्भ नंबर '{app_ref}' हे।" if app_ref else ""
             ref_msg_en = f" Quote application reference '{app_ref}'." if app_ref else ""
-            evidence = [{"source": "TVS Rural Support", "toll_free": "1800-425-4555", "application_ref": app_ref or "N/A"}]
+            evidence = [{"source": "GeoKisaan Rural Support", "toll_free": "1800-425-4555", "application_ref": app_ref or "N/A"}]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"आप टीवीएस क्रेडिट के फील्ड रिलेशनशिप ऑफिसर या टोल-फ्री हेल्पलाइन (1800-425-4555) से सीधे संपर्क कर सकते हैं।{ref_msg_hi} अधिकारी आपकी पूरी सहायता करेंगे।"
+                resp = f"आप जियोकिसान के फील्ड रिलेशनशिप ऑफिसर या टोल-फ्री हेल्पलाइन (1800-425-4555) से सीधे संपर्क कर सकते हैं।{ref_msg_hi} अधिकारी आपकी पूरी सहायता करेंगे।"
             elif lang == "CHHATTISGARHI":
-                resp = f"तुमन टीवीएस क्रेडिट के फील्ड अफसर या टोल-फ्री नंबर (1800-425-4555) म गोठिया सकत हव।{ref_msg_cg} अफसर मन तुरंत सहायता करहीं।"
+                resp = f"तुमन जियोकिसान के फील्ड अफसर या टोल-फ्री नंबर (1800-425-4555) म गोठिया सकत हव।{ref_msg_cg} अफसर मन तुरंत सहायता करहीं।"
             elif lang == "TAMIL":
-                resp = f"நீங்கள் TVS கிரெடிட் கள அலுவலரை அல்லது எங்கள் இலவச உதவி எண்ணை (1800-425-4555) நேரடியாக தொடர்பு கொள்ளலாம்."
+                resp = f"நீங்கள் GeoKisaan கிரெடிட் கள அலுவலரை அல்லது எங்கள் இலவச உதவி எண்ணை (1800-425-4555) நேரடியாக தொடர்பு கொள்ளலாம்."
             elif lang == "TELUGU":
-                resp = f"మీరు నేరుగా TVS క్రెడిట్ ఫీల్డ్ రిలేషన్షిప్ ఆఫీసర్‌తో మాట్లాడవచ్చు లేదా మా ఉచిత హెల్ప్‌లైన్ (1800-425-4555) కు కాల్ చేయవచ్చు."
+                resp = f"మీరు నేరుగా GeoKisaan క్రెడిట్ ఫీల్డ్ రిలేషన్షిప్ ఆఫీసర్‌తో మాట్లాడవచ్చు లేదా మా ఉచిత హెల్ప్‌లైన్ (1800-425-4555) కు కాల్ చేయవచ్చు."
             elif lang == "MARATHI":
-                resp = f"आपण TVS क्रेडिट फील्ड रिलेशनशिप ऑफिसरशी थेट बोलू शकता किंवा टोल-फ्री हेल्पलाइन (१८००-४२५-४५५५) वर कॉल करू शकता."
+                resp = f"आपण GeoKisaan क्रेडिट फील्ड रिलेशनशिप ऑफिसरशी थेट बोलू शकता किंवा टोल-फ्री हेल्पलाइन (१८००-४२५-४५५५) वर कॉल करू शकता."
             elif lang == "KANNADA":
-                resp = f"ನೀವು ನೇರವಾಗಿ TVS ಕ್ರೆಡಿಟ್ ಕ್ಷೇತ್ರ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಮಾತನಾಡಬಹುದು ಅಥವಾ ನಮ್ಮ ಟೋಲ್-ಫ್ರೀ ಸಂಖ್ಯೆಗೆ (1800-425-4555) ಕರೆ ಮಾಡಬಹುದು."
+                resp = f"ನೀವು ನೇರವಾಗಿ GeoKisaan ಕ್ರೆಡಿಟ್ ಕ್ಷೇತ್ರ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಮಾತನಾಡಬಹುದು ಅಥವಾ ನಮ್ಮ ಟೋಲ್-ಫ್ರೀ ಸಂಖ್ಯೆಗೆ (1800-425-4555) ಕರೆ ಮಾಡಬಹುದು."
             elif lang == "BENGALI":
-                resp = f"আপনি সরাসরি TVS ক্রেডিট ফিল্ড অফিসারের সাথে কথা বলতে পারেন বা টোল-ফ্রি হেল্পলাইনে (১৮০০-৪২৫-৪৫৫৫) কল করতে পারেন।"
+                resp = f"আপনি সরাসরি GeoKisaan ক্রেডিট ফিল্ড অফিসারের সাথে কথা বলতে পারেন বা টোল-ফ্রি হেল্পলাইনে (১৮০০-৪২৫-৪৫৫৫) কল করতে পারেন।"
             elif lang == "HINGLISH":
-                resp = f"Aap TVS Credit ke dedicated Field Relationship Officer se direct baat kar sakte hain ya toll-free helpline (1800-425-4555) par call kar sakte hain.{ref_msg_en} Support team aapki poori madad karegi."
+                resp = f"Aap GeoKisaan ke dedicated Field Relationship Officer se direct baat kar sakte hain ya toll-free helpline (1800-425-4555) par call kar sakte hain.{ref_msg_en} Support team aapki poori madad karegi."
             else:
-                resp = f"You can connect directly with your dedicated TVS Credit Field Relationship Officer or call our rural toll-free helpline at 1800-425-4555.{ref_msg_en} Our officers provide on-ground assistance across Chhattisgarh."
+                resp = f"You can connect directly with your dedicated GeoKisaan Field Relationship Officer or call our rural toll-free helpline at 1800-425-4555.{ref_msg_en} Our officers provide on-ground assistance across Chhattisgarh."
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.96)
             return resp, intent, evidence, conf, follow_ups
 
@@ -1625,7 +1630,7 @@ class KrishiSaathiAssistant:
         if retrieved:
             faq_data = retrieved[0].get("data", {})
             intent = "POLICY_FAQ_MATCH"
-            evidence = [{"source": "TVS Knowledge Base", "title": retrieved[0].get("title", "Policy FAQ")}]
+            evidence = [{"source": "GeoKisaan Knowledge Base", "title": retrieved[0].get("title", "Policy FAQ")}]
             follow_ups = self._get_suggested_follow_ups("GENERAL_AGRI_LOAN", lang)
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.93)
             if isinstance(faq_data, dict):
@@ -1643,49 +1648,49 @@ class KrishiSaathiAssistant:
         # ---------------------------------------------------------------------
         intent = "GENERAL_AGRI_LOAN"
         if not has_borrower_context or amount is None:
-            evidence = [{"source": "TVS Knowledge Base", "service": "Rural Agri-Credit Advisory"}]
+            evidence = [{"source": "GeoKisaan Knowledge Base", "service": "Rural Agri-Credit Advisory"}]
             follow_ups = self._get_suggested_follow_ups(intent, lang)
             if lang == "HINDI":
-                resp = f"नमस्ते! मैं टीवीएस कृषि साथी हूँ। मैं कृषि ऋण पात्रता, फसल कटाई आधारित EMI, 10m सैटेलाइट खेत स्वास्थ्य, और ऋण प्रक्रिया में आपकी सहायता के लिए तैयार हूँ। आप क्या जानना चाहेंगे?"
+                resp = f"नमस्ते! मैं जियोकिसान कृषि साथी हूँ। मैं कृषि ऋण पात्रता, फसल कटाई आधारित EMI, 10m सैटेलाइट खेत स्वास्थ्य, और ऋण प्रक्रिया में आपकी सहायता के लिए तैयार हूँ। आप क्या जानना चाहेंगे?"
             elif lang == "CHHATTISGARHI":
-                resp = f"जय जोहार संगवारी! मैं टीवीएस कृषि साथी हंव। मैं लोन पात्रता, फसल कटाई किस्त, सैटेलाइट खेत जांच, अउ ब्याज दर के बारे म गोठियाए बर हाजिर हंव। का जानना चाहत हव?"
+                resp = f"जय जोहार संगवारी! मैं जियोकिसान कृषि साथी हंव। मैं लोन पात्रता, फसल कटाई किस्त, सैटेलाइट खेत जांच, अउ ब्याज दर के बारे म गोठियाए बर हाजिर हंव। का जानना चाहत हव?"
             elif lang == "TAMIL":
-                resp = f"வணக்கம்! நான் TVS கிரிஷி சாதி. விவசாய கடன் தகுதி, சீசனல் அறுவடை தவணைகள், செயற்கைக்கோள் நில ஆய்வு குறித்து உதவ நான் தயாராக உள்ளேன். எதைப் பற்றி அறிய விரும்புகிறீர்கள்?"
+                resp = f"வணக்கம்! நான் GeoKisaan கிரிஷி சாதி. விவசாய கடன் தகுதி, சீசனல் அறுவடை தவணைகள், செயற்கைக்கோள் நில ஆய்வு குறித்து உதவ நான் தயாராக உள்ளேன். எதைப் பற்றி அறிய விரும்புகிறீர்கள்?"
             elif lang == "TELUGU":
-                resp = f"నమస్కారం! TVS కృషి సాథిగా వ్యవసాయ రుణాలు, హార్వెస్ట్ EMI, మరియు శాటిలైట్ భూమి నివేదికల సమాచారం అందించడానికి సిద్ధంగా ఉన్నాను."
+                resp = f"నమస్కారం! GeoKisaan కృషి సాథిగా వ్యవసాయ రుణాలు, హార్వెస్ట్ EMI, మరియు శాటిలైట్ భూమి నివేదికల సమాచారం అందించడానికి సిద్ధంగా ఉన్నాను."
             elif lang == "MARATHI":
-                resp = f"नमस्कार! TVS कृषी साथी म्हणून मी कृषी कर्ज, हंगामी हप्ता, उपग्रह अहवाल आणि व्याजदरांबद्दल मदत करण्यास सज्ज आहे."
+                resp = f"नमस्कार! GeoKisaan कृषी साथी म्हणून मी कृषी कर्ज, हंगामी हप्ता, उपग्रह अहवाल आणि व्याजदरांबद्दल मदत करण्यास सज्ज आहे."
             elif lang == "KANNADA":
-                resp = f"ನಮಸ್ಕಾರ! TVS ಕೃಷಿ ಸಾಥಿಯಾಗಿ ಕೃಷಿ ಸಾಲ, ಹಾರ್ವೆಸ್ಟ್ ಕಂತು, ಮತ್ತು ಉಪಗ್ರಹ ಬೆಳೆ ವರದಿಯ ಬಗ್ಗೆ ಸಹಾಯ ಮಾಡಲು ಸಿದ್ಧನಿದ್ದೇನೆ."
+                resp = f"ನಮಸ್ಕಾರ! GeoKisaan ಕೃಷಿ ಸಾಥಿಯಾಗಿ ಕೃಷಿ ಸಾಲ, ಹಾರ್ವೆಸ್ಟ್ ಕಂತು, ಮತ್ತು ಉಪಗ್ರಹ ಬೆಳೆ ವರದಿಯ ಬಗ್ಗೆ ಸಹಾಯ ಮಾಡಲು ಸಿದ್ಧನಿದ್ದೇನೆ."
             elif lang == "BENGALI":
-                resp = f"নমস্কার! TVS কৃষি সাথী হিসেবে কৃষি ঋণ, হার্ভেস্ট কিস্তি, এবং স্যাটেলাইট রিপোর্ট সংক্রান্ত তথ্যে আমি প্রস্তুত।"
+                resp = f"নমস্কার! GeoKisaan কৃষি সাথী হিসেবে কৃষি ঋণ, হার্ভেস্ট কিস্তি, এবং স্যাটেলাইট রিপোর্ট সংক্রান্ত তথ্যে আমি প্রস্তুত।"
             elif lang == "HINGLISH":
-                resp = f"Namaste! TVS Krishi Saathi ke roop me main aapki tractor loan eligibility, Seasonally-Aligned Harvest EMI, 10m satellite khet report aur interest rates par guide karne ke liye hazir hoon. Aap kya janna chahte hain?"
+                resp = f"Namaste! GeoKisaan Krishi Saathi ke roop me main aapki tractor loan eligibility, Seasonally-Aligned Harvest EMI, 10m satellite khet report aur interest rates par guide karne ke liye hazir hoon. Aap kya janna chahte hain?"
             else:
-                resp = f"I'm here to help! As your TVS Krishi Saathi assistant, I can explain our Seasonally-Aligned Harvest EMI schedules, 10m Sentinel-2 satellite soil health analysis, or guide you on tractor financing. What would you like to explore?"
+                resp = f"I'm here to help! As your GeoKisaan Krishi Saathi assistant, I can explain our Seasonally-Aligned Harvest EMI schedules, 10m Sentinel-2 satellite soil health analysis, or guide you on tractor financing. What would you like to explore?"
             conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.88)
             return resp, intent, evidence, conf, follow_ups
 
         evidence = [{"source": "Borrower Profile", "agri_credit_score": score, "approved_amount_inr": amount}]
         follow_ups = self._get_suggested_follow_ups(intent, lang)
         if lang == "HINDI":
-            resp = f"नमस्ते {first_name} जी! टीवीएस कृषि साथी के रूप में मैं आपके ₹{amount:,} के लोन आवेदन (स्कोर: {score}) के लिए उपलब्ध हूँ। आप मुझसे फसल कटाई आधारित किस्तों, 10m सैटेलाइट खेत रिपोर्ट, या ब्याज दरों के बारे में पूछ सकते हैं। आप क्या जानना चाहेंगे?"
+            resp = f"नमस्ते {first_name} जी! जियोकिसान कृषि साथी के रूप में मैं आपके ₹{amount:,} के लोन आवेदन (स्कोर: {score}) के लिए उपलब्ध हूँ। आप मुझसे फसल कटाई आधारित किस्तों, 10m सैटेलाइट खेत रिपोर्ट, या ब्याज दरों के बारे में पूछ सकते हैं। आप क्या जानना चाहेंगे?"
         elif lang == "CHHATTISGARHI":
-            resp = f"जय जोहार {first_name} भइया! मैं टीवीएस कृषि साथी हंव। तुंहर ₹{amount:,} के लोन बर (स्कोर: {score}) मैं हाजिर हंव। तुमन किस्त, खेत के सैटेलाइट रिपोर्ट, या ब्याज दर के बारे म पूछ सकत हव। का जानना चाहत हव संगवारी?"
+            resp = f"जय जोहार {first_name} भइया! मैं जियोकिसान कृषि साथी हंव। तुंहर ₹{amount:,} के लोन बर (स्कोर: {score}) मैं हाजिर हंव। तुमन किस्त, खेत के सैटेलाइट रिपोर्ट, या ब्याज दर के बारे म पूछ सकत हव। का जानना चाहत हव संगवारी?"
         elif lang == "TAMIL":
-            resp = f"வணக்கம் {first_name}! நான் TVS கிரிஷி சாதி. உங்கள் ₹{amount:,} கடன் அனுமதி (மதிப்பெண்: {score}) குறித்து நான் உதவ முடியும். சீசனல் அறுவடை தவணைகள், செயற்கைக்கோள் பயிர் ஆரோக்கியம், அல்லது வட்டி விகிதங்கள் பற்றி நீங்கள் கேட்கலாம்."
+            resp = f"வணக்கம் {first_name}! நான் GeoKisaan கிரிஷி சாதி. உங்கள் ₹{amount:,} கடன் அனுமதி (மதிப்பெண்: {score}) குறித்து நான் உதவ முடியும். சீசனல் அறுவடை தவணைகள், செயற்கைக்கோள் பயிர் ஆரோக்கியம், அல்லது வட்டி விகிதங்கள் பற்றி நீங்கள் கேட்கலாம்."
         elif lang == "TELUGU":
-            resp = f"నమస్కారం {first_name} గారు! TVS కృషి సాథిగా మీ ₹{amount:,} రుణ ఆమోదం (స్కోరు: {score}) కోసం నేను సిద్ధంగా ఉన్నాను. హార్వెస్ట్ EMI, శాటిలైట్ భూమి నివేదిక, లేదా వడ్డీ రేట్ల గురించి అడగండి."
+            resp = f"నమస్కారం {first_name} గారు! GeoKisaan కృషి సాథిగా మీ ₹{amount:,} రుణ ఆమోదం (స్కోరు: {score}) కోసం నేను సిద్ధంగా ఉన్నాను. హార్వెస్ట్ EMI, శాటిలైట్ భూమి నివేదిక, లేదా వడ్డీ రేట్ల గురించి అడగండి."
         elif lang == "MARATHI":
-            resp = f"नमस्कार {first_name} जी! TVS कृषी साथी म्हणून मी आपल्या ₹{amount:,} कर्ज मंजुरीसाठी (क्रेडिट स्कोअर: {score}) हजर आहे. आपण हंगामी हप्ता, उपग्रह अहवाल किंवा व्याजदरांबद्दल विचारू शकता."
+            resp = f"नमस्कार {first_name} जी! GeoKisaan कृषी साथी म्हणून मी आपल्या ₹{amount:,} कर्ज मंजुरीसाठी (क्रेडिट स्कोअर: {score}) हजर आहे. आपण हंगामी हप्ता, उपग्रह अहवाल किंवा व्याजदरांबद्दल विचारू शकता."
         elif lang == "KANNADA":
-            resp = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ! TVS ಕೃಷಿ ಸಾಥಿಯಾಗಿ ನಿಮ್ಮ ₹{amount:,} ಸಾಲ ಮಂಜೂರಾತಿ (ಸ್ಕೋರ್: {score}) ಸಹಾಯಕ್ಕೆ ನಾನು ಸಿದ್ಧನಿದ್ದೇನೆ. ಹಾರ್ವೆಸ್ಟ್ ಕಂತು, ಉಪಗ್ರಹ ಬೆಳೆ ವರದಿ ಅಥವಾ ಬಡ್ಡಿದರದ ಬಗ್ಗೆ ಕೇಳಿ."
+            resp = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ! GeoKisaan ಕೃಷಿ ಸಾಥಿಯಾಗಿ ನಿಮ್ಮ ₹{amount:,} ಸಾಲ ಮಂಜೂರಾತಿ (ಸ್ಕೋರ್: {score}) ಸಹಾಯಕ್ಕೆ ನಾನು ಸಿದ್ಧನಿದ್ದೇನೆ. ಹಾರ್ವೆಸ್ಟ್ ಕಂತು, ಉಪಗ್ರಹ ಬೆಳೆ ವರದಿ ಅಥವಾ ಬಡ್ಡಿದರದ ಬಗ್ಗೆ ಕೇಳಿ."
         elif lang == "BENGALI":
-            resp = f"নমস্কার {first_name} বাবু! TVS কৃষি সাথী হিসেবে আপনার ₹{amount:,} ঋণ অনুমোদন (স্কোর: {score}) সংক্রান্ত যে কোনও তথ্যে আমি প্রস্তুত। হার্ভেস্ট কিস্তি, উপগ্রহ রিপোর্ট বা সুদের হার সম্পর্কে জিজ্ঞাসা করুন।"
+            resp = f"নমস্কার {first_name} বাবু! GeoKisaan কৃষি সাথী হিসেবে আপনার ₹{amount:,} ঋণ অনুমোদন (স্কোর: {score}) সংক্রান্ত যে কোনও তথ্যে আমি প্রস্তুত। হার্ভেস্ট কিস্তি, উপগ্রহ রিপোর্ট বা সুদের হার সম্পর্কে জিজ্ঞাসা করুন।"
         elif lang == "HINGLISH":
-            resp = f"Namaste {first_name} ji! TVS Krishi Saathi ke roop me main aapke ₹{amount:,} loan application (Score: {score}) ke liye hazir hoon. Aap mujhse Seasonally-Aligned Harvest EMI, 10m satellite khet report, ya interest rates ke bare me puch sakte hain. Aap kya janna chahte hain?"
+            resp = f"Namaste {first_name} ji! GeoKisaan Krishi Saathi ke roop me main aapke ₹{amount:,} loan application (Score: {score}) ke liye hazir hoon. Aap mujhse Seasonally-Aligned Harvest EMI, 10m satellite khet report, ya interest rates ke bare me puch sakte hain. Aap kya janna chahte hain?"
         else:
-            resp = f"I'm here to help, {first_name}! As your TVS Krishi Saathi assistant, I can explain your ₹{amount:,} loan sanction (Score: {score}), break down our flexible Harvest EMI schedule, or review your 10m satellite soil health (NDVI: {ndvi:.2f}). What would you like to explore?"
+            resp = f"I'm here to help, {first_name}! As your GeoKisaan Krishi Saathi assistant, I can explain your ₹{amount:,} loan sanction (Score: {score}), break down our flexible Harvest EMI schedule, or review your 10m satellite soil health (NDVI: {ndvi:.2f}). What would you like to explore?"
         conf = self._calculate_grounding_score(query, ctx, retrieved, ["agri_credit_score", "max_sanction_amount_inr"], 0.88)
         return resp, intent, evidence, conf, follow_ups
 
@@ -1700,22 +1705,22 @@ class KrishiSaathiAssistant:
         kn_greeting = f"ನಮಸ್ಕಾರ {first_name} ಅವರೇ!" if first_name else "ನಮಸ್ಕಾರ!"
         bn_greeting = f"নমস্কার {first_name} বাবু!" if first_name else "নমস্কার!"
         hing_greeting = f"Namaste {first_name} ji!" if first_name else "Namaste!"
-        en_greeting = f"Welcome {first_name} to TVS Krishi Saathi!" if first_name else "Welcome to TVS Krishi Saathi!"
+        en_greeting = f"Welcome {first_name} to GeoKisaan Krishi Saathi!" if first_name else "Welcome to GeoKisaan Krishi Saathi!"
 
         if lang == "HINDI":
-            return f"{hi_greeting} टीवीएस कृषि साथी में आपका स्वागत है। मैं आपकी ऋण पात्रता, फसल कटाई आधारित EMI योजना, सेंटिनल उपग्रह खेत जांच और मौसम सलाह में सहायता के लिए तैयार हूँ।"
+            return f"{hi_greeting} जियोकिसान कृषि साथी में आपका स्वागत है। मैं आपकी ऋण पात्रता, फसल कटाई आधारित EMI योजना, सेंटिनल उपग्रह खेत जांच और मौसम सलाह में सहायता के लिए तैयार हूँ।"
         elif lang == "CHHATTISGARHI":
-            return f"{cg_greeting} TVS कृषि साथी म तुंहर सुवागत हे। मैं तुंहर लोन पात्रता, फसल कटाई किस्त, सैटेलाइट खेत जांच अउ मौसम सलाह बर हाजिर हंव।"
+            return f"{cg_greeting} GeoKisaan कृषि साथी म तुंहर सुवागत हे। मैं तुंहर लोन पात्रता, फसल कटाई किस्त, सैटेलाइट खेत जांच अउ मौसम सलाह बर हाजिर हंव।"
         elif lang == "TAMIL":
-            return f"{ta_greeting} TVS கிரிஷி சாதிக்கு உங்களை வரவேற்கிறோம். உங்கள் கடன் ஒப்புதல், பயிர் அறுவடை சீசனல் EMI, மற்றும் செயற்கைக்கோள் நில ஆய்வில் உதவ நான் தயாராக உள்ளேன்."
+            return f"{ta_greeting} GeoKisaan கிரிஷி சாதிக்கு உங்களை வரவேற்கிறோம். உங்கள் கடன் ஒப்புதல், பயிர் அறுவடை சீசனல் EMI, மற்றும் செயற்கைக்கோள் நில ஆய்வில் உதவ நான் தயாராக உள்ளேன்."
         elif lang == "TELUGU":
-            return f"{te_greeting} TVS కృషి సాథికి స్వాగతం. మీ లోన్ అర్హత, హార్వెస్ట్ EMI ప్రణాళిక, శాటిలైట్ పంట ఆరోగ్య నివేదిక మరియు వాతావరణ సలహాల్లో సహాయం చేయడానికి నేను సిద్ధంగా ఉన్నాను."
+            return f"{te_greeting} GeoKisaan కృషి సాథికి స్వాగతం. మీ లోన్ అర్హత, హార్వెస్ట్ EMI ప్రణాళిక, శాటిలైట్ పంట ఆరోగ్య నివేదిక మరియు వాతావరణ సలహాల్లో సహాయం చేయడానికి నేను సిద్ధంగా ఉన్నాను."
         elif lang == "MARATHI":
-            return f"{mr_greeting} TVS कृषी साथी मध्ये आपले स्वागत आहे. मी आपली कर्ज पात्रता, हंगामी हार्वेस्ट ईएमआय योजना, उपग्रह पीक तपासणी आणि हवामान सल्ल्यासाठी सज्ज आहे."
+            return f"{mr_greeting} GeoKisaan कृषी साथी मध्ये आपले स्वागत आहे. मी आपली कर्ज पात्रता, हंगामी हार्वेस्ट ईएमआय योजना, उपग्रह पीक तपासणी आणि हवामान सल्ल्यासाठी सज्ज आहे."
         elif lang == "KANNADA":
-            return f"{kn_greeting} TVS ಕೃಷಿ ಸಾಥಿಗೆ ಸುಸ್ವಾಗತ. ನಿಮ್ಮ ಸಾಲದ ಅರ್ಹತೆ, ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಯೋಜನೆ, ಉಪಗ್ರಹ ಬೆಳೆ ಪರಿಶೀಲನೆ ಮತ್ತು ಕೃಷಿ ಸಲಹೆಗಳಿಗೆ ನಾನು ಸದಾ ಸಿದ್ಧ."
+            return f"{kn_greeting} GeoKisaan ಕೃಷಿ ಸಾಥಿಗೆ ಸುಸ್ವಾಗತ. ನಿಮ್ಮ ಸಾಲದ ಅರ್ಹತೆ, ಹಾರ್ವೆಸ್ಟ್ ಇಎಂಐ ಯೋಜನೆ, ಉಪಗ್ರಹ ಬೆಳೆ ಪರಿಶೀಲನೆ ಮತ್ತು ಕೃಷಿ ಸಲಹೆಗಳಿಗೆ ನಾನು ಸದಾ ಸಿದ್ಧ."
         elif lang == "BENGALI":
-            return f"{bn_greeting} TVS কৃষি সাথীতে আপনাকে স্বাগত। আপনার ঋণ যোগ্যতা, হার্ভেস্ট ইএমআই পরিকল্পনা, স্যাটেলাইট ফসল স্বাস্থ্য এবং আবহাওয়া পরামর্শে আমি প্রস্তুত।"
+            return f"{bn_greeting} GeoKisaan কৃষি সাথীতে আপনাকে স্বাগত। আপনার ঋণ যোগ্যতা, হার্ভেস্ট ইএমআই পরিকল্পনা, স্যাটেলাইট ফসল স্বাস্থ্য এবং আবহাওয়া পরামর্শে আমি প্রস্তুত।"
         elif lang == "HINGLISH":
-            return f"{hing_greeting} TVS Krishi Saathi Copilot me aapka swagat hai. Main aapki tractor loan eligibility, Seasonally-Aligned Harvest EMI schedule, 10m Sentinel satellite khet report aur PMFBY fasal bima guidance me madad ke liye taiyar hoon."
+            return f"{hing_greeting} GeoKisaan Krishi Saathi Copilot me aapka swagat hai. Main aapki tractor loan eligibility, Seasonally-Aligned Harvest EMI schedule, 10m Sentinel satellite khet report aur PMFBY fasal bima guidance me madad ke liye taiyar hoon."
         return f"{en_greeting} I am your AI rural loan assistant, ready to assist with your loan sanction, harvest EMI schedule, satellite soil analysis, or weather advisories."

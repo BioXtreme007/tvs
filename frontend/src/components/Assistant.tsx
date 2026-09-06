@@ -722,7 +722,7 @@ export default function Assistant({
               onClick={() =>
                 download(
                   'saathi-conversation.txt',
-                  'TVS Krishi Saathi Record\n\n' +
+                  'GeoKisaan Krishi Saathi Record\n\n' +
                     messages
                       .map(
                         m =>

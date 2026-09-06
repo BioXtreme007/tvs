@@ -144,11 +144,11 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
       {/* Top Navigation Bar: Identical structure, Logo, and Anchor Styling to Landing Page Navbar */}
       <header className="fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 h-[65px] flex items-center bg-[#EAE1DF]/90 backdrop-blur-md border-b border-black/5 shadow-2xs">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 w-full flex items-center justify-between">
-          {/* Left: TVS Credit Logo */}
+          {/* Left: GeoKisaan Logo */}
           <button
             onClick={onBackToCockpit}
             className="flex items-center gap-3 flex-shrink-0 cursor-pointer bg-transparent border-0 p-0 text-left"
-            title="Return to TVS Credit Home"
+            title="Return to GeoKisaan Home"
           >
             <Logo />
           </button>
@@ -222,7 +222,7 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
                       <UserProfileSidebar
                         user={{
                           name: user.name,
-                          email: user.email || 'kisan.portal@tvscredit.com',
+                          email: user.email || 'kisan.portal@geokisaan.in',
                           role: user.role || 'Verified Agri Partner',
                           branch: user.branch || 'Madhya Pradesh Cluster',
                         }}
@@ -593,7 +593,7 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             <ArrowLeft size={14} />
             <span>Back to website</span>
           </button>
-          <span>BioXtreme · Built for rural progress · TVS Credit</span>
+          <span>BioXtreme · Built for rural progress · GeoKisaan</span>
         </footer>
       </main>
     </div>

@@ -1,5 +1,5 @@
 /**
- * TVS Credit AI-Powered Smart Lending Decision Hub - Web Frontend Logic
+ * GeoKisaan AI-Powered Smart Lending Decision Hub - Web Frontend Logic
  */
 
 // Tab Navigation
@@ -25,7 +25,7 @@ let currentUnderwritingData = {
   agri_credit_score: 735,
   tier: "GOOD",
   underwriting_decision: "FAST_TRACK_APPROVE",
-  recommended_product: "TVS New Tractor Loan",
+  recommended_product: "GeoKisaan New Tractor Loan",
   sanctioned_amount_inr: 550000,
   risk_adjusted_roi_pct: 10.5,
   satellite_ndvi: 0.68,
@@ -59,7 +59,7 @@ function renderUnderwritingResults(data) {
   }
 
   // Update Summary Badges
-  document.getElementById('resProduct').innerText = data.recommended_product || "TVS New Tractor Loan";
+  document.getElementById('resProduct').innerText = data.recommended_product || "GeoKisaan New Tractor Loan";
   document.getElementById('resAmount').innerText = `₹${(data.sanctioned_amount_inr || 550000).toLocaleString()}`;
   document.getElementById('resROI').innerText = `${data.risk_adjusted_roi_pct || 10.5}% p.a.`;
   document.getElementById('resNDVI').innerText = (data.satellite_ndvi || 0.68).toFixed(2);
@@ -108,7 +108,7 @@ document.getElementById('loanAppForm')?.addEventListener('submit', function(e) {
     agri_credit_score: score,
     tier: tier,
     underwriting_decision: decision,
-    recommended_product: acres >= 3.0 ? "TVS New Tractor Loan" : "TVS Kisan Two-Wheeler Loan",
+    recommended_product: acres >= 3.0 ? "GeoKisaan New Tractor Loan" : "GeoKisaan Kisan Rural Two-Wheeler Loan",
     sanctioned_amount_inr: loanAmt,
     risk_adjusted_roi_pct: roi,
     satellite_ndvi: ndvi,
@@ -173,7 +173,7 @@ function sendChatMessage() {
   const typingDiv = document.createElement('div');
   typingDiv.className = 'chat-bubble bubble-assistant';
   typingDiv.id = 'tempTypingBubble';
-  typingDiv.innerHTML = `<em>TVS Krishi Saathi is reasoning...</em>`;
+  typingDiv.innerHTML = `<em>GeoKisaan Krishi Saathi is reasoning...</em>`;
   msgContainer.appendChild(typingDiv);
   msgContainer.scrollTop = msgContainer.scrollHeight;
 

@@ -27,7 +27,7 @@ export const DeliberationModal: React.FC<DeliberationModalProps> = ({
     },
     {
       name: 'Agent 2: Regulatory Compliance & Policy RAG',
-      role: 'RBI Fair Lending & TVS Credit Agri-Credit Guidelines',
+      role: 'RBI Fair Lending & GeoKisaan Agri-Credit Guidelines',
       status: 'COMPLIANT',
       details:
         'Verified against RBI Master Directions on NBFC Lending 2024. Proposed 10.5% risk-adjusted APR complies with state usury caps. Farmer eligibility under PM KISAN and crop insurance requirements verified.',

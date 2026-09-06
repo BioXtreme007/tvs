@@ -101,7 +101,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                 <div className="flex items-center gap-2">
                   <Logo />
                   <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#192837] text-white">
-                    TVS Credit
+                    GeoKisaan
                   </span>
                 </div>
                 <motion.button

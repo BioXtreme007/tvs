@@ -136,7 +136,7 @@ export default function WebsiteApp() {
     };
   }, [view]);
   useEffect(() => {
-    document.title = (view === 'signin' ? 'Sign in' : view === 'farmer' ? 'Farmer portal' : view === 'precision-preview' ? 'PrecisionSection Preview' : 'Smart Agri-Lending') + ' · TVS Credit';
+    document.title = (view === 'signin' ? 'Sign in' : view === 'farmer' ? 'Farmer portal' : view === 'precision-preview' ? 'PrecisionSection Preview' : 'Smart Agri-Lending') + ' · GeoKisaan';
     const frame = requestAnimationFrame(() => {
       const targetId = window.location.hash.replace('#', '');
       if (targetId && targetId !== 'farmer' && targetId !== 'home' && targetId !== 'dashboard') {
@@ -245,7 +245,7 @@ export default function WebsiteApp() {
         <Reveal><PortfolioSection /></Reveal>
         <Reveal><WhatIfSection /></Reveal>
         <Reveal><EWSSection /></Reveal>
-        <Reveal><section id="krishi-saathi" className="website-saathi-section"><div className="website-saathi-card"><div><span className="website-kicker"><Sparkles size={16} /> TVS KRISHI SAATHI</span><h2>Your language.<br />A little more clarity.</h2><p>Understand your assessment, explore harvest-linked repayments, and ask your next question in one of eight languages.</p><button className="website-saathi-button" onClick={() => ask('', true)}>Talk 1:1 with Krishi Saathi <Sparkles size={17} /></button></div><div className="website-saathi-prompts"><span>START A CONVERSATION</span>{['What documents do I need?', 'How do harvest repayments work?', 'Explain my credit assessment'].map(query => <button key={query} onClick={() => ask(query)}>{query}<span>↗</span></button>)}<p>English · हिन्दी · छत्तीसगढ़ी · தமிழ்<br />తెలుగు · मराठी · ಕನ್ನಡ · বাংলা</p></div></div></section></Reveal>
+        <Reveal><section id="krishi-saathi" className="website-saathi-section"><div className="website-saathi-card"><div><span className="website-kicker"><Sparkles size={16} /> GEOKISAAN SAATHI</span><h2>Your language.<br />A little more clarity.</h2><p>Understand your assessment, explore harvest-linked repayments, and ask your next question in one of eight languages.</p><button className="website-saathi-button" onClick={() => ask('', true)}>Talk 1:1 with Krishi Saathi <Sparkles size={17} /></button></div><div className="website-saathi-prompts"><span>START A CONVERSATION</span>{['What documents do I need?', 'How do harvest repayments work?', 'Explain my credit assessment'].map(query => <button key={query} onClick={() => ask(query)}>{query}<span>↗</span></button>)}<p>English · हिन्दी · छत्तीसगढ़ी · தமிழ்<br />తెలుగు · मराठी · ಕನ್ನಡ · বাংলা</p></div></div></section></Reveal>
       </main>
       <Footer />
       <DeliberationModal isOpen={!!deliberation} onClose={() => setDeliberation(null)} resultData={deliberation} />

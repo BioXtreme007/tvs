@@ -39,7 +39,7 @@ export const WhatIfSection: React.FC = () => {
             Macro-Climatic What-If Stress Simulator
           </h2>
           <p className="mt-3 text-sm sm:text-base text-slate-700 max-w-2xl">
-            Simulate portfolio defaults under drought, heatwave, and price crash conditions, testing TVS Credit's restructuring shield.
+            Simulate portfolio defaults under drought, heatwave, and price crash conditions, testing GeoKisaan's restructuring shield.
           </p>
         </div>
 
@@ -185,11 +185,11 @@ export const WhatIfSection: React.FC = () => {
               </div>
             </div>
 
-            {/* TVS Proactive Restructuring Benefit Card */}
+            {/* GeoKisaan Proactive Restructuring Benefit Card */}
             <div className="glass-card-dark text-white rounded-3xl p-7 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-purple-300 flex items-center gap-1.5">
-                  <Sparkles size={16} /> TVS Credit Restructuring Shield
+                  <Sparkles size={16} /> GeoKisaan Restructuring Shield
                 </span>
                 <span className="text-xs px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 font-bold border border-emerald-400/30">
                   PROACTIVE MITIGATION
@@ -212,7 +212,7 @@ export const WhatIfSection: React.FC = () => {
               </div>
 
               <p className="text-xs text-slate-300 leading-relaxed">
-                By automatically converting monthly EMIs into nominal maintenance and deferred bullet installments aligned with Mandi sales, TVS Credit saves <strong>65% of potential defaults</strong> before the 90-day SMA-2 mark.
+                By automatically converting monthly EMIs into nominal maintenance and deferred bullet installments aligned with Mandi sales, GeoKisaan saves <strong>65% of potential defaults</strong> before the 90-day SMA-2 mark.
               </p>
             </div>
           </div>

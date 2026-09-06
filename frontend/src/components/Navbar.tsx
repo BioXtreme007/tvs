@@ -114,8 +114,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   );
 
   const userProfile: UserProfile = {
-    name: authUser?.name || 'TVS Partner',
-    email: authUser?.email || (isCreditAdmin ? 'credit.ops@tvscredit.com' : 'kisan.portal@tvscredit.com'),
+    name: authUser?.name || 'GeoKisaan Partner',
+    email: authUser?.email || (isCreditAdmin ? 'credit.ops@geokisaan.in' : 'kisan.portal@geokisaan.in'),
     role: authUser?.role || (isCreditAdmin ? 'Senior Credit Underwriter' : 'Verified Agri Partner'),
     branch: isCreditAdmin ? 'Bhopal Central Desk' : 'Madhya Pradesh Cluster',
   };
@@ -243,20 +243,20 @@ export const Navbar: React.FC<NavbarProps> = ({
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 w-full flex items-center justify-between">
-        {/* Left: TVS Credit Logo + Brand badge */}
+        {/* Left: GeoKisaan Logo + Brand badge */}
         <div
           className="flex items-center gap-3 flex-shrink-0 cursor-pointer"
           onClick={() => {
             window.location.hash = '#home';
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          title="TVS Credit Home"
+          title="GeoKisaan Home"
         >
           <Logo />
           <span
             className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#192837] text-white"
           >
-            TVS Credit
+            GeoKisaan
           </span>
         </div>
 

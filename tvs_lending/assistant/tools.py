@@ -73,7 +73,7 @@ def get_document_checklist(
         "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "is_sample": False,
         "data": {
-            "product_name": selected_prod.get("name", "TVS New Tractor Loan"),
+            "product_name": selected_prod.get("name", "GeoKisaan New Tractor Loan"),
             "min_land_required_acres": selected_prod.get("min_land_acres", 3.0),
             "max_loan_amount_inr": selected_prod.get("max_amount_inr", 1200000),
             "crop_type": crop_type,
@@ -116,7 +116,7 @@ def get_authorized_application_status(
                 "source": "tvs_lending_db",
                 "as_of": datetime.datetime.now(datetime.timezone.utc).isoformat(),
                 "is_sample": False,
-                "error": f"Application '{application_id}' does not exist in TVS Credit records.",
+                "error": f"Application '{application_id}' does not exist in GeoKisaan records.",
             }
 
         # Borrower isolation check
@@ -151,7 +151,7 @@ def get_authorized_application_status(
                 "interest_rate_pct": verdict.get("risk_adjusted_roi_pct", 8.4),
                 "agri_credit_score": verdict.get("agri_credit_score", scorecard.get("agri_credit_score", 745)),
                 "credit_tier": scorecard.get("tier", "PRIME"),
-                "recommended_asset": verdict.get("recommended_product", "TVS 45HP Smart Farm Tractor"),
+                "recommended_asset": verdict.get("recommended_product", "GeoKisaan 45HP Smart Farm Tractor"),
             },
         }
 
@@ -219,7 +219,7 @@ def get_authorized_repayment_schedule(
                 "applicant_name": app_row["applicant_name"],
                 "total_loan_amount_inr": sanctioned_amt,
                 "crop_cycle": f"{app_row['crop_type']} Kharif Season",
-                "repayment_model": "TVS Seasonally-Aligned Harvest EMI",
+                "repayment_model": "GeoKisaan Seasonally-Aligned Harvest EMI",
                 "lean_season_months": "June to October (Sowing & Growth)",
                 "lean_season_emi_inr": lean_emi,
                 "lean_season_explanation": f"During months of sowing and input expenditure, farmer pays only nominal Rs. {lean_emi:,.0f} maintenance to preserve liquidity.",

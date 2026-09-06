@@ -214,7 +214,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       answer: (
         <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
           <p>
-            During peak monsoon cycles in Chhattisgarh (July–September), persistent 80–95% cloud cover blinds optical satellites. TVS Credit&apos;s dual-branch deep inpainting network reconstructs occluded pixels using multi-temporal Sentinel-2 revisits and synthetic radar correlations (Sentinel-1 SAR VV/VH).
+            During peak monsoon cycles in Chhattisgarh (July–September), persistent 80–95% cloud cover blinds optical satellites. GeoKisaan&apos;s dual-branch deep inpainting network reconstructs occluded pixels using multi-temporal Sentinel-2 revisits and synthetic radar correlations (Sentinel-1 SAR VV/VH).
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-200/70">
             <div>
@@ -246,7 +246,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       answer: (
         <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
           <p>
-            Every applicant Khasra parcel is geocoded and indexed into hierarchical Uber H3 hexagons. The multi-tiered verification checks against registered state revenue records (Bhuiyan CG) and existing TVS Credit encumbrances.
+            Every applicant Khasra parcel is geocoded and indexed into hierarchical Uber H3 hexagons. The multi-tiered verification checks against registered state revenue records (Bhuiyan CG) and existing GeoKisaan encumbrances.
           </p>
           <ul className="list-disc list-inside space-y-1 text-slate-500">
             <li><strong>Tier-1 Spatial Index:</strong> Locks out applications with duplicate boundary intersection &gt; 5% across non-related entities.</li>
@@ -322,7 +322,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
           <span className="portal-mark">
             <Logo width={22} height={22} fill="#7451d1" />
           </span>
-          <span>TVS CREDIT<small>AGRI INTELLIGENCE</small></span>
+          <span>GEOKISAAN<small>AGRI INTELLIGENCE</small></span>
         </button>
         <div className="rail-workspace">
           <span className="status-dot" />Decision cockpit
@@ -363,7 +363,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
         </div>
       </aside>
 
-      {/* Admin Body with Topbar: Breadcrumbs + TVS Credit Icon + Website Button + Profile Dropdown */}
+      {/* Admin Body with Topbar: Breadcrumbs + GeoKisaan Icon + Website Button + Profile Dropdown */}
       <div className={`admin-body ${sidebarCollapsed ? 'rail-collapsed' : ''}`}>
         <header className="admin-topbar">
           <div className="flex items-center gap-3">
@@ -378,11 +378,11 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
             <button
               onClick={onNavigateHome}
               className="flex items-center gap-2 cursor-pointer bg-transparent border-0 p-0 text-left"
-              title="Return to TVS Credit Home"
+              title="Return to GeoKisaan Home"
             >
               <Logo width={26} height={26} />
               <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#192837] text-white">
-                TVS Credit
+                GeoKisaan
               </span>
             </button>
             <span className="breadcrumb-divider">/</span>
@@ -455,7 +455,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
         <main className="admin-content">
           <div className="portal-page-heading">
             <div>
-              <span className="portal-eyebrow">TVS CREDIT · DECISION INTELLIGENCE</span>
+              <span className="portal-eyebrow">GEOKISAAN · DECISION INTELLIGENCE</span>
               <h1>{tab === 'overview' ? 'Your lending command centre.' : tabs.find(t => t[0] === tab)?.[1]}</h1>
               <p>{tab === 'overview' ? `Welcome, ${user.name?.split(' ')[0] || 'there'}. A clearer view of your portfolio and the decisions ahead.` : 'Explore the evidence. Take the next informed step.'}</p>
             </div>
@@ -571,7 +571,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
                     from="assistant"
                     timestamp="Real-time Telemetry Advisory"
                     copyText="Multi-satellite Sentinel-2 telemetry indicates 23.4% NDVI recovery post-inpainting across Durg and Raipur clusters. Recommend approving applicant Rajeshwar Sahu (₹3.4L sanction cap) with harvest-linked quarterly EMI schedule."
-                    source="Sentinel-2 Inpainting + CIBIL + TVS Decision Engine"
+                    source="Sentinel-2 Inpainting + CIBIL + GeoKisaan Decision Engine"
                     evidence={[
                       "NDVI 0.68 (+14% vs 5yr normal)",
                       "CIBIL 742 (Prime Tier)",
@@ -693,7 +693,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
                 <div className="mb-4">
                   <span className="portal-eyebrow">MODEL EXPLAINABILITY &amp; GOVERNANCE</span>
                   <h2 className="text-xl font-bold text-[#0B2545]">
-                    TVS Credit Decision Intelligence &amp; Multimodal Safeguards Disclosures
+                    GeoKisaan Decision Intelligence &amp; Multimodal Safeguards Disclosures
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
                     Interactive architectural specifications and regulatory safeguards governing the autonomous underwriting engine.
@@ -722,7 +722,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
           )}
 
           <footer className="portal-footer">
-            <span>BioXtreme / TVS Credit E.P.I.C 8</span>
+            <span>BioXtreme / GeoKisaan E.P.I.C 8</span>
             <span>Decision support · Officer review</span>
           </footer>
         </main>
@@ -891,7 +891,7 @@ function AssessmentDetailModal({
         <div className="p-5 border-b border-slate-200 bg-slate-50/70 flex items-start justify-between gap-4">
           <div>
             <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#0B2545]/10 text-[#0B2545] text-[10px] font-bold tracking-wider uppercase mb-1">
-              <span>TVS Smart Lending Hub · Underwriting Assessment Dossier</span>
+              <span>GeoKisaan Smart Lending Hub · Underwriting Assessment Dossier</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
               {selected.applicant_name || 'Borrower Assessment'}

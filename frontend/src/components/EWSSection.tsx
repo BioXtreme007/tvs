@@ -37,7 +37,7 @@ interface EWSSectionProps {
 export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
   const [alerts, setAlerts] = useState<AlertItem[]>([
     {
-      loan_id: 'TVS-TR-2023-4109',
+      loan_id: 'GK-TR-2023-4109',
       borrower_name: 'Bhupendra Baghel',
       current_ndvi: 0.35,
       previous_ndvi: 0.60,
@@ -46,7 +46,7 @@ export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
       outstanding_principal_inr: 390000.0,
     },
     {
-      loan_id: 'TVS-TR-2024-8812',
+      loan_id: 'GK-TR-2024-8812',
       borrower_name: 'Rameshwar Verma',
       current_ndvi: 0.42,
       previous_ndvi: 0.68,
@@ -58,7 +58,7 @@ export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
 
   const [dossiers, setDossiers] = useState<RecoveryDossier[]>([
     {
-      loan_id: 'TVS-TR-2023-4109',
+      loan_id: 'GK-TR-2023-4109',
       borrower_name: 'Bhupendra Baghel',
       phone: '+91-9752109832',
       village: 'Kurud',
@@ -66,7 +66,7 @@ export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
       outstanding_inr: 390000.0,
       probability_of_default_pct: 28.5,
       days_past_due: 65,
-      asset_type: 'TVS New 45HP Tractor',
+      asset_type: 'GeoKisaan New 45HP Tractor',
       land_acres: 3.8,
       khasra_no: '214/1',
       crop_type: 'Paddy',
@@ -74,7 +74,7 @@ export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
       weather_alert: '42% NDVI drop (Severe Stem Borer Infestation)',
     },
     {
-      loan_id: 'TVS-TR-2024-8812',
+      loan_id: 'GK-TR-2024-8812',
       borrower_name: 'Rameshwar Verma',
       phone: '+91-9425201198',
       village: 'Arang',
@@ -82,7 +82,7 @@ export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
       outstanding_inr: 520000.0,
       probability_of_default_pct: 19.2,
       days_past_due: 18,
-      asset_type: 'TVS 50HP Tractor + Rotavator',
+      asset_type: 'GeoKisaan 50HP Tractor + Rotavator',
       land_acres: 5.2,
       khasra_no: '98/B',
       crop_type: 'Paddy',

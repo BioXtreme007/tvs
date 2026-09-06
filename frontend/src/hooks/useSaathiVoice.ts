@@ -344,9 +344,9 @@ export function useSaathiVoice(options: UseSaathiVoiceOptions = {}) {
             if (msg.status === 'executing') {
               const toolLabel =
                 msg.name === 'get_document_checklist'
-                  ? 'Verifying TVS Document Checklist...'
+                  ? 'Verifying GeoKisaan Document Checklist...'
                   : msg.name === 'get_authorized_application_status'
-                  ? 'Checking Sanction Verdict in TVS Records...'
+                  ? 'Checking Sanction Verdict in GeoKisaan Records...'
                   : msg.name === 'get_authorized_repayment_schedule'
                   ? 'Calculating Harvest-Aligned EMI Schedule...'
                   : msg.name === 'get_apmc_mandi_rates'
