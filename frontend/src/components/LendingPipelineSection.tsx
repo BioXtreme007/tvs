@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import {
   FileCheck,
   Satellite,
@@ -98,18 +98,19 @@ export const LendingPipelineSection: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <section id="pipeline" className="relative w-full py-16 px-4 sm:px-6">
+    <section id="lending-pipeline" className="relative w-full py-16 px-4 sm:px-6 scroll-mt-20">
+      <div id="pipeline" className="absolute -top-24 pointer-events-none" aria-hidden="true" />
       <div className="max-w-[1280px] mx-auto">
         <div className="flex flex-col items-center text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-xs font-semibold mb-2.5">
             <Clock size={13} className="text-[#0B2545]" />
-            <span>Autonomous Precision Lending</span>
+            <span>How It Works · Autonomous Precision Lending</span>
           </div>
           <h2
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"
             style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}
           >
-            The 3-Minute From farm details to a decision
+            How It Works: The 3-Minute Lending Pipeline
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-700 max-w-2xl leading-relaxed">
             From rural farmer applicant to dealer tractor disbursement in under 180 seconds—powered by orbital satellites, deep neural inpainting, and multi-agent consensus.

@@ -1,6 +1,21 @@
 import React from 'react';
-import { Menu, X } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import {
+  Menu,
+  X,
+  ChevronDown,
+  LogOut,
+  ShieldCheck,
+  Activity,
+  ShieldAlert,
+  Sprout,
+  Sparkles,
+  FileText,
+  Calendar,
+  User,
+} from 'lucide-react';
 import Logo from './Logo';
+import { UserProfileSidebar, NavItem, UserProfile } from './ui/menu';
 
 interface NavbarProps {
   isMobileMenuOpen: boolean;
@@ -27,9 +42,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       window.dispatchEvent(new CustomEvent('open-krishi-saathi'));
       return;
     }
-    const el = document.getElementById(link.href.replace('#', ''));
+    const targetId = link.href.replace('#', '');
+    const el = document.getElementById(targetId) ||
+      (targetId === 'lending-pipeline' ? document.getElementById('pipeline') : null);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+      try {
+        window.history.replaceState(null, '', link.href);
+      } catch {}
     }
   };
 
@@ -68,6 +88,23 @@ export const Navbar: React.FC<NavbarProps> = ({
     };
   }, []);
 
+  const [profileOpen, setProfileOpen] = React.useState(false);
+  const profileRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    if (profileOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [profileOpen]);
+
   const isCreditAdmin = Boolean(
     authUser && (
       /underwriter|officer|admin|credit|risk/i.test(authUser.role || '') ||
@@ -75,6 +112,127 @@ export const Navbar: React.FC<NavbarProps> = ({
       /credit/i.test(authUser.name || '')
     )
   );
+
+  const userProfile: UserProfile = {
+    name: authUser?.name || 'TVS Partner',
+    email: authUser?.email || (isCreditAdmin ? 'credit.ops@tvscredit.com' : 'kisan.portal@tvscredit.com'),
+    role: authUser?.role || (isCreditAdmin ? 'Senior Credit Underwriter' : 'Verified Agri Partner'),
+    branch: isCreditAdmin ? 'Bhopal Central Desk' : 'Madhya Pradesh Cluster',
+  };
+
+  const adminNavItems: NavItem[] = [
+    {
+      icon: <ShieldCheck className="w-4 h-4" />,
+      label: 'Credit Decision Cockpit',
+      href: '#dashboard',
+      badge: 'Live',
+      onClick: () => {
+        window.location.hash = '#dashboard';
+      },
+    },
+    {
+      icon: <Activity className="w-4 h-4" />,
+      label: 'District Risk Portfolio',
+      href: '#portfolio',
+      onClick: () => {
+        const el = document.getElementById('portfolio');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else window.location.hash = '#portfolio';
+      },
+    },
+    {
+      icon: <ShieldAlert className="w-4 h-4" />,
+      label: 'Early Warning Signals (EWS)',
+      href: '#ews',
+      badge: '3 Alerts',
+      onClick: () => {
+        const el = document.getElementById('ews');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else window.location.hash = '#ews';
+      },
+    },
+    {
+      icon: <Sprout className="w-4 h-4" />,
+      label: 'Farmer Portal Inspector',
+      href: '#farmer',
+      isSeparator: true,
+      onClick: () => {
+        if (onFarmerPortalClick) onFarmerPortalClick();
+        else window.location.hash = '#farmer';
+      },
+    },
+    {
+      icon: <Sparkles className="w-4 h-4" />,
+      label: 'Krishi Saathi Underwriter AI',
+      href: '#krishi-saathi',
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('open-krishi-saathi'));
+      },
+    },
+  ];
+
+  const partnerNavItems: NavItem[] = [
+    {
+      icon: <Sprout className="w-4 h-4" />,
+      label: 'Farmer Workspace',
+      href: '#farmer',
+      badge: 'Active',
+      onClick: () => {
+        if (window.location.hash.startsWith('#farmer')) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          window.location.hash = '#farmer';
+        }
+      },
+    },
+    {
+      icon: <FileText className="w-4 h-4" />,
+      label: 'Document Checklist & Khasra',
+      href: '#farmer-documents',
+      onClick: () => {
+        if (window.location.hash.startsWith('#farmer')) {
+          const el = document.getElementById('farmer-documents');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+          else window.location.hash = '#farmer-documents';
+        } else {
+          window.location.hash = '#farmer-documents';
+        }
+      },
+    },
+    {
+      icon: <Calendar className="w-4 h-4" />,
+      label: 'Harvest-Aligned Repayments',
+      href: '#farmer-journey',
+      badge: 'Flexible',
+      onClick: () => {
+        if (window.location.hash.startsWith('#farmer')) {
+          const el = document.getElementById('farmer-journey');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+          else window.location.hash = '#farmer-journey';
+        } else {
+          window.location.hash = '#farmer-journey';
+        }
+      },
+    },
+    {
+      icon: <Sparkles className="w-4 h-4" />,
+      label: 'Ask Krishi Saathi (AI Voice)',
+      href: '#krishi-saathi',
+      isSeparator: true,
+      onClick: () => {
+        window.dispatchEvent(new CustomEvent('open-krishi-saathi'));
+      },
+    },
+  ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('tvs_credit_user');
+    localStorage.removeItem('tvs_auth_token');
+    setAuthUser(null);
+    setProfileOpen(false);
+    window.dispatchEvent(new Event('tvs-auth-change'));
+    window.location.hash = '#home';
+  };
 
   return (
     <nav
@@ -85,8 +243,15 @@ export const Navbar: React.FC<NavbarProps> = ({
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 w-full flex items-center justify-between">
-        {/* Left: Logo component + Brand badge */}
-        <div className="flex items-center gap-3 flex-shrink-0">
+        {/* Left: TVS Credit Logo + Brand badge */}
+        <div
+          className="flex items-center gap-3 flex-shrink-0 cursor-pointer"
+          onClick={() => {
+            window.location.hash = '#home';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          title="TVS Credit Home"
+        >
           <Logo />
           <span
             className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[#192837] text-white"
@@ -114,15 +279,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right (desktop lg:flex): Action Buttons */}
         <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
-          {isCreditAdmin && (
-            <button
-              onClick={() => { window.location.hash = '#dashboard'; }}
-              className="text-xs font-bold px-3.5 py-1.5 rounded-full text-white bg-[#0B2545] hover:bg-[#133863] shadow-xs active:scale-95 transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5"
-              title="Open Credit Operations Dashboard"
-            >
-              <span>⚡ Admin Dashboard</span>
-            </button>
-          )}
           {onFarmerPortalClick && (
             <button
               onClick={onFarmerPortalClick}
@@ -134,27 +290,50 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
           {authUser ? (
-            <div className="flex items-center gap-2 bg-white/90 border border-slate-200/90 rounded-full pl-3 pr-2 py-1 shadow-2xs flex-shrink-0">
-              <span className={`w-2 h-2 rounded-full ${isCreditAdmin ? 'bg-purple-500' : 'bg-emerald-500'} animate-pulse flex-shrink-0`} />
+            <div className="relative" ref={profileRef}>
               <button
-                onClick={() => { window.location.hash = isCreditAdmin ? '#dashboard' : '#farmer'; }}
-                className="text-xs font-bold text-[#0B2545] hover:underline cursor-pointer truncate max-w-[120px]"
-                title={isCreditAdmin ? 'Open Admin Dashboard' : 'Open Farmer Portal'}
+                onClick={() => setProfileOpen((prev) => !prev)}
+                className="flex items-center gap-2 bg-white/95 hover:bg-white border border-slate-200/90 rounded-full pl-2 pr-2.5 py-1 shadow-2xs hover:shadow-xs transition-all cursor-pointer group active:scale-95"
+                title="Account Menu"
+                aria-expanded={profileOpen}
+                aria-haspopup="true"
               >
-                {authUser.name}
+                <div className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200/90 flex items-center justify-center flex-shrink-0 text-slate-700">
+                  <User className="w-3.5 h-3.5 text-slate-600" />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      isCreditAdmin ? 'bg-purple-500' : 'bg-emerald-500'
+                    } animate-pulse flex-shrink-0`}
+                  />
+                  <span className="text-xs font-bold text-[#0B2545] truncate max-w-[120px]">
+                    {authUser.name}
+                  </span>
+                </div>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 flex-shrink-0 ${
+                    profileOpen ? 'rotate-180' : ''
+                  }`}
+                />
               </button>
-              <button
-                onClick={() => {
-                  localStorage.removeItem('tvs_credit_user');
-                  localStorage.removeItem('tvs_auth_token');
-                  setAuthUser(null);
-                  window.dispatchEvent(new Event('tvs-auth-change'));
-                }}
-                className="text-[10px] font-bold text-slate-400 hover:text-rose-600 px-1.5 py-0.5 rounded cursor-pointer ml-0.5"
-                title="Sign out of account"
-              >
-                ✕
-              </button>
+
+              <AnimatePresence>
+                {profileOpen && (
+                  <div className="absolute right-0 top-[calc(100%+8px)] z-50 w-72">
+                    <UserProfileSidebar
+                      user={userProfile}
+                      navItems={isCreditAdmin ? adminNavItems : partnerNavItems}
+                      logoutItem={{
+                        icon: <LogOut className="w-4 h-4" />,
+                        label: 'Sign Out Account',
+                        onClick: handleLogout,
+                      }}
+                      onClose={() => setProfileOpen(false)}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
           ) : (
             <button

@@ -38,7 +38,7 @@ export const PortfolioSection: React.FC = () => {
   const currentDist = districts.find((d) => d.district === selectedDistrict) || districts[0];
 
   return (
-    <section id="portfolio" className="relative w-full py-20 px-4 sm:px-6">
+    <section id="portfolio" className="relative w-full py-20 px-4 sm:px-6 scroll-mt-20">
       <div className="max-w-[1280px] mx-auto">
         {/* Section Header */}
         <div className="flex flex-col items-center text-center mb-14">

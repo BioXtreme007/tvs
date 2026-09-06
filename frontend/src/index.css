@@ -190,8 +190,8 @@ button:disabled { cursor: not-allowed; }
 .field-story button { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-top: 1px solid #19283722; padding: 17px 0 0; background: none; font-size: 12px; font-weight: 650; }
 .story-3 button { border-color: #ffffff30; }
 .field-story button:hover svg { transform: translateX(4px); }.field-story svg { transition: transform .2s; }
-#pipeline { background: #e2dbdf; border-block: 1px solid #19283708; }
-#pipeline .glass-card { background: #f0eaf2; }
+#pipeline, #lending-pipeline { background: #e2dbdf; border-block: 1px solid #19283708; }
+#pipeline .glass-card, #lending-pipeline .glass-card { background: #f0eaf2; }
 #innovations .glass-card:nth-child(1) { background: #e2e9e0; }
 #innovations .glass-card:nth-child(2) { background: #e7dff0; }
 #innovations .glass-card:nth-child(3) { background: #e0e7ee; }

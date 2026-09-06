@@ -55,7 +55,7 @@ export const InnovationPillars: React.FC = () => {
   ];
 
   return (
-    <section id="innovations" className="relative w-full pt-8 pb-14 px-4 sm:px-6">
+    <section id="innovations" className="relative w-full pt-8 pb-14 px-4 sm:px-6 scroll-mt-20">
       <div className="max-w-[1280px] mx-auto">
         {/* Compact Section Header */}
         <div className="flex flex-col items-center text-center mb-8">

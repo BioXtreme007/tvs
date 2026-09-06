@@ -15,16 +15,18 @@ import Footer from './components/Footer';
 import SignInPage from './components/SignInPage';
 import DeliberationModal from './components/DeliberationModal';
 import Assistant from './components/Assistant';
-import FarmerPortal from './components/FarmerPortal';
+import FarmerPortal from './components/FarmerWorkspace';
 import PrecisionSectionPreview from './components/PrecisionSectionPreview';
-import AdminDashboard from './components/AdminDashboard';
+import AdminDashboard from './components/AdminCockpit';
 
-const viewFromHash = () =>
-  window.location.hash === '#signin' ? 'signin' :
-  window.location.hash === '#farmer' ? 'farmer' :
-  window.location.hash === '#precision-preview' ? 'precision-preview' :
-  window.location.hash === '#dashboard' ? 'dashboard' :
-  'landing';
+const viewFromHash = () => {
+  const hash = window.location.hash;
+  if (hash === '#signin') return 'signin';
+  if (hash.startsWith('#farmer')) return 'farmer';
+  if (hash === '#precision-preview') return 'precision-preview';
+  if (hash.startsWith('#dashboard')) return 'dashboard';
+  return 'landing';
+};
 function Reveal({ children }: { children: React.ReactNode }) {
   const reduced = useReducedMotion();
   return <motion.div initial={false} whileInView={reduced ? undefined : { y: [14, 0], opacity: [.88, 1] }} viewport={{ once: true, amount: .08 }} transition={{ duration: .55, ease: [.22, 1, .36, 1] }}>{children}</motion.div>;
@@ -57,14 +59,25 @@ export default function WebsiteApp() {
   const navigate = (hash: string) => {
     setMenu(false);
     setAssistantOpen(false);
-    window.location.hash = hash.startsWith('#') ? hash : '#' + hash;
+    const cleanHash = hash.startsWith('#') ? hash : '#' + hash;
+    window.location.hash = cleanHash;
     setView(
-      hash === 'signin' || hash === '#signin' ? 'signin' :
-      hash === 'farmer' || hash === '#farmer' ? 'farmer' :
-      hash === 'precision-preview' || hash === '#precision-preview' ? 'precision-preview' :
-      hash === 'dashboard' || hash === '#dashboard' ? 'dashboard' :
+      cleanHash === '#signin' ? 'signin' :
+      cleanHash.startsWith('#farmer') ? 'farmer' :
+      cleanHash === '#precision-preview' ? 'precision-preview' :
+      cleanHash.startsWith('#dashboard') ? 'dashboard' :
       'landing'
     );
+  };
+  const handleFarmerPortalClick = () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('tvs_credit_user') || 'null');
+      if (user && (user.name || user.email || user.user_id)) {
+        navigate('farmer');
+        return;
+      }
+    } catch {}
+    navigate('signin');
   };
   const ask = (query = '') => { opener.current = document.activeElement as HTMLElement; setDraft(query); setAssistantOpen(true); };
   const closeAssistant = () => { setAssistantOpen(false); window.setTimeout(() => (opener.current?.isConnected ? opener.current : document.getElementById('saathi-launcher'))?.focus()); };
@@ -81,9 +94,18 @@ export default function WebsiteApp() {
   useEffect(() => {
     document.title = (view === 'signin' ? 'Sign in' : view === 'farmer' ? 'Farmer portal' : view === 'precision-preview' ? 'PrecisionSection Preview' : 'Smart Agri-Lending') + ' · TVS Credit';
     const frame = requestAnimationFrame(() => {
-      const section = view === 'landing' ? document.getElementById(window.location.hash.slice(1)) : null;
-      if (section) section.scrollIntoView({ behavior: 'instant' as ScrollBehavior });
-      else window.scrollTo(0, 0);
+      const targetId = window.location.hash.replace('#', '');
+      if (targetId && targetId !== 'farmer' && targetId !== 'home' && targetId !== 'dashboard') {
+        const el = document.getElementById(targetId) ||
+          (targetId === 'lending-pipeline' ? document.getElementById('pipeline') : null);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+      }
+      if (!targetId || targetId === 'farmer' || targetId === 'home' || targetId === 'dashboard') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     });
     return () => cancelAnimationFrame(frame);
   }, [view]);
@@ -141,6 +163,7 @@ export default function WebsiteApp() {
       />
     ) : view === 'dashboard' ? (
       <AdminDashboard
+        onContext={setContext}
         user={dashboardUser || (() => {
           try {
             const u = JSON.parse(localStorage.getItem('tvs_credit_user') || 'null');
@@ -163,8 +186,8 @@ export default function WebsiteApp() {
     ) : view === 'precision-preview' ? (
       <PrecisionSectionPreview onBack={() => navigate('home')} />
     ) : <>
-        <Navbar isMobileMenuOpen={menu} setIsMobileMenuOpen={setMenu} onSignInClick={() => navigate('signin')} onFarmerPortalClick={() => navigate('farmer')} />
-        <MobileMenu isOpen={menu} onClose={() => setMenu(false)} onSignInClick={() => navigate('signin')} onFarmerPortalClick={() => navigate('farmer')} />
+        <Navbar isMobileMenuOpen={menu} setIsMobileMenuOpen={setMenu} onSignInClick={() => navigate('signin')} onFarmerPortalClick={handleFarmerPortalClick} />
+        <MobileMenu isOpen={menu} onClose={() => setMenu(false)} onSignInClick={() => navigate('signin')} onFarmerPortalClick={handleFarmerPortalClick} />
       <header className="website-hero" id="home">
         <video ref={video} autoPlay muted loop playsInline preload="auto" aria-hidden="true" onCanPlay={() => { video.current?.play().catch(() => {}); }} className="website-hero-video" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260606_131516_eca35265-ea66-4fbd-8d52-22aae6e1a503.mp4" />
         <div className="website-hero-fade" />

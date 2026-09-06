@@ -29,9 +29,14 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
       window.dispatchEvent(new CustomEvent('open-krishi-saathi'));
       return;
     }
-    const el = document.getElementById(link.href.replace('#', ''));
+    const targetId = link.href.replace('#', '');
+    const el = document.getElementById(targetId) ||
+      (targetId === 'lending-pipeline' ? document.getElementById('pipeline') : null);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+      try {
+        window.history.replaceState(null, '', link.href);
+      } catch {}
     }
   };
 
@@ -139,17 +144,6 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
 
             {/* CTA Buttons at bottom */}
             <div className="flex flex-col gap-3 pt-6 border-t border-[#192837]/12">
-              {authUser && (/underwriter|officer|admin|credit|risk/i.test(authUser.role || '') || /credit|tvs/i.test((authUser as any).email || '') || /credit/i.test(authUser.name || '')) && (
-                <button
-                  onClick={() => {
-                    window.location.hash = '#dashboard';
-                    onClose();
-                  }}
-                  className="w-full py-3.5 rounded-full text-white font-bold text-[0.95rem] shadow-sm active:scale-95 transition-all cursor-pointer bg-[#0B2545] hover:bg-[#133863] flex items-center justify-center gap-2"
-                >
-                  <span>⚡ Admin Dashboard</span>
-                </button>
-              )}
               {onFarmerPortalClick && (
                 <button
                   onClick={() => {
@@ -162,23 +156,47 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
                   <span>Farmer Portal</span>
                 </button>
               )}
-              <button
-                onClick={() => {
-                  if (onSignInClick) {
-                    onSignInClick();
-                  } else {
-                    window.location.href = '/signin.html';
-                  }
-                  onClose();
-                }}
-                className="w-full py-3.5 rounded-full font-semibold text-[0.95rem] border border-black/10 active:scale-95 transition-all cursor-pointer"
-                style={{
-                  backgroundColor: '#F2F2EE',
-                  color: 'var(--color-text)',
-                }}
-              >
-                Sign In
-              </button>
+              {authUser ? (
+                <div className="flex flex-col gap-2 bg-white/60 p-3 rounded-2xl border border-black/5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[#0B2545] truncate">{authUser.name}</span>
+                    <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-full">
+                      {authUser.role || 'Active User'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem('tvs_credit_user');
+                      localStorage.removeItem('tvs_auth_token');
+                      setAuthUser(null);
+                      window.dispatchEvent(new Event('tvs-auth-change'));
+                      window.location.hash = '#home';
+                      onClose();
+                    }}
+                    className="w-full py-2.5 rounded-xl font-bold text-xs text-rose-600 bg-rose-50 hover:bg-rose-100 active:scale-95 transition-all cursor-pointer text-center"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => {
+                    if (onSignInClick) {
+                      onSignInClick();
+                    } else {
+                      window.location.href = '/signin.html';
+                    }
+                    onClose();
+                  }}
+                  className="w-full py-3.5 rounded-full font-semibold text-[0.95rem] border border-black/10 active:scale-95 transition-all cursor-pointer"
+                  style={{
+                    backgroundColor: '#F2F2EE',
+                    color: 'var(--color-text)',
+                  }}
+                >
+                  Sign In
+                </button>
+              )}
             </div>
           </motion.div>
         </>
