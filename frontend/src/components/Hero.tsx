@@ -68,11 +68,11 @@ export const Hero: React.FC = () => {
           }}
         >
           {/* Line 1 */}
-          <span className="inline-flex items-center justify-center gap-2.5 whitespace-nowrap">
-            <span>Power Smart Agri-Lending</span>
+          <span className="inline-flex items-center justify-center gap-2.5 flex-wrap">
+            <span>Credit that sees your farm.</span>
             <Sprout
               size={32}
-              className="inline text-emerald-600 shrink-0"
+              className="hidden sm:inline text-emerald-600 shrink-0"
               style={{
                 verticalAlign: 'middle',
                 position: 'relative',
@@ -83,11 +83,11 @@ export const Hero: React.FC = () => {
           </span>
           <br />
           {/* Line 2 */}
-          <span className="inline-flex items-center justify-center gap-2.5 whitespace-nowrap">
-            <span>with Multimodal AI Security</span>
+          <span className="inline-flex items-center justify-center gap-2.5 flex-wrap">
+            <span>Repayments that fit its season.</span>
             <ShieldCheck
               size={30}
-              className="inline text-[#7342E2] shrink-0"
+              className="hidden sm:inline text-[#7342E2] shrink-0"
               style={{
                 verticalAlign: 'middle',
                 position: 'relative',
@@ -115,9 +115,7 @@ export const Hero: React.FC = () => {
           }}
           className="mt-6 font-medium"
         >
-          Zero friction, total precision. Sentinel-2 remote sensing,
-          CloudGap-CG monsoon inpainting, and grounded vernacular voice AI for
-          rural India's non-stop growth.
+          Connect satellite crop signals, land checks and harvest-linked repayments. Understand the assessment with Krishi Saathi, in your own language.
         </motion.p>
 
         {/* CTA Button */}
@@ -146,9 +144,10 @@ export const Hero: React.FC = () => {
               gap: '32px',
             }}
           >
-            <span>Explore AI Innovations</span>
+            <span>See what makes it different</span>
             <ArrowRightCircle size={20} />
           </motion.button>
+          <a href="#underwriting" className="inline-flex items-center gap-2 min-h-12 px-4 text-sm font-semibold text-[#0B2545] underline underline-offset-4">Start your assessment</a>
         </motion.div>
       </div>
     </div>

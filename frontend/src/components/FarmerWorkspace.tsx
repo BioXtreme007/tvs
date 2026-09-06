@@ -1,3 +1,4 @@
+import { FarmerCropSafetySlider } from './adaptive-slider';
 import React, { useState, useRef, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import {
@@ -583,6 +584,8 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             </button>
           </section>
         </div>
+
+        <FarmerCropSafetySlider />
 
         {/* Footer */}
         <footer className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 mt-12 border-t border-black/10 text-xs text-slate-600 font-medium">

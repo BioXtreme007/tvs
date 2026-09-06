@@ -978,3 +978,10 @@ button:disabled { cursor: not-allowed; }
 }
 .orbit-interaction-bar, .orbit-detail { display: none !important; }
 .original-site .assistant-layer { z-index: 120; }
+
+/* Public assessment form shares the cockpit layout with the site's typography. */
+.assessment-page .form-field > span { color: #475569; font-family: var(--font-body); font-size: 12px; }
+.assessment-page .empty-state h3 { color: #0B2545; }
+.assessment-page .empty-state p { color: #64748b; }
+.assessment-page .cockpit-tools .button.primary { background: #0B2545; border-color: #0B2545; }
+.assessment-page .cockpit-tools input:not([type=range]), .assessment-page .cockpit-tools select { min-height: 48px; }

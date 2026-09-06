@@ -226,7 +226,6 @@ export default function Assistant({
         type: 'NAVIGATE',
         target: '#underwriting',
         label: 'Open Sanction Decision Cockpit',
-        prefill: { land_acres: 3.5, district: 'Durg' },
       };
     }
     if (combined.includes('document') || combined.includes('checklist') || combined.includes('khasra') || combined.includes('dastavej') || combined.includes('b1')) {

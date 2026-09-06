@@ -9,6 +9,7 @@ import {
   ArrowRight,
   ShieldCheck,
 } from 'lucide-react';
+import CarouselNavigator from './CarouselNavigator';
 
 interface PipelineStep {
   number: string;
@@ -110,10 +111,10 @@ export const LendingPipelineSection: React.FC = () => {
             className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight"
             style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}
           >
-            How It Works: The 3-Minute Lending Pipeline
+            From farm evidence to a clearer credit decision.
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-700 max-w-2xl leading-relaxed">
-            From rural farmer applicant to dealer tractor disbursement in under 180 seconds—powered by orbital satellites, deep neural inpainting, and multi-agent consensus.
+            Enter the farm details, review crop and land signals, then explore an explained assessment and a repayment plan shaped around the harvest.
           </p>
         </div>
 
@@ -207,22 +208,17 @@ export const LendingPipelineSection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 pt-2">
-                  <button
-                    disabled={activeStep === 0}
-                    onClick={() => setActiveStep((prev) => Math.max(0, prev - 1))}
-                    className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
-                  >
-                    ← Previous Step
-                  </button>
-                  <button
-                    disabled={activeStep === pipelineSteps.length - 1}
-                    onClick={() => setActiveStep((prev) => Math.min(pipelineSteps.length - 1, prev + 1))}
-                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold bg-[#0B2545] text-white hover:bg-[#133863] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer shadow-sm"
-                  >
-                    <span>Next Pipeline Step</span>
-                    <ArrowRight size={13} />
-                  </button>
+                <div className="pt-3 flex items-center justify-between sm:justify-start gap-4 flex-wrap">
+                  <CarouselNavigator
+                    currentIndex={activeStep}
+                    onIndexChange={setActiveStep}
+                    totalSlides={pipelineSteps.length}
+                    autoDelay={6000}
+                    autoPlay={true}
+                  />
+                  <div className="text-xs font-mono text-slate-500">
+                    Step {activeStep + 1} of {pipelineSteps.length} · <span className="font-semibold text-slate-700">{current.duration}</span>
+                  </div>
                 </div>
               </div>
 
@@ -230,11 +226,11 @@ export const LendingPipelineSection: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
                     <span className="text-xs font-bold text-[#0B2545] uppercase tracking-wider">
-                      Live Telemetry Benchmark
+                      Illustrative workflow
                     </span>
                     <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Active Pipeline
+                      Demo example
                     </span>
                   </div>
 
@@ -256,14 +252,26 @@ export const LendingPipelineSection: React.FC = () => {
                 <div className="mt-5 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
                   <span className="flex items-center gap-1">
                     <ShieldCheck size={14} className="text-emerald-600" />
-                    Audited GeoKisaan E.P.I.C 8 Model
+                    GeoKisaan assessment workflow
                   </span>
-                  <span className="font-mono text-[11px]">SLA &lt; 180s</span>
+                  <span className="font-mono text-[11px]">Illustrative timings</span>
                 </div>
               </div>
             </div>
           );
         })()}
+        <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-slate-300/70 pt-6">
+          <p className="text-sm text-slate-600">
+            Ready to explore your own farm? Start with your name, land details and loan requirement.
+          </p>
+          <a
+            href="#underwriting"
+            className="inline-flex items-center justify-center gap-3 rounded-full bg-[#0B2545] text-white px-6 py-3 min-h-12 text-sm font-semibold shrink-0 hover:bg-[#133863] transition-colors"
+          >
+            Enter your farm details
+            <ArrowRight size={17} />
+          </a>
+        </div>
       </div>
     </section>
   );

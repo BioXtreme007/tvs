@@ -18,10 +18,12 @@ import Assistant from './components/Assistant';
 import FarmerPortal from './components/FarmerWorkspace';
 import PrecisionSectionPreview from './components/PrecisionSectionPreview';
 import AdminDashboard from './components/AdminCockpit';
+import { Underwriting } from './components/WorkspaceViews';
 
 const viewFromHash = () => {
   const hash = window.location.hash;
   if (hash === '#signin') return 'signin';
+  if (hash === '#underwriting') return 'underwriting';
   if (hash.startsWith('#farmer')) return 'farmer';
   if (hash === '#precision-preview') return 'precision-preview';
   if (hash.startsWith('#dashboard')) return 'dashboard';
@@ -34,6 +36,7 @@ function Reveal({ children }: { children: React.ReactNode }) {
 
 export default function WebsiteApp() {
   const [view, setView] = useState(viewFromHash);
+  const [routeHash, setRouteHash] = useState(window.location.hash);
   const [menu, setMenu] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [draft, setDraft] = useState('');
@@ -61,8 +64,10 @@ export default function WebsiteApp() {
     setAssistantOpen(false);
     const cleanHash = hash.startsWith('#') ? hash : '#' + hash;
     window.location.hash = cleanHash;
+    setRouteHash(cleanHash);
     setView(
       cleanHash === '#signin' ? 'signin' :
+      cleanHash === '#underwriting' ? 'underwriting' :
       cleanHash.startsWith('#farmer') ? 'farmer' :
       cleanHash === '#precision-preview' ? 'precision-preview' :
       cleanHash.startsWith('#dashboard') ? 'dashboard' :
@@ -89,7 +94,7 @@ export default function WebsiteApp() {
   const closeAssistant = () => { setAssistantOpen(false); window.setTimeout(() => (opener.current?.isConnected ? opener.current : document.getElementById('saathi-launcher'))?.focus()); };
 
   useEffect(() => {
-    const route = () => { setView(viewFromHash()); setMenu(false); setAssistantOpen(false); };
+    const route = () => { setView(viewFromHash()); setRouteHash(window.location.hash); setMenu(false); setAssistantOpen(false); };
     const open = (e: Event) => {
       const detail = (e as CustomEvent).detail || {};
       ask(detail.query || '', detail.voiceMode || false);
@@ -99,8 +104,12 @@ export default function WebsiteApp() {
       const detail = (e as CustomEvent).detail;
       if (!detail?.target) return;
       const targetId = detail.target.replace('#', '');
+      if (targetId === 'underwriting' || targetId === 'cockpit') {
+        navigate('underwriting');
+        return;
+      }
       if (targetId === 'farmer-documents' || targetId === 'farmer-faq') {
-        if (view !== 'farmer') setView('farmer');
+        navigate(targetId);
         setTimeout(() => {
           const el = document.getElementById(targetId);
           if (el) {
@@ -111,12 +120,9 @@ export default function WebsiteApp() {
         }, 150);
         return;
       }
-      if (view !== 'home') {
-        setView('home');
-      }
+      navigate(targetId);
       setTimeout(() => {
-        const el = document.getElementById(targetId) ||
-          (targetId === 'underwriting' ? document.getElementById('underwriting') || document.getElementById('pipeline') : null);
+        const el = document.getElementById(targetId);
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' });
           el.classList.add('ring-4', 'ring-[#0B2545]', 'transition-all', 'duration-700');
@@ -136,7 +142,7 @@ export default function WebsiteApp() {
     };
   }, [view]);
   useEffect(() => {
-    document.title = (view === 'signin' ? 'Sign in' : view === 'farmer' ? 'Farmer portal' : view === 'precision-preview' ? 'PrecisionSection Preview' : 'Smart Agri-Lending') + ' · GeoKisaan';
+    document.title = (view === 'underwriting' ? 'Your loan assessment' : view === 'signin' ? 'Sign in' : view === 'farmer' ? 'Farmer portal' : view === 'precision-preview' ? 'PrecisionSection Preview' : 'Smart Agri-Lending') + ' · GeoKisaan';
     const frame = requestAnimationFrame(() => {
       const targetId = window.location.hash.replace('#', '');
       if (targetId && targetId !== 'farmer' && targetId !== 'home' && targetId !== 'dashboard') {
@@ -147,12 +153,12 @@ export default function WebsiteApp() {
           return;
         }
       }
-      if (!targetId || targetId === 'farmer' || targetId === 'home' || targetId === 'dashboard') {
+      if (!targetId || targetId === 'underwriting' || targetId === 'farmer' || targetId === 'home' || targetId === 'dashboard') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
     return () => cancelAnimationFrame(frame);
-  }, [view]);
+  }, [view, routeHash]);
   useEffect(() => {
     video.current?.play().catch(() => {});
   }, [reduced, view]);
@@ -225,6 +231,17 @@ export default function WebsiteApp() {
         }}
         onNavigateHome={() => navigate('home')}
       />
+    ) : view === 'underwriting' ? (
+      <div className="assessment-page min-h-screen bg-[#F9F9F7] text-[#192837]">
+        <header className="border-b border-slate-200 bg-white px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
+          <a href="#home" className="font-bold tracking-tight text-lg">GeoKisaan</a>
+          <button className="button secondary" onClick={() => navigate('farmer')}><ArrowLeft size={16} />Farmer workspace</button>
+        </header>
+        <main id="website-main" className="max-w-7xl mx-auto px-4 sm:px-8 py-10" tabIndex={-1}>
+          <div className="mb-8 max-w-2xl"><span className="eyebrow">SANCTION DECISION COCKPIT</span><h1 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>Start with your farm details.</h1><p className="mt-3 text-slate-600 leading-relaxed">Enter your name, village, Khasra reference and land area, then tell us about the loan you need. Review the assessment here and ask Saathi to explain it.</p></div>
+          <div className="cockpit-tools"><Underwriting onContext={setContext} ask={ask} blankInputs /></div>
+        </main>
+      </div>
     ) : view === 'farmer' ? (
       <FarmerPortal onBackToCockpit={() => navigate('home')} onOpenSignIn={() => navigate('signin')} />
     ) : view === 'precision-preview' ? (
