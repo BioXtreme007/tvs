@@ -13,6 +13,10 @@ export async function api<T = any>(path: string, options: RequestInit = {}): Pro
       headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}), ...options.headers },
     });
     if (!response.ok) {
+      if (response.status === 401) {
+        localStorage.removeItem('tvs_auth_token');
+        localStorage.removeItem('tvs_credit_user');
+      }
       const body = await response.json().catch(() => ({}));
       const detail = typeof body.detail === 'string' ? body.detail : body.error?.message;
       throw new Error(detail || (response.status === 401 ? 'Please sign in again to continue.' : 'The service could not complete this request (' + response.status + '). Please try again.'));

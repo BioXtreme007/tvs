@@ -142,18 +142,13 @@ def get_optional_current_user(
 ) -> Optional[Dict[str, Any]]:
     """
     Extract current user if valid Bearer token is provided.
-    Raises 401 if an invalid/expired token was sent, or returns None if no token.
+    Returns user dict if token is valid, or None if no token or if the token is invalid/expired.
+    Ensures public features (like Krishi Saathi assistant chat and general navigation)
+    remain fully functional even if an expired session token exists in browser localStorage.
     """
     if not credentials or not credentials.credentials:
         return None
-    user = get_user_by_token(credentials.credentials)
-    if not user:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid, expired, or revoked session token. Please sign in again.",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    return user
+    return get_user_by_token(credentials.credentials)
 
 
 # Instantiate Singletons
@@ -1240,3 +1235,7 @@ def deliberate_with_subagents(req: AgentDeliberationRequest) -> Dict[str, Any]:
 # Local microphone transcription, independent of browser speech services.
 from .speech import router as speech_router
 app.include_router(speech_router)
+
+# Real-time streaming conversational voice session (Gemini Live WebSocket / Local Fallback)
+from .voice_sessions import router as voice_router
+app.include_router(voice_router, prefix="/api/v1")

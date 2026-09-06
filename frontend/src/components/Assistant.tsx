@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDownToLine, ArrowUp, Check, Copy, FileText, LoaderCircle, Mic, MicOff, RotateCcw, Sparkles, Square, Volume2, VolumeX, X } from 'lucide-react';
+import { ArrowDownToLine, ArrowUp, Check, Copy, FileText, LoaderCircle, Mic, MicOff, Radio, RotateCcw, Sparkles, Square, Volume2, VolumeX, X } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api, download } from '../api';
 import { saathiCopy } from './saathi-i18n';
+import SaathiVoiceSession from './SaathiVoiceSession';
 
 interface Message { id: string; role: 'user' | 'assistant'; text: string; source?: string; evidence?: string[]; language: string; time: string }
 const languages = [
@@ -16,6 +17,7 @@ export default function Assistant({ context, draft, visible, onClose, identity }
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [language, setLanguage] = useState('ENGLISH');
+  const [liveVoiceOpen, setLiveVoiceOpen] = useState(false);
   const t = saathiCopy(language);
   const localizedPrompts = [t.documents, t.repayments, t.assessment];
   const [transcribing, setTranscribing] = useState(false);
@@ -245,7 +247,7 @@ export default function Assistant({ context, draft, visible, onClose, identity }
     setSpeaking(message.id); window.speechSynthesis.speak(utterance);
   };
   return <div className="assistant-ui">
-    <header className="chat-header"><span className="chat-brand"><img src="/saathi-icon.png" alt="" /></span><div><h2>{t.name}</h2><p>{t.companion}</p></div><button className="icon-button" aria-label={t.close} onClick={onClose}><X size={21} /></button></header>
+    <header className="chat-header"><span className="chat-brand"><img src="/saathi-icon.png" alt="" /></span><div><h2>{t.name}</h2><p>{t.companion}</p></div><div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}><button type="button" onClick={() => setLiveVoiceOpen(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '5px 11px', fontSize: '11px', fontWeight: 600, background: 'linear-gradient(135deg, #7342E2 0%, #4F46E5 100%)', color: '#fff', border: 0, borderRadius: '20px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(115, 66, 226, 0.3)' }} title="Start Live Conversational Spoken Call (Gemini Live · Realtime Interruption)"><Radio size={13} className="spin" style={{ animationDuration: '3s' }} /><span>Live Call</span></button><button className="icon-button" aria-label={t.close} onClick={onClose}><X size={21} /></button></div></header>
     <div className="chat-toolbar"><label><span className="sr-only">{t.language}</span><select value={language} disabled={loading || listening || transcribing} onChange={e => { stopAudio(); setLanguage(e.target.value); setSuggestions([]); setError(''); }}>{languages.map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label><div><button className="icon-button" aria-label={t.export} title={t.export} disabled={!messages.length} onClick={() => download('saathi-conversation.txt', 'DEMO WORKSPACE — Assistant guidance is unverified.\n\n' + messages.map(m => m.role.toUpperCase() + ' · ' + m.time + '\n' + m.text + (m.source ? '\nProvider: ' + m.source : '')).join('\n\n'), 'text/plain')}><ArrowDownToLine size={17} /></button><button className="icon-button" aria-label={t.reset} title={t.reset} disabled={loading} onClick={reset}><RotateCcw size={17} /></button></div></div>
     {context && <div className="chat-context"><span className="context-dot" /><span>{context.applicant_name}</span></div>}
     <div className="chat-transcript" ref={transcriptRef} role="log" aria-live="polite" aria-label="Conversation">
@@ -289,8 +291,17 @@ export default function Assistant({ context, draft, visible, onClose, identity }
           ))}
         </div>
       )}
-      <form className="chat-composer" onSubmit={e => { e.preventDefault(); void send(); }}><label className="sr-only" htmlFor="saathi-input">{t.placeholder}</label><textarea id="saathi-input" ref={inputRef} placeholder={listening ? t.listening : transcribing ? t.thinking : t.placeholder} value={input} maxLength={4000} rows={2} onChange={e => { setInput(e.target.value); if (micFriendlyNotice) setMicFriendlyNotice(null); }} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }} /><div className="composer-actions"><button className={'icon-button ' + (listening ? 'recording' : '')} type="button" disabled={loading || transcribing || !speechSupported} title={listening ? t.stop : t.dictate} aria-label={listening ? t.stop : t.dictate} onClick={voice}>{listening ? <MicOff size={18} /> : <Mic size={18} />}</button>{listening ? <span className="mic-listening-indicator"><span className="mic-pulse-ring" /><span>Listening... Speak now</span></span> : micFriendlyNotice ? <span className="mic-friendly-alert" role="status"><span>{micFriendlyNotice}</span></span> : <small>{input.length > 3500 ? input.length + '/4000' : t.hint}</small>}{loading ? <button className="send-button" aria-label="Cancel response" type="button" onClick={() => pending.current?.abort()}><Square size={16} /></button> : <button className="send-button" aria-label={t.send} type="submit" disabled={!input.trim() || listening || transcribing}><ArrowUp size={20} /></button>}</div></form>
+      <form className="chat-composer" onSubmit={e => { e.preventDefault(); void send(); }}><label className="sr-only" htmlFor="saathi-input">{t.placeholder}</label><textarea id="saathi-input" ref={inputRef} placeholder={listening ? t.listening : transcribing ? t.thinking : t.placeholder} value={input} maxLength={4000} rows={2} onChange={e => { setInput(e.target.value); if (micFriendlyNotice) setMicFriendlyNotice(null); }} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); void send(); } }} /><div className="composer-actions"><button className="icon-button" type="button" title="Open Live Spoken Voice Call (Gemini Live · Realtime Interruption)" aria-label="Open Live Spoken Voice Call" onClick={() => setLiveVoiceOpen(true)} style={{ color: '#7342E2' }}><Radio size={17} /></button><button className={'icon-button ' + (listening ? 'recording' : '')} type="button" disabled={loading || transcribing || !speechSupported} title={listening ? t.stop : t.dictate} aria-label={listening ? t.stop : t.dictate} onClick={voice}>{listening ? <MicOff size={18} /> : <Mic size={18} />}</button>{listening ? <span className="mic-listening-indicator"><span className="mic-pulse-ring" /><span>Listening... Speak now</span></span> : micFriendlyNotice ? <span className="mic-friendly-alert" role="status"><span>{micFriendlyNotice}</span></span> : <small>{input.length > 3500 ? input.length + '/4000' : t.hint}</small>}{loading ? <button className="send-button" aria-label="Cancel response" type="button" onClick={() => pending.current?.abort()}><Square size={16} /></button> : <button className="send-button" aria-label={t.send} type="submit" disabled={!input.trim() || listening || transcribing}><ArrowUp size={20} /></button>}</div></form>
 
     </div>
+    <SaathiVoiceSession
+      isOpen={liveVoiceOpen}
+      onClose={() => setLiveVoiceOpen(false)}
+      language={language}
+      onLanguageChange={setLanguage}
+      applicationId={context?.application_id}
+      applicantName={context?.applicant_name || 'Farmer'}
+      onSwitchToTextChat={() => setLiveVoiceOpen(false)}
+    />
   </div>;
 }
