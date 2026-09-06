@@ -8,9 +8,15 @@ interface UnderwritingSectionProps {
   onOpenDeliberation: (data: any) => void;
   onContext?: (data: any) => void;
   scenario?: FieldScenario | null;
+  compact?: boolean;
 }
 
-export const UnderwritingSection: React.FC<UnderwritingSectionProps> = ({ onOpenDeliberation, onContext, scenario }) => {
+export const UnderwritingSection: React.FC<UnderwritingSectionProps> = ({
+  onOpenDeliberation,
+  onContext,
+  scenario,
+  compact = false,
+}) => {
   const [formData, setFormData] = useState({
     applicantName: 'Rajeshwar Sahu',
     district: 'Raipur',
@@ -136,31 +142,31 @@ export const UnderwritingSection: React.FC<UnderwritingSectionProps> = ({ onOpen
   };
 
   return (
-    <section id="underwriting" className="relative w-full py-20 px-4 sm:px-6">
+    <section id="underwriting" className={`relative w-full ${compact ? 'py-2 sm:py-4 px-1 sm:px-3' : 'py-10 sm:py-16 px-4 sm:px-6'}`}>
       <div className="max-w-[1280px] mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+        <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 ${compact ? 'mb-5' : 'mb-10'}`}>
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-xs font-semibold mb-2">
-              <Zap size={14} className="text-[#0B2545]" />
+            <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-xs font-semibold mb-1.5">
+              <Zap size={13} className="text-[#0B2545]" />
               <span>Real-Time Autonomous Scoring</span>
             </div>
             <h2
-              className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+              className={`${compact ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-extrabold tracking-tight`}
               style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}
             >
               Live Smart Sanction & Decision Cockpit
             </h2>
-            <p className="mt-2 text-sm text-slate-700 max-w-xl">
+            <p className="mt-1 text-xs sm:text-sm text-slate-700 max-w-xl">
               Fusing financial history with Sentinel-2 10m remote sensing, topsoil organic carbon, and NASA POWER climate data.
             </p>
           </div>
 
           <button
             onClick={() => onOpenDeliberation(result)}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-xs font-bold bg-[#192837] text-white hover:bg-black transition-all shadow-md active:scale-95 cursor-pointer self-start sm:self-auto"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold bg-[#192837] text-white hover:bg-black transition-all shadow-md active:scale-95 cursor-pointer self-start sm:self-auto"
           >
-            <Cpu size={16} />
+            <Cpu size={15} />
             <span>Launch 6-Subagent Deliberation</span>
           </button>
         </div>

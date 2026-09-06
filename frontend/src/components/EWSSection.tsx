@@ -30,7 +30,11 @@ interface RecoveryDossier {
   weather_alert: string;
 }
 
-export const EWSSection: React.FC = () => {
+interface EWSSectionProps {
+  compact?: boolean;
+}
+
+export const EWSSection: React.FC<EWSSectionProps> = ({ compact = false }) => {
   const [alerts, setAlerts] = useState<AlertItem[]>([
     {
       loan_id: 'TVS-TR-2023-4109',
@@ -122,22 +126,22 @@ export const EWSSection: React.FC = () => {
   };
 
   return (
-    <section id="ews" className="relative w-full py-20 px-4 sm:px-6">
+    <section id="ews" className={`relative w-full ${compact ? 'py-2 sm:py-4 px-1 sm:px-3' : 'py-10 sm:py-16 px-4 sm:px-6'}`}>
       <div className="max-w-[1280px] mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
+        <div className={`flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 ${compact ? 'mb-5' : 'mb-10'}`}>
           <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-xs font-semibold mb-2">
-              <AlertTriangle size={14} className="text-rose-600" />
+            <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-300 text-xs font-semibold mb-1.5">
+              <AlertTriangle size={13} className="text-rose-600" />
               <span>Proactive Risk Mitigation</span>
             </div>
             <h2
-              className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+              className={`${compact ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-extrabold tracking-tight`}
               style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}
             >
               Early Warning System (EWS) & Field Collection
             </h2>
-            <p className="mt-2 text-sm text-slate-700 max-w-xl">
+            <p className="mt-1 text-xs sm:text-sm text-slate-700 max-w-xl">
               Real-time satellite vegetative drop watcher and automated restructuring action playbooks for field agents.
             </p>
           </div>

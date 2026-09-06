@@ -11,7 +11,11 @@ interface DistrictData {
   top_crop: string;
 }
 
-export const PortfolioSection: React.FC = () => {
+interface PortfolioSectionProps {
+  compact?: boolean;
+}
+
+export const PortfolioSection: React.FC<PortfolioSectionProps> = ({ compact = false }) => {
   const [districts, setDistricts] = useState<DistrictData[]>([
     { district: 'Raipur', active_loans: 4200, portfolio_cr: 185.0, par_90_pct: 2.1, mean_credit_score: 710, top_crop: 'Paddy' },
     { district: 'Durg', active_loans: 3800, portfolio_cr: 162.0, par_90_pct: 1.9, mean_credit_score: 725, top_crop: 'Paddy & Vegetables' },
@@ -38,21 +42,21 @@ export const PortfolioSection: React.FC = () => {
   const currentDist = districts.find((d) => d.district === selectedDistrict) || districts[0];
 
   return (
-    <section id="portfolio" className="relative w-full py-20 px-4 sm:px-6 scroll-mt-20">
+    <section id="portfolio" className={`relative w-full ${compact ? 'py-2 sm:py-4 px-1 sm:px-3' : 'py-10 sm:py-16 px-4 sm:px-6'} scroll-mt-20`}>
       <div className="max-w-[1280px] mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col items-center text-center mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-xs font-semibold mb-3">
-            <MapPin size={14} className="text-blue-600" />
+        <div className={`flex flex-col items-center text-center ${compact ? 'mb-6' : 'mb-12'}`}>
+          <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-white/70 backdrop-blur-md border border-white/60 text-xs font-semibold mb-2">
+            <MapPin size={13} className="text-blue-600" />
             <span>Geographic Risk Heatmap</span>
           </div>
           <h2
-            className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+            className={`${compact ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-extrabold tracking-tight`}
             style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}
           >
             Portfolio Geographic Analytics
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-700 max-w-2xl">
+          <p className="mt-2 text-xs sm:text-sm text-slate-700 max-w-2xl">
             Real-time PAR-90 default heatmaps and loan volume distribution across Chhattisgarh agricultural districts.
           </p>
         </div>

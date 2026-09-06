@@ -724,8 +724,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {/* TAB 2: DECISION COCKPIT (THE ACTUAL COCKPIT EMBEDDED) */}
           {activeTab === 'cockpit' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-4 max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl sm:text-2xl font-black text-[#0B2545] tracking-tight">
@@ -752,16 +752,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
 
               {/* The UnderwritingSection itself */}
-              <div className="bg-white rounded-2xl p-2 sm:p-4 border border-slate-200 shadow-sm overflow-hidden">
-                <UnderwritingSection onOpenDeliberation={setDeliberationData} />
+              <div className="bg-white rounded-2xl p-2 sm:p-3 border border-slate-200 shadow-sm overflow-hidden">
+                <UnderwritingSection onOpenDeliberation={setDeliberationData} compact />
               </div>
             </div>
           )}
 
           {/* TAB 3: PORTFOLIO RISK MAP */}
           {activeTab === 'portfolio' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xs">
+            <div className="space-y-4 max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs">
                 <h2 className="text-xl sm:text-2xl font-black text-[#0B2545] tracking-tight">
                   District Portfolio Analytics & PAR-90 Heatmap
                 </h2>
@@ -769,16 +769,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Zonal risk exposure across 7 Chhattisgarh operational districts.
                 </p>
               </div>
-              <div className="bg-white rounded-2xl p-2 sm:p-4 border border-slate-200 shadow-sm overflow-hidden">
-                <PortfolioSection />
+              <div className="bg-white rounded-2xl p-2 sm:p-3 border border-slate-200 shadow-sm overflow-hidden">
+                <PortfolioSection compact />
               </div>
             </div>
           )}
 
           {/* TAB 4: EARLY WARNING SYSTEM (EWS) */}
           {activeTab === 'ews' && (
-            <div className="space-y-6 max-w-7xl mx-auto">
-              <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-2xs">
+            <div className="space-y-4 max-w-7xl mx-auto">
+              <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-2xs">
                 <h2 className="text-xl sm:text-2xl font-black text-[#0B2545] tracking-tight">
                   Early Warning System (EWS) · Satellite Watcher
                 </h2>
@@ -786,8 +786,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   Active Sentinel-2 NDVI drop watchers, monsoon anomaly tracking, and field recovery dossiers.
                 </p>
               </div>
-              <div className="bg-white rounded-2xl p-2 sm:p-4 border border-slate-200 shadow-sm overflow-hidden">
-                <EWSSection />
+              <div className="bg-white rounded-2xl p-2 sm:p-3 border border-slate-200 shadow-sm overflow-hidden">
+                <EWSSection compact />
               </div>
             </div>
           )}
