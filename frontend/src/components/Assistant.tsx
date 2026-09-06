@@ -25,6 +25,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api, download, API_BASE_URL } from '../api';
 import { saathiCopy } from './saathi-i18n';
 import AIMessage, { AIMessageAction } from './AIMessage';
+import { generateLocalSaathiResponse } from './saathi-engine';
 
 interface Message {
   id: string;
@@ -342,9 +343,30 @@ export default function Assistant({
         readAloud(newMsg);
       }
     } catch (e: any) {
-      if (session.current === sessionId) {
-        setError(e.message || 'Could not connect to assistant.');
-        setFailed({ text, language: selectedLanguage });
+      if (session.current === sessionId && !controller.signal.aborted) {
+        try {
+          const fallbackData = generateLocalSaathiResponse(text, selectedLanguage, context);
+          const newMsg: Message = {
+            id: uid(),
+            role: 'assistant',
+            text: fallbackData.reply,
+            source: fallbackData.source,
+            evidence: fallbackData.evidence,
+            language: selectedLanguage,
+            time: new Date().toISOString(),
+            action: fallbackData.action,
+          };
+          setMessages(prev => [...prev, newMsg]);
+          setSuggestions(fallbackData.suggested_follow_ups);
+          setError('');
+          setFailed(null);
+          if (autoSpeak || modeRef.current === 'call') {
+            readAloud(newMsg);
+          }
+        } catch {
+          setError(e.message || 'Could not connect to assistant.');
+          setFailed({ text, language: selectedLanguage });
+        }
       }
     } finally {
       if (pending.current === controller) {
@@ -372,15 +394,31 @@ export default function Assistant({
   };
 
   const fallbackSpeechSynthesis = (message: Message) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
       setSpeaking(null);
       handleContinuousSpeechLoop();
       return;
     }
     try {
+      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(message.text);
-      utterance.lang = languages.find(l => l[0] === message.language)?.[2] || 'en-IN';
+      const langCode = languages.find(l => l[0] === message.language)?.[2] || 'en-IN';
+      utterance.lang = langCode;
       utterance.rate = 0.95;
+
+      const voices = window.speechSynthesis.getVoices();
+      if (voices && voices.length > 0) {
+        const exactMatch = voices.find(v => v.lang.replace('_', '-').toLowerCase() === langCode.toLowerCase());
+        const langPrefixMatch = voices.find(v => v.lang.replace('_', '-').toLowerCase().startsWith(langCode.split('-')[0].toLowerCase()));
+        const indianVoice = voices.find(v => v.lang.includes('IN') || v.name.includes('India') || v.name.includes('Indian'));
+        if (exactMatch) utterance.voice = exactMatch;
+        else if (langPrefixMatch) utterance.voice = langPrefixMatch;
+        else if (indianVoice) utterance.voice = indianVoice;
+      }
+
+      utterance.onstart = () => {
+        setSpeaking(message.id);
+      };
       utterance.onend = () => {
         setSpeaking(null);
         handleContinuousSpeechLoop();
@@ -389,6 +427,11 @@ export default function Assistant({
         setSpeaking(null);
         handleContinuousSpeechLoop();
       };
+
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      setSpeaking(message.id);
       window.speechSynthesis.speak(utterance);
     } catch {
       setSpeaking(null);
@@ -421,7 +464,8 @@ export default function Assistant({
         }),
       });
 
-      if (response.ok) {
+      const contentType = response.headers.get('content-type') || '';
+      if (response.ok && contentType.includes('audio')) {
         const blob = await response.blob();
         if (blob.size > 100) {
           const audioUrl = URL.createObjectURL(blob);
@@ -469,6 +513,7 @@ export default function Assistant({
         recognition.interimResults = true;
         recognition.maxAlternatives = 1;
         let finalSpokenText = '';
+        let lastKnownTranscript = '';
 
         recognition.onstart = () => {
           setListening(true);
@@ -484,8 +529,9 @@ export default function Assistant({
               interim += event.results[i][0].transcript;
             }
           }
-          const currentText = finalSpokenText || interim;
+          const currentText = (finalSpokenText + ' ' + interim).trim() || finalSpokenText || interim;
           if (currentText) {
+            lastKnownTranscript = currentText;
             setInput(currentText);
             setCurrentTranscript(currentText);
           }
@@ -503,7 +549,7 @@ export default function Assistant({
         recognition.onend = () => {
           setListening(false);
           recognitionRef.current = null;
-          const query = finalSpokenText.trim();
+          const query = (finalSpokenText || lastKnownTranscript).trim();
           if (query) {
             void send(query, false, selectedLanguage, true);
           }
