@@ -154,8 +154,8 @@ export default function SaathiVoiceSession({
               }}
             />
             <div
-              className="absolute w-32 h-32 rounded-full border border-violet-500/40 animate-ping pointer-events-none"
-              style={{ animationDuration: '3s' }}
+              className="absolute w-32 h-32 rounded-full border border-violet-500/30 pointer-events-none transition-transform duration-700"
+              style={{ transform: `scale(${pulseScale * 1.08})` }}
             />
 
             {/* Core Orb */}
@@ -165,7 +165,7 @@ export default function SaathiVoiceSession({
               title={status === 'speaking' ? 'Click to interrupt' : 'Listening...'}
             >
               {status === 'speaking' ? (
-                <Volume2 className="w-10 h-10 text-violet-300 animate-bounce" />
+                <Volume2 className="w-10 h-10 text-violet-300" />
               ) : status === 'thinking' ? (
                 <RefreshCw className="w-9 h-9 text-amber-300 animate-spin" />
               ) : isMuted ? (

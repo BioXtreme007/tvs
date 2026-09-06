@@ -671,9 +671,9 @@ export default function Assistant({
               }, 400);
             }}
           >
-            <Radio size={13} className={mode === 'call' ? 'text-emerald-400 animate-pulse' : 'text-slate-500'} />
+            <Radio size={13} className={mode === 'call' ? 'text-emerald-400' : 'text-slate-500'} />
             <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>1:1&nbsp;Call</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
             <span className="text-[9.5px] px-1 py-0.2 rounded bg-emerald-400/20 text-emerald-300 font-mono uppercase font-bold tracking-wider ml-0.5">
               Live
             </span>
@@ -770,7 +770,7 @@ export default function Assistant({
           {/* Top Live Call Badge */}
           <div className="flex items-center justify-between">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-800 text-[11px] font-semibold border border-emerald-200">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0 shadow-[0_0_6px_rgba(5,150,105,0.8)]" />
               <span>LIVE 1:1 VOICE ASSISTANT</span>
             </div>
             <div className="text-[11px] text-slate-400">
@@ -780,42 +780,42 @@ export default function Assistant({
 
           {/* Central Pulsing Audio Orb / Avatar */}
           <div className="my-auto flex flex-col items-center justify-center py-6 text-center">
-            <div className="relative flex items-center justify-center">
-              {/* Outer Ripple 1 */}
+            <div className="relative flex items-center justify-center w-60 h-60">
+              {/* Outer Ripple / Breathing Aura */}
               <div
-                className={`absolute w-36 h-36 rounded-full transition-all duration-700 ${
+                className={`absolute w-56 h-56 rounded-full transition-colors duration-500 pointer-events-none ${
                   listening
-                    ? 'bg-emerald-300/40 scale-125 animate-ping'
+                    ? 'bg-emerald-200/50 voice-aura-outer'
                     : speaking
-                    ? 'bg-blue-300/40 scale-110 animate-pulse'
+                    ? 'bg-blue-200/40 voice-speaking-outer'
                     : loading
-                    ? 'bg-purple-300/40 scale-110 animate-pulse'
-                    : 'bg-slate-200/50 scale-100'
+                    ? 'bg-purple-200/40 voice-speaking-outer'
+                    : 'bg-slate-200/40'
                 }`}
               />
-              {/* Outer Ripple 2 */}
+              {/* Outer Ripple 2 / Middle Ring */}
               <div
-                className={`absolute w-28 h-28 rounded-full transition-all duration-500 ${
+                className={`absolute w-36 h-36 rounded-full transition-colors duration-500 pointer-events-none ${
                   listening
-                    ? 'bg-emerald-400/30 scale-110 animate-pulse'
+                    ? 'bg-emerald-300/40 voice-aura-middle'
                     : speaking
-                    ? 'bg-[#0B2545]/20 scale-110 animate-pulse'
+                    ? 'bg-[#0B2545]/15 voice-aura-middle'
                     : loading
-                    ? 'bg-purple-400/30 scale-110 animate-pulse'
-                    : 'bg-slate-200/40 scale-95'
+                    ? 'bg-purple-300/35 voice-aura-middle'
+                    : 'bg-slate-200/60'
                 }`}
               />
               {/* Center Interactive Orb */}
               <button
                 type="button"
-                className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-white shadow-xl transition-all duration-300 transform active:scale-95 ${
+                className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center text-white transition-all duration-300 transform active:scale-95 cursor-pointer ${
                   listening
-                    ? 'bg-emerald-600 shadow-emerald-500/40 ring-4 ring-emerald-300'
+                    ? 'bg-emerald-600 shadow-xl shadow-emerald-600/30 ring-4 ring-emerald-300/60 voice-aura-core'
                     : speaking
-                    ? 'bg-[#0B2545] shadow-blue-900/40 ring-4 ring-blue-300'
+                    ? 'bg-[#0B2545] shadow-xl shadow-blue-900/35 ring-4 ring-blue-300/60'
                     : loading
-                    ? 'bg-purple-600 shadow-purple-500/40 ring-4 ring-purple-300'
-                    : 'bg-[#0B2545] hover:bg-[#153a66] ring-4 ring-slate-200'
+                    ? 'bg-purple-600 shadow-xl shadow-purple-600/35 ring-4 ring-purple-300/60'
+                    : 'bg-[#0B2545] hover:bg-[#153a66] shadow-lg ring-4 ring-slate-200/80'
                 }`}
                 onClick={voice}
                 aria-label={listening ? 'Stop listening' : 'Start speaking'}
@@ -823,9 +823,9 @@ export default function Assistant({
                 {loading ? (
                   <LoaderCircle size={32} className="animate-spin text-purple-200" />
                 ) : speaking ? (
-                  <Volume2 size={32} className="animate-pulse text-emerald-300" />
+                  <Volume2 size={32} className="text-emerald-300" />
                 ) : listening ? (
-                  <Mic size={32} className="text-white animate-bounce" />
+                  <Mic size={32} className="text-white" />
                 ) : (
                   <Mic size={30} className="text-white" />
                 )}
@@ -1147,7 +1147,7 @@ export default function Assistant({
 
                 {listening ? (
                   <span className="text-[11px] text-emerald-700 font-semibold flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.8)]" />
                     Listening...
                   </span>
                 ) : transcribing ? (
