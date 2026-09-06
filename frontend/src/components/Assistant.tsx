@@ -617,13 +617,13 @@ export default function Assistant({
   return (
     <div className="assistant-ui h-full flex flex-col bg-white">
       {/* Top Header with Mode Tabs */}
-      <header className="chat-header p-3.5 border-b border-slate-100 flex items-center justify-between gap-2 bg-slate-50/70">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <span className="chat-brand w-9 h-9 flex items-center justify-center rounded-xl bg-[#0B2545] text-white shadow-xs">
+      <header className="chat-header p-3.5 border-b border-slate-100 flex items-center justify-between gap-2.5 bg-slate-50/80">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
+          <span className="chat-brand w-9 h-9 shrink-0 flex items-center justify-center rounded-xl bg-[#0B2545] text-white shadow-xs">
             <Radio size={18} className="text-emerald-400" />
           </span>
-          <div className="truncate">
-            <h2 className="text-sm font-bold text-slate-900 tracking-tight leading-none">
+          <div className="truncate min-w-0">
+            <h2 className="text-sm font-bold text-slate-900 tracking-tight leading-none truncate">
               {t.name}
             </h2>
             <p className="text-[10px] text-slate-500 mt-1 truncate">
@@ -632,13 +632,13 @@ export default function Assistant({
           </div>
         </div>
 
-        {/* Tab Selector: Chat vs 1:1 Voice Call */}
-        <div className="flex items-center bg-slate-200/80 p-0.5 rounded-lg text-xs font-semibold">
+        {/* Tab Selector: Chat vs 1:1 Voice Call - Wrap-Proof Segmented Control */}
+        <div className="shrink-0 flex items-center bg-slate-200/90 p-1 rounded-xl shadow-inner border border-slate-300/60 text-xs font-semibold whitespace-nowrap">
           <button
             type="button"
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all ${
+            className={`whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               mode === 'chat'
-                ? 'bg-white text-slate-900 shadow-xs font-bold'
+                ? 'bg-white text-slate-900 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
             onClick={() => {
@@ -647,14 +647,14 @@ export default function Assistant({
               setMode('chat');
             }}
           >
-            <MessageSquare size={13} />
-            <span>Chat</span>
+            <MessageSquare size={13} className={mode === 'chat' ? 'text-[#0B2545]' : 'text-slate-500'} />
+            <span className="whitespace-nowrap">Chat</span>
           </button>
           <button
             type="button"
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-all ${
+            className={`whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               mode === 'call'
-                ? 'bg-[#0B2545] text-white shadow-xs font-bold'
+                ? 'bg-[#0B2545] text-white shadow-sm ring-1 ring-emerald-400/40'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
             onClick={() => {
@@ -666,9 +666,12 @@ export default function Assistant({
               }, 400);
             }}
           >
-            <Radio size={13} className="text-emerald-400 animate-pulse" />
-            <span>1:1 Call</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping ml-0.5" />
+            <Radio size={13} className={mode === 'call' ? 'text-emerald-400 animate-pulse' : 'text-slate-500'} />
+            <span className="whitespace-nowrap">1:1 Call</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <span className="text-[9.5px] px-1 py-0.2 rounded bg-emerald-400/20 text-emerald-300 font-mono uppercase font-bold tracking-wider ml-0.5">
+              Live
+            </span>
           </button>
         </div>
 

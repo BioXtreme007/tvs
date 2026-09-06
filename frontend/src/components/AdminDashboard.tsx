@@ -12,6 +12,7 @@ import PortfolioSection from './PortfolioSection';
 import EWSSection from './EWSSection';
 import WhatIfSection from './WhatIfSection';
 import DeliberationModal from './DeliberationModal';
+import SidebarToggleIcon from './SidebarToggleIcon';
 
 interface AdminUser {
   name: string;
@@ -215,7 +216,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             aria-label="Toggle Sidebar"
             title="Toggle Sidebar"
           >
-            <Menu size={20} />
+            <SidebarToggleIcon isOpen={!sidebarCollapsed} className="w-5 h-5 text-slate-700" />
           </button>
 
           {/* TVS Credit Brand */}
@@ -629,10 +630,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <td className="py-3.5 px-4">{getStatusBadge(app.status)}</td>
                             <td className="py-3.5 px-4 text-right">
                               <button
-                                onClick={() => setActiveTab('cockpit')}
-                                className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-[#0B2545] hover:text-white text-slate-700 font-bold text-[11px] transition-all cursor-pointer"
+                                onClick={() => {
+                                  const parts = app.village.split(', ');
+                                  const vName = parts[0] || 'Kurud';
+                                  const dist = parts[1] || 'Raipur';
+                                  const amtVal = app.amount.includes('Lakh')
+                                    ? Math.round(parseFloat(app.amount.replace(/[^0-9.]/g, '')) * 100000)
+                                    : 550000;
+                                  window.dispatchEvent(
+                                    new CustomEvent('assistant-prefill-underwriting', {
+                                      detail: {
+                                        applicant_name: app.borrower,
+                                        district: dist,
+                                        village: vName,
+                                        khasra_no: '142/1',
+                                        land_acres: app.acres,
+                                        crop_type: app.crop.includes('Paddy') ? 'PADDY_KHARIF' : 'SOYBEAN_KHARIF',
+                                        requested_amount_inr: amtVal,
+                                        requested_loan_amount_inr: amtVal,
+                                      },
+                                    })
+                                  );
+                                  setActiveTab('cockpit');
+                                }}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-[#0B2545] hover:text-white text-slate-700 font-bold text-[11px] transition-all cursor-pointer shadow-2xs"
                               >
-                                Review
+                                <span>Review &amp; Edit</span>
+                                <ArrowRight size={12} />
                               </button>
                             </td>
                           </tr>

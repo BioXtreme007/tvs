@@ -48,7 +48,41 @@ export function Underwriting({ onContext, ask }: { onContext: (value: any) => vo
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const active = useRef<AbortController | null>(null);
-  useEffect(() => () => active.current?.abort(), []);
+  useEffect(() => {
+    const handlePrefill = (event: Event) => {
+      const detail = (event as CustomEvent)?.detail;
+      if (!detail) return;
+      active.current?.abort();
+      active.current = null;
+      setLoading(false);
+      setForm(prev => ({
+        ...prev,
+        applicant_name: detail.applicant_name || detail.borrower || prev.applicant_name,
+        district: detail.district || prev.district,
+        village: detail.village || prev.village || 'Kurud',
+        khasra_no: detail.khasra_no || prev.khasra_no || '142/1',
+        land_acres: detail.land_acres !== undefined ? String(detail.land_acres) : (detail.acres !== undefined ? String(detail.acres) : prev.land_acres),
+        crop_type: detail.crop_type || (detail.crop?.includes('Paddy') ? 'PADDY_KHARIF' : prev.crop_type),
+        requested_loan_amount_inr: detail.requested_amount_inr !== undefined ? String(detail.requested_amount_inr) : (detail.max_sanction_amount_inr !== undefined ? String(detail.max_sanction_amount_inr) : (detail.requested_loan_amount_inr !== undefined ? String(detail.requested_loan_amount_inr) : prev.requested_loan_amount_inr)),
+        requested_tenure_months: detail.requested_tenure_months !== undefined ? String(detail.requested_tenure_months) : prev.requested_tenure_months,
+        bureau_cibil_score: detail.bureau_cibil_score !== undefined && detail.bureau_cibil_score !== null ? String(detail.bureau_cibil_score) : prev.bureau_cibil_score,
+        annual_banking_turnover_inr: detail.annual_banking_turnover_inr !== undefined ? String(detail.annual_banking_turnover_inr) : prev.annual_banking_turnover_inr,
+      }));
+      if (detail.underwriting_verdict) {
+        setResult({
+          underwriting_verdict: detail.underwriting_verdict,
+          scorecard_breakdown: detail.scorecard_breakdown,
+          repayment_structure: detail.repayment_structure,
+          application_summary: detail,
+        });
+      }
+    };
+    window.addEventListener('assistant-prefill-underwriting', handlePrefill);
+    return () => {
+      window.removeEventListener('assistant-prefill-underwriting', handlePrefill);
+      active.current?.abort();
+    };
+  }, []);
   const update = (name: string, value: string) => { setForm(prev => ({ ...prev, [name]: value })); setResult(null); onContext(null); };
   const submit = async (e: React.FormEvent) => {
     e.preventDefault(); if (active.current) return;

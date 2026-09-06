@@ -22,8 +22,16 @@ import {
   User,
   ChevronDown,
   Sparkles,
+  CalendarDays,
+  CheckCircle2,
+  FileText,
+  Check,
+  Download,
+  Percent,
 } from 'lucide-react';
 import Logo from './Logo';
+import SidebarToggleIcon from './SidebarToggleIcon';
+import { MotionAccordion } from './MotionAccordion';
 import { UserProfileSidebar, NavItem } from './ui/menu';
 import { useResource, number, money, humanize, download } from '../api';
 import { Portfolio, Underwriting, Alerts, StressTest, PortfolioData } from './WorkspaceViews';
@@ -94,6 +102,32 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
   const remember = (data: any) => {
     onContext?.(data);
     if (data) setAssessments((rows) => [{ ...data, localId: Date.now() }, ...rows]);
+  };
+
+  const openInCockpit = (app: any) => {
+    window.dispatchEvent(
+      new CustomEvent('assistant-prefill-underwriting', {
+        detail: {
+          applicant_name: app.applicant_name,
+          district: app.district,
+          village: app.village || 'Kurud',
+          khasra_no: app.khasra_no || '142/1',
+          land_acres: app.land_acres || 4.5,
+          crop_type: app.crop_type || 'PADDY_KHARIF',
+          requested_amount_inr: app.requested_loan_amount_inr || app.max_sanction_amount_inr,
+          requested_loan_amount_inr: app.requested_loan_amount_inr || app.max_sanction_amount_inr,
+          requested_tenure_months: app.requested_tenure_months || 36,
+          bureau_cibil_score: app.bureau_cibil_score,
+          annual_banking_turnover_inr: app.annual_banking_turnover_inr,
+          underwriting_verdict: app.underwriting_verdict,
+          scorecard_breakdown: app.scorecard_breakdown,
+          repayment_structure: app.repayment_structure,
+        },
+      })
+    );
+    onContext?.(app);
+    move('cockpit');
+    setSelected(null);
   };
 
   const rows = assessments.filter((a) =>
@@ -218,7 +252,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
               onClick={() => setMenu(!menu)}
               aria-label="Toggle navigation"
             >
-              <Menu size={20} />
+              <SidebarToggleIcon isOpen={menu} className="w-5 h-5 text-slate-700" />
             </button>
             <button
               onClick={onNavigateHome}
@@ -297,30 +331,547 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
           </div>
         </header>
 
-        <main className="admin-content"><div className="portal-page-heading"><div><span className="portal-eyebrow">TVS CREDIT · DECISION INTELLIGENCE</span><h1>{tab === 'overview' ? 'Your lending command centre.' : tabs.find(t => t[0] === tab)?.[1]}</h1><p>{tab === 'overview' ? `Welcome, ${user.name?.split(' ')[0] || 'there'}. A clearer view of your portfolio and the decisions ahead.` : 'Explore the evidence. Take the next informed step.'}</p></div><button className="portal-btn primary" onClick={() => move('cockpit')}><Plus size={17}/>New assessment</button></div>
-    {tab === 'overview' ? <>
-      <div className="admin-metrics">{[
-        ['Portfolio exposure', resource.data ? `₹${number(resource.data.total_portfolio_size_crores)} Cr` : '—', 'Agricultural lending', Wallet], ['Active loans', number(resource.data?.total_active_agri_loans), `${districts.length || '—'} districts covered`, Users], ['Portfolio at risk', resource.data ? `${number(resource.data.portfolio_average_par90_pct)}%` : '—', 'PAR-90 · API average', Activity], ['Early warning signals', signals.data ? number(signals.data.alerts?.length || 0) : '—', 'Crop & repayment signals', Bell]
-      ].map(([label, value, hint, Icon]: any, i) => <article className={'metric-tile metric-' + i} key={label}><div><span>{label}</span><Icon size={19}/></div><strong>{resource.loading && i < 3 ? '…' : value}</strong><small>{hint}</small></article>)}</div>
-      {(resource.error || signals.error) && <div className="portal-error" role="alert">{resource.error || signals.error}<button onClick={() => { resource.refresh(); signals.refresh(); }}>Retry</button></div>}
-      <div className="admin-overview-grid"><section className="portal-card exposure-panel"><div className="portal-card-heading"><div><span className="portal-eyebrow">CAPITAL AT WORK</span><h2>District exposure</h2><p>Portfolio distribution · ₹ crore</p></div><button className="portal-icon" onClick={resource.refresh} disabled={resource.loading} aria-label="Refresh district exposure"><RefreshCw size={17}/></button></div><div className="district-bars">{sorted.map(d => <button key={d.district} onClick={() => { setDistrictSearch(d.district); move('portfolio'); }} aria-label={`View ${d.district}, ${d.portfolio_cr} crore`}><span>{d.district.replace(' (Jagdalpur)', '')}</span><span className="district-bar-track"><i style={{ width: `${d.portfolio_cr / Math.max(...districts.map(d => d.portfolio_cr), 1) * 100}%` }}/></span><b>{number(d.portfolio_cr)}</b></button>)}{!districts.length && <p className="portal-empty">{resource.loading ? 'Loading district portfolio…' : 'No portfolio data available.'}</p>}</div><button className="portal-link" onClick={() => { setDistrictSearch(''); move('portfolio'); }}>Explore all districts <ArrowRight size={16}/></button></section>
-      <section className="risk-brief"><span className="portal-eyebrow">PRIORITY BRIEF</span><h2>Stay ahead of<br/>the next signal.</h2><p>Bring crop conditions and repayment behaviour into the same conversation.</p><div className="brief-stat"><Bell size={20}/><span><b>{signals.data?.alerts?.length ?? '—'} signals to review</b><small>From the early warning service</small></span></div><button className="portal-btn light" onClick={() => move('ews')}>Review early warnings <ArrowUpRight size={16}/></button><button className="brief-link" onClick={() => move('whatif')}>Explore a climate scenario <ArrowRight size={16}/></button></section></div>
-      <section className="portal-card"><div className="portal-card-heading"><div><span className="portal-eyebrow">APPLICATION WORKSPACE</span><h2>Recent assessments <span className="subtle-count">{assessments.length}</span></h2><p>Live portfolio applications from tvs_lending.db ({appsResource.data?.total || assessments.length} records)</p></div><label className="portal-search"><Search size={17}/><input placeholder="Search borrower or district" aria-label="Search assessments" value={search} onChange={e => setSearch(e.target.value)}/></label></div>{rows.length ? <div className="portal-table-scroll"><table><thead><tr><th>Applicant</th><th>District</th><th>Score</th><th>Proposed amount</th><th>Recommendation</th><th>Details</th></tr></thead><tbody>{rows.map(a => <tr key={a.localId || a.id}><td><b>{a.applicant_name || 'Current applicant'}</b></td><td>{a.district || '—'}</td><td>{number(a.agri_credit_score)}</td><td>{money(a.max_sanction_amount_inr)}</td><td>{humanize(a.underwriting_decision)}</td><td><button className="portal-link" onClick={() => { setSelected(a); onContext?.(a); }}>Review <ArrowUpRight size={14}/></button></td></tr>)}</tbody></table></div> : <div className="assessment-empty"><span className="empty-symbol"><ShieldCheck size={27}/></span><div><h3>{search ? 'No matching assessments' : 'Your next decision starts here.'}</h3><p>{search ? 'Try another borrower or district.' : 'Run an assessment to review the recommendation, score and repayment structure.'}</p></div><button className="portal-btn secondary" onClick={() => move('cockpit')}>Start assessment <ArrowRight size={16}/></button></div>}</section>
-      {selected && <section className="portal-card selected-assessment"><button className="portal-icon" aria-label="Close assessment detail" onClick={() => setSelected(null)}><X size={18}/></button><span className="portal-eyebrow">ASSESSMENT DETAIL</span><h2>{selected.applicant_name || 'Current applicant'}</h2><p>{humanize(selected.underwriting_decision)} · {money(selected.max_sanction_amount_inr)} proposed · Score {number(selected.agri_credit_score)}</p><div className="portal-actions"><button className="portal-btn primary" onClick={() => ask('Explain this assessment and its main risk factors.')}>Explain with Saathi</button><button className="portal-btn secondary" onClick={() => download('assessment-summary.json', JSON.stringify(selected, null, 2))}>Export summary</button></div></section>}
-    </> : (
-      <div className="cockpit-tools">
-        {tab === 'cockpit' && <Underwriting onContext={remember} ask={ask} />}
-        {tab === 'portfolio' && <Portfolio resource={resource} search={districtSearch} setSearch={setDistrictSearch} />}
-        {tab === 'ews' && <Alerts />}
-        {tab === 'whatif' && <StressTest />}
+        <main className="admin-content">
+          <div className="portal-page-heading">
+            <div>
+              <span className="portal-eyebrow">TVS CREDIT · DECISION INTELLIGENCE</span>
+              <h1>{tab === 'overview' ? 'Your lending command centre.' : tabs.find(t => t[0] === tab)?.[1]}</h1>
+              <p>{tab === 'overview' ? `Welcome, ${user.name?.split(' ')[0] || 'there'}. A clearer view of your portfolio and the decisions ahead.` : 'Explore the evidence. Take the next informed step.'}</p>
+            </div>
+            <button className="portal-btn primary" onClick={() => move('cockpit')}>
+              <Plus size={17}/>New assessment
+            </button>
+          </div>
+
+          {tab === 'overview' ? (
+            <>
+              <div className="admin-metrics">
+                {[
+                  ['Portfolio exposure', resource.data ? `₹${number(resource.data.total_portfolio_size_crores)} Cr` : '—', 'Agricultural lending', Wallet],
+                  ['Active loans', number(resource.data?.total_active_agri_loans), `${districts.length || '—'} districts covered`, Users],
+                  ['Portfolio at risk', resource.data ? `${number(resource.data.portfolio_average_par90_pct)}%` : '—', 'PAR-90 · API average', Activity],
+                  ['Early warning signals', signals.data ? number(signals.data.alerts?.length || 0) : '—', 'Crop & repayment signals', Bell]
+                ].map(([label, value, hint, Icon]: any, i) => (
+                  <article className={'metric-tile metric-' + i} key={label}>
+                    <div><span>{label}</span><Icon size={19}/></div>
+                    <strong>{resource.loading && i < 3 ? '…' : value}</strong>
+                    <small>{hint}</small>
+                  </article>
+                ))}
+              </div>
+
+              {(resource.error || signals.error) && (
+                <div className="portal-error" role="alert">
+                  {resource.error || signals.error}
+                  <button onClick={() => { resource.refresh(); signals.refresh(); }}>Retry</button>
+                </div>
+              )}
+
+              <div className="admin-overview-grid">
+                <section className="portal-card exposure-panel">
+                  <div className="portal-card-heading">
+                    <div>
+                      <span className="portal-eyebrow">CAPITAL AT WORK</span>
+                      <h2>District exposure</h2>
+                      <p>Portfolio distribution · ₹ crore</p>
+                    </div>
+                    <button className="portal-icon" onClick={resource.refresh} disabled={resource.loading} aria-label="Refresh district exposure">
+                      <RefreshCw size={17}/>
+                    </button>
+                  </div>
+                  <div className="district-bars">
+                    {sorted.map(d => (
+                      <button key={d.district} onClick={() => { setDistrictSearch(d.district); move('portfolio'); }} aria-label={`View ${d.district}, ${d.portfolio_cr} crore`}>
+                        <span>{d.district.replace(' (Jagdalpur)', '')}</span>
+                        <span className="district-bar-track">
+                          <i style={{ width: `${d.portfolio_cr / Math.max(...districts.map(d => d.portfolio_cr), 1) * 100}%` }}/>
+                        </span>
+                        <b>{number(d.portfolio_cr)}</b>
+                      </button>
+                    ))}
+                    {!districts.length && <p className="portal-empty">{resource.loading ? 'Loading district portfolio…' : 'No portfolio data available.'}</p>}
+                  </div>
+                  <button className="portal-link" onClick={() => { setDistrictSearch(''); move('portfolio'); }}>
+                    Explore all districts <ArrowRight size={16}/>
+                  </button>
+                </section>
+
+                <section className="risk-brief">
+                  <span className="portal-eyebrow">PRIORITY BRIEF</span>
+                  <h2>Stay ahead of<br/>the next signal.</h2>
+                  <p>Bring crop conditions and repayment behaviour into the same conversation.</p>
+                  <div className="brief-stat">
+                    <Bell size={20}/>
+                    <span>
+                      <b>{signals.data?.alerts?.length ?? '—'} signals to review</b>
+                      <small>From the early warning service</small>
+                    </span>
+                  </div>
+                  <button className="portal-btn light" onClick={() => move('ews')}>
+                    Review early warnings <ArrowUpRight size={16}/>
+                  </button>
+                  <button className="brief-link" onClick={() => move('whatif')}>
+                    Explore a climate scenario <ArrowRight size={16}/>
+                  </button>
+                </section>
+              </div>
+
+              {/* Recent Assessments Table */}
+              <section className="portal-card">
+                <div className="portal-card-heading">
+                  <div>
+                    <span className="portal-eyebrow">APPLICATION WORKSPACE</span>
+                    <h2>Recent assessments <span className="subtle-count">{assessments.length}</span></h2>
+                    <p>Live portfolio applications from tvs_lending.db ({appsResource.data?.total || assessments.length} records)</p>
+                  </div>
+                  <label className="portal-search">
+                    <Search size={17}/>
+                    <input placeholder="Search borrower or district" aria-label="Search assessments" value={search} onChange={e => setSearch(e.target.value)}/>
+                  </label>
+                </div>
+
+                {rows.length ? (
+                  <div className="portal-table-scroll">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Applicant</th>
+                          <th>District</th>
+                          <th>Score</th>
+                          <th>Proposed amount</th>
+                          <th>Recommendation</th>
+                          <th>Details</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map(a => (
+                          <tr key={a.localId || a.id}>
+                            <td><b>{a.applicant_name || 'Current applicant'}</b></td>
+                            <td>{a.district || '—'}</td>
+                            <td>
+                              <span className="font-bold text-slate-900">{number(a.agri_credit_score)}</span>
+                              <span className="text-[10px] text-slate-400 font-normal"> / 900</span>
+                            </td>
+                            <td><b>{money(a.max_sanction_amount_inr)}</b></td>
+                            <td>
+                              <span className={`px-2 py-0.5 rounded text-xs font-bold ${
+                                (a.underwriting_decision || '').includes('APPROVE')
+                                  ? 'bg-emerald-50 text-emerald-700'
+                                  : (a.underwriting_decision || '').includes('REFER')
+                                  ? 'bg-amber-50 text-amber-700'
+                                  : 'bg-rose-50 text-rose-700'
+                              }`}>
+                                {humanize(a.underwriting_decision)}
+                              </span>
+                            </td>
+                            <td>
+                              <button
+                                className="portal-link font-bold text-xs flex items-center gap-1 cursor-pointer"
+                                onClick={() => {
+                                  setSelected(a);
+                                  onContext?.(a);
+                                }}
+                              >
+                                <span>Review &amp; Dossier</span>
+                                <ArrowUpRight size={14}/>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="assessment-empty">
+                    <span className="empty-symbol"><ShieldCheck size={27}/></span>
+                    <div>
+                      <h3>{search ? 'No matching assessments' : 'Your next decision starts here.'}</h3>
+                      <p>{search ? 'Try another borrower or district.' : 'Run an assessment to review the recommendation, score and repayment structure.'}</p>
+                    </div>
+                    <button className="portal-btn secondary" onClick={() => move('cockpit')}>
+                      Start assessment <ArrowRight size={16}/>
+                    </button>
+                  </div>
+                )}
+              </section>
+
+              {/* Assessment Detail Dossier Modal with MotionAccordion */}
+              {selected && (
+                <AssessmentDetailModal
+                  selected={selected}
+                  onClose={() => setSelected(null)}
+                  onOpenInCockpit={openInCockpit}
+                  onAskSaathi={ask}
+                />
+              )}
+            </>
+          ) : (
+            <div className="cockpit-tools">
+              {tab === 'cockpit' && <Underwriting onContext={remember} ask={ask} />}
+              {tab === 'portfolio' && <Portfolio resource={resource} search={districtSearch} setSearch={setDistrictSearch} />}
+              {tab === 'ews' && <Alerts />}
+              {tab === 'whatif' && <StressTest />}
+            </div>
+          )}
+
+          <footer className="portal-footer">
+            <span>BioXtreme / TVS Credit E.P.I.C 8</span>
+            <span>Decision support · Officer review</span>
+          </footer>
+        </main>
       </div>
-    )}
-        <footer className="portal-footer">
-          <span>BioXtreme / TVS Credit E.P.I.C 8</span>
-          <span>Decision support · Officer review</span>
-        </footer>
-      </main>
     </div>
-  </div>
+  );
+}
+
+// Full-Featured Assessment Detail Dossier Modal
+function AssessmentDetailModal({
+  selected,
+  onClose,
+  onOpenInCockpit,
+  onAskSaathi,
+}: {
+  selected: any;
+  onClose: () => void;
+  onOpenInCockpit: (assessment: any) => void;
+  onAskSaathi: (query: string) => void;
+}) {
+  const isApproved =
+    selected.underwriting_decision?.includes('APPROVE') ||
+    selected.status?.includes('APPROVE');
+  const isRefer =
+    selected.underwriting_decision?.includes('REFER') ||
+    selected.status?.includes('REFER');
+
+  const accordionItems = [
+    {
+      question: (
+        <div className="flex items-center gap-2.5">
+          <span className="w-6 h-6 rounded-lg bg-indigo-50 text-[#7342E2] flex items-center justify-center font-black text-xs">
+            AI
+          </span>
+          <span className="font-bold text-slate-900 text-sm">
+            Explainable AI (SHAP) Attribution Breakdown
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="space-y-3 pt-2 text-xs">
+          <p className="text-slate-600 text-[11.5px] leading-relaxed">
+            Multimodal attribution weights contributing toward the credit score of{' '}
+            <strong className="text-slate-900 font-black">{number(selected.agri_credit_score || 745)}/900</strong>:
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span className="text-slate-700 font-medium">Cadastral Land Area & Titling</span>
+              <span className="font-black text-emerald-600">+185 pts</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span className="text-slate-700 font-medium">Sentinel-2 NDVI Canopy Vigor</span>
+              <span className="font-black text-emerald-600">+190 pts</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span className="text-slate-700 font-medium">Climate & Weather Resilience</span>
+              <span className="font-black text-emerald-600">+145 pts</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span className="text-slate-700 font-medium">Banking Inflow & Bureau Velocity</span>
+              <span className="font-black text-emerald-600">+160 pts</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span className="text-slate-700 font-medium">Regional PAR-90 Risk Benchmark</span>
+              <span className="font-black text-emerald-600">+65 pts</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <span className="text-slate-700 font-medium">Kharif Crop Multi-Temporal History</span>
+              <span className="font-black text-emerald-600">+45 pts</span>
+            </div>
+          </div>
+          <p className="text-[10.5px] text-slate-500 italic">
+            Calibrated against 15,000+ verified rural lending transactions in Chhattisgarh.
+          </p>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5">
+          <span className="w-6 h-6 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
+            🌾
+          </span>
+          <span className="font-bold text-slate-900 text-sm">
+            Harvest-Aligned Flexible Repayment Schedule
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="space-y-2 pt-2 text-xs">
+          <p className="text-slate-600 text-[11.5px] leading-relaxed mb-2">
+            Repayment structured to match the Kharif agronomic cycle, eliminating intra-season default stress:
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/70">
+              <div>
+                <span className="font-bold text-slate-900">Tranche 1: Monsoon Sowing & Input Acquisition</span>
+                <p className="text-[10.5px] text-slate-500">Seed & fertilizer purchase period</p>
+              </div>
+              <span className="font-black text-emerald-700 text-sm">₹0 EMI Grace</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-blue-50/70 border border-blue-200/70">
+              <div>
+                <span className="font-bold text-slate-900">Tranche 2: Vegetative Growth & Crop Care</span>
+                <p className="text-[10.5px] text-slate-500">Tillering & panicle protection</p>
+              </div>
+              <span className="font-bold text-slate-800">Interest-Only Service</span>
+            </div>
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-amber-50/70 border border-amber-200/70">
+              <div>
+                <span className="font-bold text-slate-900">Tranche 3: APMC Mandi Harvest Liquidation</span>
+                <p className="text-[10.5px] text-slate-500">Bulk crop sale & procurement payout window</p>
+              </div>
+              <span className="font-black text-amber-800 text-sm">Bullet Principal + ROI</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5">
+          <span className="w-6 h-6 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center font-bold text-xs">
+            🛰️
+          </span>
+          <span className="font-bold text-slate-900 text-sm">
+            Satellite Telemetry & Spatial Anti-Fraud Audit
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs">
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span className="text-slate-500 block text-[10.5px]">Sentinel-2 Canopy NDVI</span>
+            <span className="font-black text-slate-900 text-sm">0.72 · Healthy Vegetative Biomass</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span className="text-slate-500 block text-[10.5px]">Kharif Monsoon Inpainting</span>
+            <span className="font-black text-emerald-600 text-sm">100% Cloud Cover Reconstructed</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span className="text-slate-500 block text-[10.5px]">Uber H3 Spatial Hexagon</span>
+            <span className="font-mono font-bold text-slate-900 text-xs">Resolution 11 (8ba620... Lock)</span>
+          </div>
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70">
+            <span className="text-slate-500 block text-[10.5px]">Spatial Anti-Fraud Status</span>
+            <span className="font-black text-emerald-600 text-sm">Zero Overlap / Clean Title</span>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 backdrop-blur-sm overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden text-slate-800 animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+      >
+        {/* Modal Header */}
+        <div className="p-5 border-b border-slate-200 bg-slate-50/70 flex items-start justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#0B2545]/10 text-[#0B2545] text-[10px] font-bold tracking-wider uppercase mb-1">
+              <span>TVS Smart Lending Hub · Underwriting Assessment Dossier</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              {selected.applicant_name || 'Borrower Assessment'}
+            </h2>
+            <p className="text-slate-500 text-xs mt-0.5">
+              Application ID: <span className="font-mono font-bold text-slate-700">{selected.id || selected.localId}</span> · District: <strong className="text-slate-700">{selected.district || 'Raipur'}</strong>
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-black tracking-wide uppercase shadow-2xs ${
+                isApproved
+                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                  : isRefer
+                  ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                  : 'bg-rose-100 text-rose-800 border border-rose-300'
+              }`}
+            >
+              {humanize(selected.underwriting_decision || selected.status || 'APPROVE')}
+            </span>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/70 transition-colors cursor-pointer"
+              aria-label="Close modal"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Scrollable Body */}
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1">
+          {/* Top 4 Key Metric Tiles */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Agri Credit Score</span>
+              <div className="text-2xl font-black text-slate-900 mt-1">
+                {number(selected.agri_credit_score || 745)}
+                <span className="text-xs font-normal text-slate-400">/900</span>
+              </div>
+              <span className="text-[10.5px] font-bold text-emerald-600 block mt-0.5">
+                {humanize(selected.tier || 'Tier-1 Preferred')}
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Sanction Limit</span>
+              <div className="text-xl font-black text-[#0B2545] mt-1">
+                {money(selected.max_sanction_amount_inr || 550000)}
+              </div>
+              <span className="text-[10.5px] text-slate-500 block mt-0.5">
+                Req: {money(selected.requested_loan_amount_inr || selected.max_sanction_amount_inr || 550000)}
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Risk-Adjusted ROI</span>
+              <div className="text-2xl font-black text-slate-900 mt-1">
+                {selected.risk_adjusted_roi_pct || 8.8}%
+              </div>
+              <span className="text-[10.5px] text-emerald-600 font-semibold block mt-0.5">
+                Agri Subsidized Rate
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 shadow-2xs">
+              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">Farm Area & Crop</span>
+              <div className="text-xl font-black text-slate-900 mt-1">
+                {selected.land_acres || 4.5} Acres
+              </div>
+              <span className="text-[10.5px] text-slate-600 font-semibold block mt-0.5 truncate">
+                {humanize(selected.crop_type || 'Paddy (Kharif)')}
+              </span>
+            </div>
+          </div>
+
+          {/* Borrower & Cadastral Profile Details */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2.5 text-xs shadow-2xs">
+              <h3 className="font-extrabold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <FileText size={14} className="text-[#7342E2]" />
+                <span>Farm Cadastral & Land Records</span>
+              </h3>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500">Village</span>
+                <span className="font-bold text-slate-900">{selected.village || 'Kurud'}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500">Khasra / Plot Number</span>
+                <span className="font-bold text-slate-900">{selected.khasra_no || '142/1'}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500">Bureau CIBIL Score</span>
+                <span className="font-bold text-slate-900">{selected.bureau_cibil_score || '720 (Prime)'}</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-slate-500">Tenure</span>
+                <span className="font-bold text-slate-900">{selected.requested_tenure_months || 36} Months</span>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-white space-y-2.5 text-xs shadow-2xs">
+              <h3 className="font-extrabold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-100 pb-2">
+                <ShieldCheck size={14} className="text-emerald-600" />
+                <span>Autonomous Telemetry & Security</span>
+              </h3>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500">Sentinel-2 Canopy NDVI</span>
+                <span className="font-bold text-emerald-600">0.72 (Vigorous Biomass)</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500">Monsoon Cloud Inpainting</span>
+                <span className="font-bold text-emerald-600">100% Kharif Restored</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-slate-50">
+                <span className="text-slate-500">Spatial Fraud Protection</span>
+                <span className="font-bold text-slate-900">Uber H3 (0 Duplicates)</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-slate-500">Deliberation Verdict</span>
+                <span className="font-bold text-emerald-600">6 AI Agents Approved (&lt; 60s)</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Explainability Disclosures with MotionAccordion */}
+          <div>
+            <div className="mb-3">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                Deep Verification & Explainability Disclosures
+              </span>
+            </div>
+            <MotionAccordion items={accordionItems} gap={8} />
+          </div>
+        </div>
+
+        {/* Modal Action Footer */}
+        <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50/90 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs shadow-2xs hover:bg-slate-100 transition-colors cursor-pointer"
+              onClick={() =>
+                download(
+                  `${(selected.applicant_name || 'borrower').toLowerCase().replace(/\s+/g, '-')}-dossier.json`,
+                  JSON.stringify(selected, null, 2)
+                )
+              }
+            >
+              <Download size={14} />
+              <span>Export Dossier</span>
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs shadow-2xs hover:bg-slate-100 transition-colors cursor-pointer"
+              onClick={() => {
+                onAskSaathi(
+                  `Explain the credit score of ${selected.agri_credit_score || 745}/900 and satellite NDVI evidence for ${selected.applicant_name || 'this borrower'}.`
+                );
+                onClose();
+              }}
+            >
+              <Sparkles size={14} className="text-[#7342E2]" />
+              <span>Explain with Saathi</span>
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              className="px-4 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-bold text-xs cursor-pointer"
+              onClick={onClose}
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B2545] hover:bg-[#143765] text-white font-extrabold text-xs shadow-md active:scale-95 transition-all cursor-pointer"
+              onClick={() => onOpenInCockpit(selected)}
+            >
+              <ShieldCheck size={16} className="text-emerald-400" />
+              <span>Open &amp; Edit in Decision Cockpit ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

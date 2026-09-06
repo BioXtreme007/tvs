@@ -453,9 +453,12 @@ class KrishiSaathiAssistant:
             f"<VERIFIED_POLICY_KNOWLEDGE>\n{json.dumps([item.get('data', {}) for item in retrieved], indent=2, ensure_ascii=False)}\n</VERIFIED_POLICY_KNOWLEDGE>"
         )
 
+        start_time = time.monotonic()
+        MAX_TOTAL_TIMEOUT = 2.5
+
         providers = []
 
-        # 1. Groq Cloud Key
+        # 1. Groq Cloud Key (Ultra-low latency inference ~250ms)
         groq_key = custom_api_key if (custom_api_key and custom_api_key.startswith("gsk_")) else os.environ.get("GROQ_API_KEY")
         if groq_key:
             providers.append({
@@ -465,40 +468,29 @@ class KrishiSaathiAssistant:
                 "model": "llama-3.3-70b-versatile",
             })
 
-        # 2. Google Gemini API (AI Studio & Vertex AI compatible)
+        # 2. Google Gemini API (AI Studio / Vertex AI compatible) - single fast primary model
         gemini_key = custom_api_key if (custom_api_key and (custom_api_key.startswith("AIza") or "gemini" in str(custom_api_key).lower())) else os.environ.get("GEMINI_API_KEY")
         if gemini_key:
-            candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-pro"]
-            env_model = os.environ.get("GEMINI_MODEL")
-            if env_model:
-                if env_model in candidate_models:
-                    candidate_models.remove(env_model)
-                candidate_models.insert(0, env_model)
-
-            # Try native google.genai SDK directly across candidates
+            primary_gemini = os.environ.get("GEMINI_MODEL", "gemini-2.0-flash")
+            # Try native google.genai SDK directly if installed with strict timeout
             try:
                 from google import genai
                 g_client = genai.Client(api_key=gemini_key)
-                for gm in candidate_models:
-                    try:
-                        g_resp = g_client.models.generate_content(
-                            model=gm,
-                            contents=f"{system_instruction}\n\nUser Question:\n{condensed_query}",
-                        )
-                        if g_resp and g_resp.text and g_resp.text.strip():
-                            return g_resp.text.strip(), f"GEMINI_{gm.upper().replace('-', '_').replace('.', '_')}"
-                    except Exception:
-                        continue
+                g_resp = g_client.models.generate_content(
+                    model=primary_gemini,
+                    contents=f"{system_instruction}\n\nUser Question:\n{condensed_query}",
+                )
+                if g_resp and g_resp.text and g_resp.text.strip():
+                    return g_resp.text.strip(), f"GEMINI_{primary_gemini.upper().replace('-', '_').replace('.', '_')}"
             except Exception:
                 pass
 
-            for gm in candidate_models:
-                providers.append({
-                    "name": f"GEMINI_{gm.upper().replace('-', '_').replace('.', '_')}",
-                    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
-                    "api_key": gemini_key,
-                    "model": gm,
-                })
+            providers.append({
+                "name": f"GEMINI_{primary_gemini.upper().replace('-', '_').replace('.', '_')}",
+                "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+                "api_key": gemini_key,
+                "model": primary_gemini,
+            })
 
         # 3. Cerebras Cloud Key
         cerebras_key = custom_api_key if (custom_api_key and custom_api_key.startswith("csk-")) else os.environ.get("CEREBRAS_API_KEY")
@@ -532,33 +524,25 @@ class KrishiSaathiAssistant:
         if not providers:
             return None
 
-        base_prompt = SYSTEM_PROMPTS.get(lang, SYSTEM_PROMPTS["ENGLISH"])
-        system_instruction = (
-            f"{base_prompt}\n\n"
-            "CRITICAL INSTRUCTIONS FOR TVS KRISHI SAATHI:\n"
-            "1. You are a warm, helpful rural lending expert for TVS Credit. Talk naturally and conversationally.\n"
-            "2. Whenever discussing loan amounts, interest rates, credit scores, or satellite metrics, extract numbers STRICTLY from <BORROWER_PROFILE>.\n"
-            "3. If <BORROWER_PROFILE> is empty or has no active application, DO NOT invent an applicant name, credit score, or loan amount. Politely explain that no application is selected and invite the user to check their eligibility in the Smart Sanction Cockpit.\n"
-            "4. Whenever discussing loan products, harvest EMIs, or cloud removal, rely on <VERIFIED_POLICY_KNOWLEDGE>.\n"
-            "5. Never invent or speculate on financial numbers. If info is missing, politely suggest speaking to the field officer.\n"
-            f"6. Respond in {lang}.\n\n"
-            f"<BORROWER_PROFILE>\n{json.dumps(ctx, indent=2, ensure_ascii=False)}\n</BORROWER_PROFILE>\n\n"
-            f"<VERIFIED_POLICY_KNOWLEDGE>\n{json.dumps([item.get('data', {}) for item in retrieved], indent=2, ensure_ascii=False)}\n</VERIFIED_POLICY_KNOWLEDGE>"
-        )
-
         messages = [{"role": "system", "content": system_instruction}]
         for turn in history[-4:]:
             messages.append({"role": turn["role"], "content": turn["content"]})
         messages.append({"role": "user", "content": condensed_query})
 
         for p in providers:
+            elapsed = time.monotonic() - start_time
+            remaining = MAX_TOTAL_TIMEOUT - elapsed
+            if remaining < 0.5:
+                break
+
+            call_timeout = min(2.0, remaining)
             try:
-                client = OpenAI(base_url=p["base_url"], api_key=p["api_key"], timeout=4.0)
+                client = OpenAI(base_url=p["base_url"], api_key=p["api_key"], timeout=call_timeout)
                 completion = client.chat.completions.create(
                     model=p["model"],
                     messages=messages,
                     temperature=0.3,
-                    max_tokens=250,
+                    max_tokens=220,
                 )
                 text = completion.choices[0].message.content.strip()
                 if text:
