@@ -20,12 +20,15 @@ export interface SidebarToggleIconProps {
   strokeWidth?: number;
   /** Extra classes applied to the `<svg>` element. */
   className?: string;
+  /** Inner cutout fill color. Defaults to 'var(--background, #ffffff)'. */
+  panelColor?: string;
 }
 
 export function SidebarToggleIcon({
   isOpen,
   strokeWidth = 1.5,
   className,
+  panelColor = "var(--background, #ffffff)",
 }: SidebarToggleIconProps) {
   return (
     <svg
@@ -50,7 +53,7 @@ export function SidebarToggleIcon({
       <motion.path
         d={isOpen ? PANEL_OPEN : PANEL_CLOSED}
         animate={{ d: isOpen ? PANEL_OPEN : PANEL_CLOSED }}
-        style={{ fill: "var(--background, #ffffff)" }}
+        style={{ fill: panelColor }}
         transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
       />
     </svg>

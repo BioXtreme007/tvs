@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   LayoutDashboard,
   ShieldCheck,
@@ -66,15 +66,28 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth <= 800 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 800);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const toggleSidebar = () => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 800) {
+    if (isMobile) {
       setMenu((prev) => !prev);
     } else {
       setSidebarCollapsed((prev) => !prev);
     }
   };
 
-  const isSidebarOpen = typeof window !== 'undefined' && window.innerWidth <= 800 ? menu : !sidebarCollapsed;
+  const isSidebarOpen = isMobile ? menu : !sidebarCollapsed;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -318,12 +331,22 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
 
       {/* Sidebar Rail: Preserved exactly for full navigation */}
       <aside className={`admin-rail ${sidebarCollapsed ? 'collapsed ' : ''}${menu ? 'is-open' : ''}`}>
-        <button className="portal-brand" onClick={onNavigateHome}>
-          <span className="portal-mark">
-            <Logo width={22} height={22} fill="#7451d1" />
-          </span>
-          <span>GEOKISAAN<small>AGRI INTELLIGENCE</small></span>
-        </button>
+        <div className="rail-header">
+          <button className="portal-brand" onClick={onNavigateHome}>
+            <span className="portal-mark">
+              <Logo width={22} height={22} fill="#7451d1" />
+            </span>
+            <span>GEOKISAAN<small>AGRI INTELLIGENCE</small></span>
+          </button>
+          <button
+            className="rail-nav-toggle"
+            onClick={toggleSidebar}
+            aria-label="Collapse navigation sidebar"
+            title="Collapse navigation sidebar"
+          >
+            <SidebarToggleIcon isOpen={true} className="w-5 h-5 text-slate-700" panelColor="#ffffff" />
+          </button>
+        </div>
         <div className="rail-workspace">
           <span className="status-dot" />Decision cockpit
           <small>{user.branch || 'Bhopal Central Hub'}</small>
@@ -367,14 +390,23 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       <div className={`admin-body ${sidebarCollapsed ? 'rail-collapsed' : ''}`}>
         <header className="admin-topbar">
           <div className="flex items-center gap-3">
-            <button
-              className="rail-toggle"
-              onClick={toggleSidebar}
-              aria-label={isSidebarOpen ? 'Collapse navigation sidebar' : 'Expand navigation sidebar'}
-              title={isSidebarOpen ? 'Collapse navigation sidebar' : 'Expand navigation sidebar'}
-            >
-              <SidebarToggleIcon isOpen={isSidebarOpen} className="w-5 h-5 text-slate-700" />
-            </button>
+            <AnimatePresence>
+              {!isSidebarOpen && (
+                <motion.button
+                  key="topbar-toggle"
+                  initial={{ opacity: 0, scale: 0.9, x: -6 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, x: -6 }}
+                  transition={{ duration: 0.15 }}
+                  className="rail-toggle"
+                  onClick={toggleSidebar}
+                  aria-label="Expand navigation sidebar"
+                  title="Expand navigation sidebar"
+                >
+                  <SidebarToggleIcon isOpen={false} className="w-5 h-5 text-slate-700" panelColor="#ffffff" />
+                </motion.button>
+              )}
+            </AnimatePresence>
             <button
               onClick={onNavigateHome}
               className="flex items-center gap-2 cursor-pointer bg-transparent border-0 p-0 text-left"

@@ -10,3 +10,61 @@
 @media(max-width:800px){.admin-rail{transform:translateX(-100%);width:230px;transition:transform .2s}.admin-rail.is-open{transform:translateX(0)}.admin-body{margin-left:0!important}.admin-topbar{height:65px}.admin-topbar>div{gap:10px}.admin-topbar .dataset-chip{display:none}.admin-content{padding:26px 18px}.admin-overview-grid{grid-template-columns:1.3fr 1fr}.admin-metrics{grid-template-columns:repeat(2,1fr)}.portal-page-heading p{max-width:360px}.farmer-header{padding:16px 22px}.farmer-header nav{display:none}.farmer-content{padding:28px 22px}.farmer-service-badge{display:none}.farmer-voice-feature{grid-template-columns:1.3fr 1fr}.saathi-copy{padding:30px}.saathi-copy h2{font-size:36px}.saathi-halo{width:160px;height:160px}.saathi-halo img{width:110px;height:110px;border-radius:25px}.saathi-sample{max-width:230px}.saathi-sample button{font-size:10px}.saathi-mode{display:none}.farmer-service-grid{gap:12px}.farmer-service{padding:21px}.farmer-service h3{font-size:20px}.farmer-details-grid{grid-template-columns:1.2fr 1fr;gap:12px}.farmer-help{padding:25px 14px}.portal-card-heading{padding:22px}.farmer-service p{font-size:11px}.cockpit-tools .alert-list{grid-template-columns:1fr}}
 @media(max-width:580px){.portal-page-heading{display:block}.portal-page-heading>.portal-btn{margin-top:18px}.portal-page-heading h1{font-size:28px}.admin-overview-grid{grid-template-columns:1fr}.district-bars button{grid-template-columns:120px 1fr 30px}.risk-brief h2{font-size:29px}.risk-brief{padding:26px}.metric-tile strong{font-size:29px}.metric-tile>div{font-size:10px}.portal-card-heading{align-items:start;flex-direction:column;gap:15px}.portal-search{width:100%}.portal-search input{width:100%}.assessment-empty{padding:22px}.assessment-empty .portal-btn{margin-left:0;width:100%}.assessment-empty>div{flex:1}.assessment-empty p{font-size:11px}.portal-footer{font-size:8px;flex-wrap:wrap}.admin-topbar{font-size:10px;padding:0 16px}.breadcrumb-divider{margin:0 8px}.admin-topbar .portal-icon{display:none}.cockpit-tools .form-grid{grid-template-columns:1fr}.cockpit-tools .table-toolbar{flex-direction:column}.cockpit-tools .toolbar-group{flex-wrap:wrap}.cockpit-tools .detail-panel .detail-grid{grid-template-columns:1fr}.cockpit-tools .alert-card-heading{flex-wrap:wrap}.cockpit-tools .button-row{flex-wrap:wrap}.farmer-header{padding:14px 18px}.farmer-header .portal-brand{font-size:11px}.farmer-header .portal-brand small{font-size:6px}.farmer-header .portal-mark{width:34px;height:34px}.farmer-header .portal-btn{font-size:10px!important;padding:9px 12px;min-height:38px}.farmer-content{padding:26px 16px 15px}.farmer-greeting h1{font-size:28px;max-width:320px}.farmer-greeting p{font-size:12px}.farmer-voice-feature{display:flex;flex-direction:column;border-radius:19px}.saathi-copy{padding:28px 26px}.saathi-copy h2{font-size:38px}.saathi-copy p{font-size:12px}.saathi-copy .portal-btn{width:100%}.saathi-copy .portal-actions{display:block}.saathi-visual{padding:4px 26px 26px;flex-direction:row;gap:15px;justify-content:start}.saathi-halo{width:64px;height:64px;flex-shrink:0;border:0;box-shadow:none}.saathi-halo:before{display:none}.saathi-halo img{width:58px;height:58px;border-radius:16px}.saathi-sample{margin:0;max-width:none;padding:10px;flex:1}.saathi-sample button{font-size:10px;gap:7px}.saathi-quick{display:flex;flex-direction:column}.saathi-quick button{border-right:0;border-bottom:1px solid #ffffff10;padding:15px 26px;font-size:11px}.farmer-section-heading{margin-top:30px}.farmer-section-heading h2{font-size:26px;max-width:320px}.farmer-service-grid,.farmer-details-grid{grid-template-columns:1fr;gap:16px}.farmer-service{padding:25px}.farmer-service h3{font-size:24px}.farmer-service p{font-size:12px;min-height:0;max-width:330px}.service-icon{margin-bottom:18px}.service-status{margin:12px 0 20px}.farmer-help{padding:20px 8px}.farmer-documents .portal-card-heading{flex-direction:row}.farmer-documents h2{font-size:21px}.farmer-check{margin:0 20px;gap:10px}.checklist-note{padding:17px 20px}.farmer-check small{font-size:10px}.farmer-content>.portal-footer{margin-top:15px}.farmer-service:hover{transform:none}}
 @media(prefers-reduced-motion:reduce){.portal-ui *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Sidebar Rail Header & Persistent Toggle System */
+.rail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.rail-nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 10px;
+  border: 1px solid #d9dfea;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.rail-nav-toggle:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.14);
+}
+
+.rail-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid #d9dfea;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.rail-toggle:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.14);
+}
