@@ -83,15 +83,16 @@ export const Hero: React.FC = () => {
           </span>
           <br />
           {/* Line 2 */}
-          <span className="inline-flex items-center justify-center gap-2.5 flex-wrap">
-            <span>Repayments that fit its season</span>
+          <span className="inline-flex items-center justify-center gap-2 flex-nowrap whitespace-nowrap">
+            <span className="whitespace-nowrap">Repayments that fit its season</span>
             <ShieldCheck
               size={30}
-              className="hidden sm:inline text-[#7342E2] shrink-0"
+              className="hidden sm:inline-block text-[#7342E2] shrink-0 flex-none"
               style={{
                 verticalAlign: 'middle',
                 position: 'relative',
                 top: '-2px',
+                minWidth: '30px',
               }}
               strokeWidth={2.4}
             />
