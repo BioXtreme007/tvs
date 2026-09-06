@@ -69,7 +69,7 @@ export const Hero: React.FC = () => {
         >
           {/* Line 1 */}
           <span className="inline-flex items-center justify-center gap-2.5 flex-wrap">
-            <span>Credit that sees your farm.</span>
+            <span>Credit that sees your farm</span>
             <Sprout
               size={32}
               className="hidden sm:inline text-emerald-600 shrink-0"
@@ -84,7 +84,7 @@ export const Hero: React.FC = () => {
           <br />
           {/* Line 2 */}
           <span className="inline-flex items-center justify-center gap-2.5 flex-wrap">
-            <span>Repayments that fit its season.</span>
+            <span>Repayments that fit its season</span>
             <ShieldCheck
               size={30}
               className="hidden sm:inline text-[#7342E2] shrink-0"
