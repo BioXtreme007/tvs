@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || '';
+
 export async function api<T = any>(path: string, options: RequestInit = {}): Promise<T> {
   const controller = new AbortController();
   const abort = () => controller.abort();
@@ -8,7 +10,7 @@ export async function api<T = any>(path: string, options: RequestInit = {}): Pro
   const timer = window.setTimeout(abort, 45000);
   try {
     const token = localStorage.getItem('tvs_auth_token');
-    const response = await fetch('/api/v1' + path, {
+    const response = await fetch(API_BASE_URL + '/api/v1' + path, {
       ...options, signal: controller.signal, credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}), ...options.headers },
     });

@@ -12,13 +12,11 @@ import {
   ChevronDown,
   User,
   LogOut,
-  Radio,
 } from 'lucide-react';
 import Logo from './Logo';
 import { UserProfileSidebar, NavItem } from './ui/menu';
 import { useResource, money, number } from '../api';
 import FarmerPortal from './FarmerPortal';
-import SaathiVoiceSession from './SaathiVoiceSession';
 import '../portals.css';
 
 interface Props {
@@ -38,8 +36,6 @@ const documents = [
 
 export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props) {
   const [showDetailedPortal, setShowDetailedPortal] = useState(false);
-  const [liveVoiceOpen, setLiveVoiceOpen] = useState(false);
-  const [voiceLanguage, setVoiceLanguage] = useState('HINDI');
   const loanResource = useResource<any>('/farmer/my-loan');
   const loan = loanResource.data;
   const [checked, setChecked] = useState<string[]>([]);
@@ -330,20 +326,16 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             <div className="portal-actions flex flex-wrap items-center gap-3">
               <button
                 className="portal-btn light cursor-pointer bg-[#0B2545] text-white hover:bg-[#133863] border-0 shadow-md flex items-center gap-2"
-                onClick={() => setLiveVoiceOpen(true)}
+                onClick={() => ask()}
               >
-                <Radio size={18} className="animate-pulse text-emerald-400" />
-                <span>Live Voice Call (Gemini Live)</span>
+                <MessageCircle size={18} />
+                <span>Ask Krishi Saathi</span>
                 <ArrowUpRight size={18} />
               </button>
-              <button className="portal-btn light cursor-pointer" onClick={() => ask()}>
-                <MessageCircle size={18} />
-                <span>Text / Audio Chat</span>
-              </button>
               <span className="saathi-mode">
-                Continuous spoken dialogue
+                Voice &amp; Vernacular AI
                 <br />
-                Interrupt mid-sentence anytime
+                Hindi, English &amp; regional dialects
               </span>
             </div>
           </div>
@@ -593,19 +585,6 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
           <span>BioXtreme · Built for rural progress · TVS Credit</span>
         </footer>
       </main>
-
-      <SaathiVoiceSession
-        isOpen={liveVoiceOpen}
-        onClose={() => setLiveVoiceOpen(false)}
-        language={voiceLanguage}
-        onLanguageChange={setVoiceLanguage}
-        applicationId={loan?.application_id}
-        applicantName={loan?.applicant_name || 'Farmer'}
-        onSwitchToTextChat={() => {
-          setLiveVoiceOpen(false);
-          ask();
-        }}
-      />
     </div>
   );
 }
