@@ -28,10 +28,12 @@ import {
   Check,
   Download,
   Percent,
+  Radio,
 } from 'lucide-react';
 import Logo from './Logo';
 import SidebarToggleIcon from './SidebarToggleIcon';
-import { MotionAccordion } from './MotionAccordion';
+import { MotionAccordion, MotionAccordionItem } from './MotionAccordion';
+import { AIMessage } from './AIMessage';
 import { UserProfileSidebar, NavItem } from './ui/menu';
 import { useResource, number, money, humanize, download } from '../api';
 import { Portfolio, Underwriting, Alerts, StressTest, PortfolioData } from './WorkspaceViews';
@@ -52,15 +54,27 @@ const tabs = [
   ['whatif', 'Stress testing', SlidersHorizontal],
 ] as const;
 
-const ask = (query = '') => window.dispatchEvent(new CustomEvent('open-krishi-saathi', { detail: { query } }));
+const ask = (query = '', voiceMode = false) =>
+  window.dispatchEvent(new CustomEvent('open-krishi-saathi', { detail: { query, voiceMode } }));
 
 export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContext }: Props) {
   const [tab, setTab] = useState('overview');
   const [menu, setMenu] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [search, setSearch] = useState('');
   const [districtSearch, setDistrictSearch] = useState('');
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const toggleSidebar = () => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 800) {
+      setMenu((prev) => !prev);
+    } else {
+      setSidebarCollapsed((prev) => !prev);
+    }
+  };
+
+  const isSidebarOpen = typeof window !== 'undefined' && window.innerWidth <= 800 ? menu : !sidebarCollapsed;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -186,6 +200,112 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
   ];
 
+  const cockpitGovernanceItems: MotionAccordionItem[] = [
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 shadow-xs" />
+          <span>Sentinel-2 Kharif Monsoon CloudGap Inpainting &amp; Spectral Telemetry</span>
+          <span className="ml-auto text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            Active Telemetry · 10m Ground Res
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            During peak monsoon cycles in Chhattisgarh (July–September), persistent 80–95% cloud cover blinds optical satellites. TVS Credit&apos;s dual-branch deep inpainting network reconstructs occluded pixels using multi-temporal Sentinel-2 revisits and synthetic radar correlations (Sentinel-1 SAR VV/VH).
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+            <div>
+              <span className="text-[10px] text-slate-400 block uppercase font-mono">NDVI Vegetation</span>
+              <strong className="text-slate-800 text-xs font-semibold">0.68 (Healthy Kharif Canopy)</strong>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block uppercase font-mono">NDRE Chlorophyll</span>
+              <strong className="text-slate-800 text-xs font-semibold">0.34 (Optimal Nitrogen)</strong>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block uppercase font-mono">NDWI Moisture</span>
+              <strong className="text-slate-800 text-xs font-semibold">+0.22 (Adequate Soil Hydration)</strong>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 shadow-xs" />
+          <span>Two-Tier H3 Hexagonal Cadastral Anti-Fraud &amp; Overlap Lockout</span>
+          <span className="ml-auto text-[10px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+            Resolution 8–9 · Zero Collateral Overlap
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            Every applicant Khasra parcel is geocoded and indexed into hierarchical Uber H3 hexagons. The multi-tiered verification checks against registered state revenue records (Bhuiyan CG) and existing TVS Credit encumbrances.
+          </p>
+          <ul className="list-disc list-inside space-y-1 text-slate-500">
+            <li><strong>Tier-1 Spatial Index:</strong> Locks out applications with duplicate boundary intersection &gt; 5% across non-related entities.</li>
+            <li><strong>Tier-2 Geo-Temporal Verification:</strong> Validates farmer identity against village patwari registry and geo-tagged soil sample records.</li>
+          </ul>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0 shadow-xs" />
+          <span>SHAP Multi-Factor Credit Attribution &amp; Model Explainability</span>
+          <span className="ml-auto text-[10px] font-mono text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
+            Additive TreeSHAP · Verifiable Compliance
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            To prevent black-box bias and ensure RBI compliance, all underwriting decisions are decomposed into SHAP (SHapley Additive exPlanations) attribution vectors. Officers inspect positive drivers (+NDVI, +Bureau Tenure, +Banking Inflow) alongside dampeners (-High Incurred Leverage).
+          </p>
+          <p className="text-slate-500">
+            Every sanction letter includes transparent factor weightings so borrowers and field officers understand exact rationale for sanctioned loan-to-value caps.
+          </p>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 shadow-xs" />
+          <span>Seasonally Aligned Harvest-Linked Repayment &amp; Climate Moratoriums</span>
+          <span className="ml-auto text-[10px] font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+            Cashflow Synchronized · Kharif / Rabi Cycles
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            Traditional monthly EMI structures lead to seasonal default in agrarian communities where cashflows materialize exclusively post-harvest. The engine dynamically configures balloon schedules:
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+            <div className="bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/80">
+              <strong className="text-amber-900 block text-xs font-bold">Growing Season Moratorium</strong>
+              <span className="text-[11px] text-amber-700">June–October: Zero principal servicing during high-outlay sowing and fertilizing.</span>
+            </div>
+            <div className="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-200/80">
+              <strong className="text-emerald-900 block text-xs font-bold">Post-Harvest Mandi Liquidation</strong>
+              <span className="text-[11px] text-emerald-700">November–December: 60% annualized repayment matching mandi procurement payouts.</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="portal-ui admin-shell min-h-screen bg-[#f3f4f8]">
       {menu && (
@@ -197,7 +317,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       )}
 
       {/* Sidebar Rail: Preserved exactly for full navigation */}
-      <aside className={'admin-rail ' + (menu ? 'is-open' : '')}>
+      <aside className={`admin-rail ${sidebarCollapsed ? 'collapsed ' : ''}${menu ? 'is-open' : ''}`}>
         <button className="portal-brand" onClick={onNavigateHome}>
           <span className="portal-mark">
             <Logo width={22} height={22} fill="#7451d1" />
@@ -244,15 +364,16 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       </aside>
 
       {/* Admin Body with Topbar: Breadcrumbs + TVS Credit Icon + Website Button + Profile Dropdown */}
-      <div className="admin-body">
+      <div className={`admin-body ${sidebarCollapsed ? 'rail-collapsed' : ''}`}>
         <header className="admin-topbar">
           <div className="flex items-center gap-3">
             <button
               className="rail-toggle"
-              onClick={() => setMenu(!menu)}
-              aria-label="Toggle navigation"
+              onClick={toggleSidebar}
+              aria-label={isSidebarOpen ? 'Collapse navigation sidebar' : 'Expand navigation sidebar'}
+              title={isSidebarOpen ? 'Collapse navigation sidebar' : 'Expand navigation sidebar'}
             >
-              <SidebarToggleIcon isOpen={menu} className="w-5 h-5 text-slate-700" />
+              <SidebarToggleIcon isOpen={isSidebarOpen} className="w-5 h-5 text-slate-700" />
             </button>
             <button
               onClick={onNavigateHome}
@@ -416,6 +537,78 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
                 </section>
               </div>
 
+              {/* Krishi Saathi Live Underwriting Copilot Stream with AIMessage */}
+              <section className="portal-card p-6 bg-gradient-to-br from-white via-slate-50/60 to-indigo-50/20 border border-slate-200/80 rounded-2xl shadow-xs mb-6">
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 flex-wrap gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#0B2545] text-emerald-400 flex items-center justify-center shadow-xs">
+                      <Sparkles size={18} />
+                    </div>
+                    <div>
+                      <span className="portal-eyebrow mb-0">MULTIMODAL AI COPILOT</span>
+                      <h3 className="text-base font-bold text-[#0B2545]">Krishi Saathi Underwriting Intelligence Stream</h3>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => ask('What is the current portfolio risk and recommended action for Bastar?')}
+                      className="portal-btn secondary py-1.5 px-3 text-xs flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <span>Ask Bastar Risk</span>
+                      <ArrowRight size={13} />
+                    </button>
+                    <button
+                      onClick={() => ask('', true)}
+                      className="portal-btn primary py-1.5 px-3 text-xs flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Radio size={13} className="text-emerald-300 animate-pulse" />
+                      <span>1:1 Voice Consultation</span>
+                    </button>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <AIMessage
+                    from="assistant"
+                    timestamp="Real-time Telemetry Advisory"
+                    copyText="Multi-satellite Sentinel-2 telemetry indicates 23.4% NDVI recovery post-inpainting across Durg and Raipur clusters. Recommend approving applicant Rajeshwar Sahu (₹3.4L sanction cap) with harvest-linked quarterly EMI schedule."
+                    source="Sentinel-2 Inpainting + CIBIL + TVS Decision Engine"
+                    evidence={[
+                      "NDVI 0.68 (+14% vs 5yr normal)",
+                      "CIBIL 742 (Prime Tier)",
+                      "H3 Hexagon 882681e031fffff Verified Unencumbered",
+                    ]}
+                    action={{
+                      type: 'NAVIGATE',
+                      target: '#underwriting',
+                      label: '⚡ Open & Review Rajeshwar Sahu in Sanction Cockpit',
+                      prefill: {
+                        applicant_name: 'Rajeshwar Sahu',
+                        district: 'Raipur',
+                        village: 'Abhanpur',
+                        khasra_no: '142/1',
+                        land_acres: 4.5,
+                        crop_type: 'PADDY_KHARIF',
+                        requested_amount_inr: 340000,
+                        requested_loan_amount_inr: 340000,
+                        requested_tenure_months: 36,
+                        bureau_cibil_score: 742,
+                        annual_banking_turnover_inr: 480000,
+                        underwriting_verdict: 'APPROVE',
+                      },
+                    }}
+                    onActionClick={(action) =>
+                      openInCockpit({
+                        ...action.prefill,
+                        max_sanction_amount_inr: 340000,
+                        underwriting_decision: 'APPROVE',
+                      })
+                    }
+                  >
+                    Multi-satellite Sentinel-2 telemetry indicates <strong className="text-emerald-800 font-semibold">23.4% NDVI recovery</strong> post-inpainting across Durg and Raipur clusters. Recommend approving applicant <strong className="text-[#0B2545] font-semibold">Rajeshwar Sahu</strong> (₹3,40,000 sanction cap) with harvest-synchronized quarterly EMI schedule. Cadastral boundary anti-fraud checks confirm zero duplicate claims.
+                  </AIMessage>
+                </div>
+              </section>
+
               {/* Recent Assessments Table */}
               <section className="portal-card">
                 <div className="portal-card-heading">
@@ -493,6 +686,20 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
                     </button>
                   </div>
                 )}
+              </section>
+
+              {/* Decision Intelligence & Multimodal Safeguards Disclosures with MotionAccordion */}
+              <section className="portal-card p-6 bg-white border border-slate-200/80 rounded-2xl shadow-xs mt-6 mb-6">
+                <div className="mb-4">
+                  <span className="portal-eyebrow">MODEL EXPLAINABILITY &amp; GOVERNANCE</span>
+                  <h2 className="text-xl font-bold text-[#0B2545]">
+                    TVS Credit Decision Intelligence &amp; Multimodal Safeguards Disclosures
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Interactive architectural specifications and regulatory safeguards governing the autonomous underwriting engine.
+                  </p>
+                </div>
+                <MotionAccordion items={cockpitGovernanceItems} gap={12} />
               </section>
 
               {/* Assessment Detail Dossier Modal with MotionAccordion */}

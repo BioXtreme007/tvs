@@ -633,9 +633,13 @@ export default function Assistant({
         </div>
 
         {/* Tab Selector: Chat vs 1:1 Voice Call - Wrap-Proof Segmented Control */}
-        <div className="shrink-0 flex items-center bg-slate-200/90 p-1 rounded-xl shadow-inner border border-slate-300/60 text-xs font-semibold whitespace-nowrap">
+        <div
+          className="shrink-0 flex items-center bg-slate-200/90 p-1 rounded-xl shadow-inner border border-slate-300/60 text-xs font-semibold whitespace-nowrap"
+          style={{ whiteSpace: 'nowrap', flexShrink: 0 }}
+        >
           <button
             type="button"
+            style={{ whiteSpace: 'nowrap', minWidth: 'fit-content', flexShrink: 0 }}
             className={`whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               mode === 'chat'
                 ? 'bg-white text-slate-900 shadow-sm'
@@ -648,10 +652,11 @@ export default function Assistant({
             }}
           >
             <MessageSquare size={13} className={mode === 'chat' ? 'text-[#0B2545]' : 'text-slate-500'} />
-            <span className="whitespace-nowrap">Chat</span>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>Chat</span>
           </button>
           <button
             type="button"
+            style={{ whiteSpace: 'nowrap', minWidth: 'fit-content', flexShrink: 0 }}
             className={`whitespace-nowrap shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               mode === 'call'
                 ? 'bg-[#0B2545] text-white shadow-sm ring-1 ring-emerald-400/40'
@@ -667,7 +672,7 @@ export default function Assistant({
             }}
           >
             <Radio size={13} className={mode === 'call' ? 'text-emerald-400 animate-pulse' : 'text-slate-500'} />
-            <span className="whitespace-nowrap">1:1 Call</span>
+            <span style={{ whiteSpace: 'nowrap', display: 'inline-block' }}>1:1&nbsp;Call</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
             <span className="text-[9.5px] px-1 py-0.2 rounded bg-emerald-400/20 text-emerald-300 font-mono uppercase font-bold tracking-wider ml-0.5">
               Live
