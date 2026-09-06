@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import Logo from './Logo';
 import { UserProfileSidebar, NavItem } from './ui/menu';
+import { useResource, money, number } from '../api';
+import FarmerPortal from './FarmerPortal';
 import '../portals.css';
 
 interface Props {
@@ -33,6 +35,9 @@ const documents = [
 ];
 
 export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props) {
+  const [showDetailedPortal, setShowDetailedPortal] = useState(false);
+  const loanResource = useResource<any>('/farmer/my-loan');
+  const loan = loanResource.data;
   const [checked, setChecked] = useState<string[]>([]);
   const [user, setUser] = useState(() => {
     try {
@@ -81,7 +86,17 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
       href: '#farmer',
       badge: 'Active',
       onClick: () => {
+        setShowDetailedPortal(false);
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+    },
+    {
+      icon: <CalendarDays className="w-4 h-4" />,
+      label: 'Live Sanction & Telemetry',
+      href: '#farmer-sanction',
+      badge: loan ? 'Sanctioned' : 'Live Data',
+      onClick: () => {
+        setShowDetailedPortal(true);
       },
     },
     {
@@ -112,6 +127,15 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
     },
   ];
 
+  if (showDetailedPortal) {
+    return (
+      <FarmerPortal
+        onBackToCockpit={() => setShowDetailedPortal(false)}
+        onOpenSignIn={onOpenSignIn}
+      />
+    );
+  }
+
   return (
     <div className="portal-ui farmer-shell min-h-screen bg-[#EAE1DF] text-[#192837]">
       {/* Top Navigation Bar: Identical structure, Logo, and Anchor Styling to Landing Page Navbar */}
@@ -126,7 +150,7 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             <Logo />
           </button>
 
-          {/* Center: 3 Anchor Links matching landing page nav font, weight, and hover */}
+          {/* Center: Anchor Links matching landing page nav font, weight, and hover */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8 flex-shrink-0" aria-label="Farmer navigation">
             <button
               onClick={() => scroll('farmer-assistant')}
@@ -145,6 +169,13 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
               className="text-sm font-medium transition-opacity hover:opacity-70 cursor-pointer text-[#192837] bg-transparent border-0 p-0"
             >
               Documents
+            </button>
+            <button
+              onClick={() => setShowDetailedPortal(true)}
+              className="text-xs font-bold px-3 py-1.5 rounded-full bg-[#0B2545] hover:bg-[#133863] text-white transition-all cursor-pointer shadow-xs flex items-center gap-1.5"
+            >
+              <span>Sanction & Telemetry</span>
+              <ArrowUpRight size={13} />
             </button>
           </nav>
 
@@ -241,6 +272,38 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
           </div>
         </div>
 
+        {/* Live Active Sanction Banner from SQLite database */}
+        {loan && (
+          <div className="mb-8 p-5 rounded-3xl bg-gradient-to-r from-[#0B2545] via-[#133863] to-[#0E4B5B] text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/15">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-400 text-slate-950">
+                  {loan.status === 'APPROVED' ? 'Loan Sanctioned (Pre-Approved)' : loan.status}
+                </span>
+                <span className="text-xs text-slate-300 font-medium">
+                  Ref: {loan.application_id} · {loan.village}, {loan.district}
+                </span>
+              </div>
+              <div className="text-xl sm:text-2xl font-black tracking-tight">
+                {money(loan.sanctioned_amount_inr)}{' '}
+                <span className="text-xs sm:text-sm font-semibold text-emerald-300">
+                  at {loan.interest_rate_pct}% Subsidized PSL ROI
+                </span>
+              </div>
+              <p className="text-xs text-slate-200">
+                {loan.tractor_model} · Plot {loan.khasra_no} ({loan.land_acres} Acres, {loan.crop_type}) · Sentinel-2 NDVI {loan.scorecard_breakdown?.satellite_ndvi_mean ?? 0.68} Healthy Canopy
+              </p>
+            </div>
+            <button
+              onClick={() => setShowDetailedPortal(true)}
+              className="px-4 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-md cursor-pointer shrink-0"
+            >
+              <span>Launch Sanction & Telemetry Cockpit</span>
+              <ArrowRight size={15} />
+            </button>
+          </div>
+        )}
+
         {/* Krishi Saathi Voice & Guidance Feature Card */}
         <section
           className="farmer-voice-feature relative w-full rounded-3xl overflow-hidden shadow-xl mb-12 scroll-mt-24"
@@ -327,19 +390,25 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             </span>
             <span className="service-number font-black">01</span>
             <h3 style={{ fontFamily: 'var(--font-heading)' }}>Your application</h3>
-            <p>Start with your details and understand what a lending officer will need.</p>
+            <p>
+              {loan
+                ? `${loan.tractor_model} · Khasra ${loan.khasra_no} (${loan.land_acres} Acres, ${loan.crop_type})`
+                : 'Start with your details and understand what a lending officer will need.'}
+            </p>
             <span className="service-status font-medium">
-              {user ? 'Account signed in' : 'Get started'}
+              {loan ? `${money(loan.sanctioned_amount_inr)} Sanctioned (${loan.status})` : user ? 'Account signed in' : 'Get started'}
             </span>
             <button
               className="portal-link cursor-pointer"
               onClick={
-                user
+                loan
+                  ? () => setShowDetailedPortal(true)
+                  : user
                   ? () => ask('What are the next steps to prepare my agricultural loan application?')
                   : onOpenSignIn
               }
             >
-              <span>{user ? 'Plan my next steps' : 'Sign in to begin'}</span>
+              <span>{loan ? 'View Sanction Letter' : user ? 'Plan my next steps' : 'Sign in to begin'}</span>
               <ArrowRight size={17} />
             </button>
           </article>
@@ -350,17 +419,26 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             </span>
             <span className="service-number font-black">02</span>
             <h3 style={{ fontFamily: 'var(--font-heading)' }}>Your repayments</h3>
-            <p>Learn how a repayment schedule can align with your harvest and seasonal income.</p>
-            <span className="service-status font-medium">No repayment account linked</span>
+            <p>
+              {loan
+                ? `Harvest EMI: Sowing ₹${number(loan.repayment_structure?.sowing_lean_inr ?? 1500)}/mo | Harvest ₹${number(loan.repayment_structure?.harvest_bullet_inr ?? 55000)}.`
+                : 'Learn how a repayment schedule can align with your harvest and seasonal income.'}
+            </p>
+            <span className="service-status font-medium">
+              {loan ? `Next Due: ${loan.repayment_structure?.next_due_date || '10 Oct 2024'}` : 'No repayment account linked'}
+            </span>
             <button
               className="portal-link cursor-pointer"
-              onClick={() =>
-                ask(
-                  'Explain how harvest-based repayments work, and what I should check before agreeing to a loan.'
-                )
+              onClick={
+                loan
+                  ? () => setShowDetailedPortal(true)
+                  : () =>
+                      ask(
+                        'Explain how harvest-based repayments work, and what I should check before agreeing to a loan.'
+                      )
               }
             >
-              <span>Understand my options</span>
+              <span>{loan ? 'View Harvest Schedule' : 'Understand my options'}</span>
               <ArrowRight size={17} />
             </button>
           </article>
@@ -371,17 +449,26 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             </span>
             <span className="service-number font-black">03</span>
             <h3 style={{ fontFamily: 'var(--font-heading)' }}>Your farm insights</h3>
-            <p>Find out how satellite records, rainfall and crop health inform an assessment.</p>
-            <span className="service-status font-medium">Farm report not linked</span>
+            <p>
+              {loan
+                ? `Sentinel-2 NDVI ${loan.scorecard_breakdown?.satellite_ndvi_mean ?? 0.68} · 99.4% CloudGap monsoon penetration in ${loan.district}.`
+                : 'Find out how satellite records, rainfall and crop health inform an assessment.'}
+            </p>
+            <span className="service-status font-medium">
+              {loan ? `Cadastral Plot Verified (${loan.khasra_no})` : 'Farm report not linked'}
+            </span>
             <button
               className="portal-link cursor-pointer"
-              onClick={() =>
-                ask(
-                  'Explain the land, rainfall and crop health information used in an agricultural credit assessment.'
-                )
+              onClick={
+                loan
+                  ? () => setShowDetailedPortal(true)
+                  : () =>
+                      ask(
+                        'Explain the land, rainfall and crop health information used in an agricultural credit assessment.'
+                      )
               }
             >
-              <span>Explore farm insights</span>
+              <span>{loan ? 'View Satellite Telemetry' : 'Explore farm insights'}</span>
               <ArrowRight size={17} />
             </button>
           </article>

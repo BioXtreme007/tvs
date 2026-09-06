@@ -23,6 +23,7 @@ import {
   Check,
 } from 'lucide-react';
 import Logo from './Logo';
+import { useResource, money, number } from '../api';
 
 interface FarmerPortalProps {
   onBackToCockpit: () => void;
@@ -30,6 +31,8 @@ interface FarmerPortalProps {
 }
 
 export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onOpenSignIn }) => {
+  const loanResource = useResource<any>('/farmer/my-loan');
+  const loan = loanResource.data;
   const [lang, setLang] = useState<
     'english' | 'hindi' | 'chhattisgarhi' | 'tamil' | 'telugu' | 'marathi' | 'kannada' | 'bengali'
   >('english');
@@ -608,27 +611,41 @@ export const FarmerPortal: React.FC<FarmerPortalProps> = ({ onBackToCockpit, onO
     setShowSanctionDownloadToast(true);
     setTimeout(() => {
       setShowSanctionDownloadToast(false);
-      // Trigger a simulated text file download for the sanction letter
+      const borrowerName = loan?.applicant_name || 'Rajeshwar Sahu';
+      const appId = loan?.application_id || 'TVS-TR-2024-5510';
+      const khasra = loan?.khasra_no || '142/1';
+      const village = loan?.village || 'Raipur';
+      const district = loan?.district || 'Chhattisgarh';
+      const acres = loan?.land_acres || '4.50';
+      const amountInr = loan?.sanctioned_amount_inr ? Number(loan.sanctioned_amount_inr).toLocaleString('en-IN') : '5,50,000';
+      const tractor = loan?.tractor_model || 'TVS 45HP Smart Agriculture Tractor';
+      const roi = loan?.interest_rate_pct || 8.4;
+      const sowingEmi = loan?.repayment_structure?.sowing_lean_inr ? Number(loan.repayment_structure.sowing_lean_inr).toLocaleString('en-IN') : '1,500';
+      const harvestEmi = loan?.repayment_structure?.harvest_bullet_inr ? Number(loan.repayment_structure.harvest_bullet_inr).toLocaleString('en-IN') : '55,000';
+      const ndvi = loan?.scorecard_breakdown?.satellite_ndvi_mean ?? 0.68;
+      const dealership = loan?.dealership || `TVS ${district} Authorized Dealership`;
+
+      // Trigger a real text file download for the sanction letter
       const sanctionText = `=====================================================
 TVS CREDIT SERVICES LIMITED - AGRI-LENDING SANCTION
 =====================================================
-Borrower: Rajeshwar Sahu
-Application Ref: TVS-TR-2024-5510
-Khasra / Plot: 142/1, Raipur, Chhattisgarh (4.50 Acres)
-Sanction Amount: INR 5,50,000 (Five Lakh Fifty Thousand)
-Product: TVS 45HP Smart Agriculture Tractor
-Interest Rate: 8.40% p.a. (Priority Sector Lending PSL)
+Borrower: ${borrowerName}
+Application Ref: ${appId}
+Khasra / Plot: ${khasra}, ${village}, ${district} (${acres} Acres)
+Sanction Amount: INR ${amountInr}
+Product: ${tractor}
+Interest Rate: ${roi}% p.a. (Priority Sector Lending PSL)
 Repayment Structure: Seasonally-Aligned TVS Harvest EMI
-  - Sowing Lean Months (June-Oct): INR 1,500/month
-  - Harvest Bullet Months (Nov-Dec): INR 55,000/bullet
-Verification: Sentinel-2 NDVI 0.68 + CloudGap-CG Verified
-Dealer Delivery: TVS Raipur Authorized Dealership
+  - Sowing Lean Months (June-Oct): INR ${sowingEmi}/month
+  - Harvest Bullet Months (Nov-Dec): INR ${harvestEmi}/bullet
+Verification: Sentinel-2 NDVI ${ndvi} + CloudGap-CG Verified
+Dealer Delivery: ${dealership}
 =====================================================`;
       const blob = new Blob([sanctionText], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'TVS_Credit_Sanction_Letter_Rajeshwar_Sahu.txt';
+      a.download = `TVS_Credit_Sanction_Letter_${borrowerName.replace(/\s+/g, '_')}.txt`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -659,19 +676,21 @@ Dealer Delivery: TVS Raipur Authorized Dealership
                 </span>
               </div>
               <p className="text-xs text-slate-300 font-medium hidden sm:block">
-                {lang === 'english'
-                  ? 'Rajeshwar Sahu · Member ID: TVS-K-8921 (Raipur)'
-                  : lang === 'tamil'
-                  ? 'ராஜேஷ்வர் சாஹு · உறுப்பினர் ID: TVS-K-8921 (ராய்ப்பூர்)'
-                  : lang === 'telugu'
-                  ? 'రాజేశ్వర్ సాహు · సభ్యుని ID: TVS-K-8921 (రాయ్‌పూర్)'
-                  : lang === 'kannada'
-                  ? 'ರಾಜೇಶ್ವರ್ ಸಾಹು · ಸದಸ್ಯ ID: TVS-K-8921 (ರಾಯಪುರ)'
-                  : lang === 'bengali'
-                  ? 'রাজেশ্বর সাহু · সদস্য ID: TVS-K-8921 (রায়পুর)'
-                  : lang === 'marathi'
-                  ? 'राजेश्वर साहू · सदस्य आयडी: TVS-K-8921 (रायपूर)'
-                  : 'राजेश्वर साहू · सदस्य ID: TVS-K-8921 (रायपुर)'}
+                {loan ? `${loan.applicant_name} · Ref: ${loan.application_id || 'TVS-K-8921'} (${loan.village || loan.district})` : (
+                  lang === 'english'
+                    ? 'Rajeshwar Sahu · Member ID: TVS-K-8921 (Raipur)'
+                    : lang === 'tamil'
+                    ? 'ராஜேஷ்வர் சாஹு · உறுப்பினர் ID: TVS-K-8921 (ராய்ப்பூர்)'
+                    : lang === 'telugu'
+                    ? 'రాజేశ్వర్ సాహు · సభ్యుని ID: TVS-K-8921 (రాయ్‌పూర్)'
+                    : lang === 'kannada'
+                    ? 'ರಾಜೇಶ್ವರ್ ಸಾಹು · ಸದಸ್ಯ ID: TVS-K-8921 (ರಾಯಪುರ)'
+                    : lang === 'bengali'
+                    ? 'রাজেশ্বর সাহু · সদস্য ID: TVS-K-8921 (রায়পুর)'
+                    : lang === 'marathi'
+                    ? 'राजेश्वर साहू · सदस्य आयडी: TVS-K-8921 (रायपूर)'
+                    : 'राजेश्वर साहू · सदस्य ID: TVS-K-8921 (रायपुर)'
+                )}
               </p>
             </div>
           </div>
@@ -808,10 +827,10 @@ Dealer Delivery: TVS Raipur Authorized Dealership
                 <span>{t.loanSanctionedTag}</span>
               </div>
               <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-                {t.welcome}
+                {loan ? (lang === 'chhattisgarhi' ? `जय जोहार, ${loan.applicant_name} जी!` : `Welcome, ${loan.applicant_name}!`) : t.welcome}
               </h1>
               <p className="text-sm sm:text-base text-slate-200 font-medium">
-                {t.dealerReady} · <span className="text-emerald-300 font-semibold">{t.tractorModel}</span>
+                {loan?.dealership ? `Ready for delivery at ${loan.dealership}` : t.dealerReady} · <span className="text-emerald-300 font-semibold">{loan?.tractor_model || t.tractorModel}</span>
               </p>
             </div>
 
@@ -822,10 +841,10 @@ Dealer Delivery: TVS Raipur Authorized Dealership
                   {t.sanctionedAmountLabel}
                 </span>
                 <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  {t.loanAmount}
+                  {loan?.sanctioned_amount_inr ? money(loan.sanctioned_amount_inr) : t.loanAmount}
                 </div>
                 <span className="text-[11px] text-emerald-300 font-medium">
-                  {t.subsidizedRate}
+                  {loan?.interest_rate_pct ? `${loan.interest_rate_pct}% Subsidized PSL Interest Rate` : t.subsidizedRate}
                 </span>
               </div>
               <button
@@ -860,11 +879,13 @@ Dealer Delivery: TVS Raipur Authorized Dealership
                     <h2 className="text-base sm:text-lg font-bold text-slate-900">
                       {t.satelliteTitle}
                     </h2>
-                    <p className="text-xs text-slate-500 font-medium">{t.khasraInfo}</p>
+                    <p className="text-xs text-slate-500 font-medium">
+                      {loan ? `Plot ${loan.khasra_no} · ${loan.village}, ${loan.district} (${loan.land_acres} Acres, ${loan.crop_type})` : t.khasraInfo}
+                    </p>
                   </div>
                 </div>
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
-                  {t.ndviScore}
+                  {loan?.scorecard_breakdown?.satellite_ndvi_mean ? `${loan.scorecard_breakdown.satellite_ndvi_mean} - Healthy Green Canopy` : t.ndviScore}
                 </span>
               </div>
 
@@ -872,15 +893,17 @@ Dealer Delivery: TVS Raipur Authorized Dealership
               <div className="mt-5 p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
                 <div className="flex items-center justify-between text-xs text-slate-700 font-semibold">
                   <span>{t.ndviScaleLabel}</span>
-                  <span className="font-mono text-emerald-700 font-bold">0.68 / 1.00</span>
+                  <span className="font-mono text-emerald-700 font-bold">
+                    {loan?.scorecard_breakdown?.satellite_ndvi_mean ?? '0.68'} / 1.00
+                  </span>
                 </div>
 
                 {/* NDVI Color Scale Bar */}
                 <div className="relative w-full h-4 rounded-full overflow-hidden bg-gradient-to-r from-amber-500 via-lime-500 to-emerald-600 shadow-inner">
-                  {/* Indicator marker at 68% */}
+                  {/* Indicator marker */}
                   <div
                     className="absolute top-0 bottom-0 w-2.5 bg-white rounded-full shadow border-2 border-slate-900"
-                    style={{ left: '68%' }}
+                    style={{ left: `${Math.min(Math.max((loan?.scorecard_breakdown?.satellite_ndvi_mean ?? 0.68) * 100, 5), 95)}%` }}
                   />
                 </div>
                 <div className="flex justify-between text-[10px] text-slate-400 font-medium">
@@ -954,7 +977,7 @@ Dealer Delivery: TVS Raipur Authorized Dealership
                       </span>
                     </div>
                     <span className="text-base font-extrabold text-emerald-800">
-                      {t.sowingEmiVal}
+                      {loan?.repayment_structure?.sowing_lean_inr ? `${money(loan.repayment_structure.sowing_lean_inr)} / month` : t.sowingEmiVal}
                     </span>
                   </div>
                   <p className="mt-1 text-[11px] text-emerald-900">
@@ -972,7 +995,7 @@ Dealer Delivery: TVS Raipur Authorized Dealership
                       </span>
                     </div>
                     <span className="text-base font-extrabold text-amber-900">
-                      {t.harvestEmiVal}
+                      {loan?.repayment_structure?.harvest_bullet_inr ? `${money(loan.repayment_structure.harvest_bullet_inr)} Bullet Payment` : t.harvestEmiVal}
                     </span>
                   </div>
                   <p className="mt-1 text-[11px] text-amber-900">
@@ -985,11 +1008,13 @@ Dealer Delivery: TVS Raipur Authorized Dealership
               <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
                 <div>
                   <span className="text-slate-500">{t.nextDueLabel}</span>
-                  <div className="font-bold text-slate-900">{t.nextDueDate}</div>
+                  <div className="font-bold text-slate-900">{loan?.repayment_structure?.next_due_date || t.nextDueDate}</div>
                 </div>
                 <div className="text-right">
                   <span className="text-slate-500">{t.amountLabel}</span>
-                  <div className="font-bold text-emerald-700">₹1,500</div>
+                  <div className="font-bold text-emerald-700">
+                    {loan?.repayment_structure?.sowing_lean_inr ? money(loan.repayment_structure.sowing_lean_inr) : '₹1,500'}
+                  </div>
                 </div>
               </div>
             </div>

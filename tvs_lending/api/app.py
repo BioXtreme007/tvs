@@ -607,6 +607,166 @@ def underwrite_loan_application(
     }
 
 
+@app.get("/api/v1/applications")
+def list_applications(
+    limit: int = 60,
+    offset: int = 0,
+    district: Optional[str] = None,
+    status: Optional[str] = None,
+    search: Optional[str] = None,
+    current_user: Optional[Dict[str, Any]] = Depends(get_optional_current_user),
+) -> Dict[str, Any]:
+    """
+    List stored loan applications with full decision verdicts, credit scores, and repayment structures.
+    Connects the durable SQLite database (60 records) directly to the Underwriter Cockpit.
+    """
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        query = "SELECT * FROM applications WHERE 1=1"
+        params = []
+        if district:
+            query += " AND district = ?"
+            params.append(district)
+        if status:
+            query += " AND status = ?"
+            params.append(status)
+        if search:
+            query += " AND (applicant_name LIKE ? OR district LIKE ? OR village LIKE ? OR id LIKE ?)"
+            s_term = f"%{search}%"
+            params.extend([s_term, s_term, s_term, s_term])
+
+        count_cursor = conn.cursor()
+        count_query = query.replace("SELECT *", "SELECT COUNT(*)")
+        count_cursor.execute(count_query, params)
+        total_count = count_cursor.fetchone()[0]
+
+        query += " ORDER BY created_at DESC LIMIT ? OFFSET ?"
+        params.extend([limit, offset])
+
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+
+        results = []
+        for r in rows:
+            verdict = {}
+            if r["decision_verdict_json"]:
+                try:
+                    verdict = json.loads(r["decision_verdict_json"])
+                except Exception:
+                    verdict = {}
+
+            scorecard = {}
+            if r["scorecard_result_json"]:
+                try:
+                    scorecard = json.loads(r["scorecard_result_json"])
+                except Exception:
+                    scorecard = {}
+
+            repayment = {}
+            if r["repayment_schedule_json"]:
+                try:
+                    repayment = json.loads(r["repayment_schedule_json"])
+                except Exception:
+                    repayment = {}
+
+            evidence = {}
+            if r["evidence_snapshot_json"]:
+                try:
+                    evidence = json.loads(r["evidence_snapshot_json"])
+                except Exception:
+                    evidence = {}
+
+            results.append({
+                "id": r["id"],
+                "localId": r["id"],
+                "applicant_name": r["applicant_name"],
+                "district": r["district"],
+                "village": r["village"],
+                "khasra_no": r["khasra_no"],
+                "land_acres": r["land_acres"],
+                "crop_type": r["crop_type"],
+                "requested_loan_amount_inr": r["requested_loan_amount_inr"],
+                "requested_tenure_months": r["requested_tenure_months"],
+                "bureau_cibil_score": r["bureau_cibil_score"],
+                "status": r["status"],
+                "agri_credit_score": verdict.get("agri_credit_score", r["bureau_cibil_score"] or 650),
+                "tier": verdict.get("tier", "TIER_2_ACCEPTABLE"),
+                "underwriting_decision": verdict.get("decision", r["status"]),
+                "max_sanction_amount_inr": verdict.get("sanctioned_amount_inr", r["requested_loan_amount_inr"]),
+                "risk_adjusted_roi_pct": verdict.get("risk_adjusted_roi_pct", 8.8),
+                "underwriting_verdict": verdict,
+                "scorecard_breakdown": scorecard,
+                "repayment_structure": repayment,
+                "evidence": evidence,
+                "created_at": r["created_at"],
+            })
+
+        return {"total": total_count, "applications": results}
+
+
+@app.get("/api/v1/farmer/my-loan")
+def get_farmer_active_loan(
+    current_user: Optional[Dict[str, Any]] = Depends(get_optional_current_user),
+) -> Dict[str, Any]:
+    """
+    Return the authenticated farmer's primary loan application with real satellite & harvest repayment metrics.
+    If no authenticated session is active, defaults to the prime farmer portfolio benchmark (Rajeshwar Sahu / Kurud).
+    """
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        app_row = None
+        if current_user and current_user.get("user_id"):
+            cursor.execute(
+                "SELECT * FROM applications WHERE borrower_id = ? ORDER BY created_at DESC LIMIT 1",
+                (current_user["user_id"],)
+            )
+            app_row = cursor.fetchone()
+
+        if not app_row and current_user and current_user.get("name"):
+            cursor.execute(
+                "SELECT * FROM applications WHERE applicant_name LIKE ? ORDER BY created_at DESC LIMIT 1",
+                (f"%{current_user['name'].split()[0]}%",)
+            )
+            app_row = cursor.fetchone()
+
+        if not app_row:
+            cursor.execute("SELECT * FROM applications WHERE applicant_name LIKE '%Rajeshwar%' OR district = 'Dhamtari' ORDER BY id ASC LIMIT 1")
+            app_row = cursor.fetchone()
+
+        if not app_row:
+            cursor.execute("SELECT * FROM applications ORDER BY id ASC LIMIT 1")
+            app_row = cursor.fetchone()
+
+        if not app_row:
+            raise HTTPException(status_code=404, detail="No active loan applications found.")
+
+        verdict = json.loads(app_row["decision_verdict_json"]) if app_row["decision_verdict_json"] else {}
+        scorecard = json.loads(app_row["scorecard_result_json"]) if app_row["scorecard_result_json"] else {}
+        repayment = json.loads(app_row["repayment_schedule_json"]) if app_row["repayment_schedule_json"] else {}
+        evidence = json.loads(app_row["evidence_snapshot_json"]) if app_row["evidence_snapshot_json"] else {}
+
+        return {
+            "application_id": app_row["id"],
+            "applicant_name": app_row["applicant_name"],
+            "status": app_row["status"],
+            "district": app_row["district"],
+            "village": app_row["village"],
+            "khasra_no": app_row["khasra_no"],
+            "land_acres": app_row["land_acres"],
+            "crop_type": app_row["crop_type"],
+            "requested_loan_amount_inr": app_row["requested_loan_amount_inr"],
+            "sanctioned_amount_inr": verdict.get("sanctioned_amount_inr", app_row["requested_loan_amount_inr"]),
+            "interest_rate_pct": verdict.get("risk_adjusted_roi_pct", 8.4),
+            "agri_credit_score": verdict.get("agri_credit_score", 745),
+            "tractor_model": verdict.get("recommended_product", "TVS 45HP Smart Farm Tractor"),
+            "dealership": f"TVS {app_row['district']} Dealership",
+            "underwriting_verdict": verdict,
+            "scorecard_breakdown": scorecard,
+            "repayment_structure": repayment,
+            "evidence": evidence,
+        }
+
+
 @app.get("/api/v1/applications/{application_id}")
 def get_application_by_id(
     application_id: str,
