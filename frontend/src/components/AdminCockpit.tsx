@@ -33,7 +33,6 @@ import {
 import Logo from './Logo';
 import SidebarToggleIcon from './SidebarToggleIcon';
 import { MotionAccordion, MotionAccordionItem } from './MotionAccordion';
-import { AIMessage } from './AIMessage';
 import { UserProfileSidebar, NavItem } from './ui/menu';
 import { useResource, number, money, humanize, download } from '../api';
 import { Portfolio, Underwriting, Alerts, StressTest, PortfolioData } from './WorkspaceViews';
@@ -319,6 +318,120 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
   ];
 
+  const underwritingAdvisoryItems: MotionAccordionItem[] = [
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 shadow-xs" />
+          <span>Sentinel-2 Spectral Sanction Advisory: Rajeshwar Sahu (Raipur)</span>
+          <span className="ml-auto text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            Sanction Cap: ₹3,40,000 · Prime Tier
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            Multi-satellite Sentinel-2 spectral telemetry indicates <strong className="text-emerald-800 font-semibold">23.4% NDVI vegetation recovery</strong> post-cloud inpainting across Raipur and Durg agricultural tracts. Cadastral boundary anti-fraud verification confirms zero overlap against adjacent survey tracts.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-200/70">
+            <div>
+              <span className="text-[10px] text-slate-400 block uppercase font-mono">Spectral Telemetry</span>
+              <strong className="text-slate-800 text-xs font-semibold">NDVI 0.68 (+14% vs 5yr normal)</strong>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block uppercase font-mono">Bureau Credit Record</span>
+              <strong className="text-slate-800 text-xs font-semibold">CIBIL 742 (Prime Tier Credit)</strong>
+            </div>
+            <div>
+              <span className="text-[10px] text-slate-400 block uppercase font-mono">Spatial Index Collateral</span>
+              <strong className="text-slate-800 text-xs font-semibold">H3 882681e031fffff Unencumbered</strong>
+            </div>
+          </div>
+          <div className="pt-2 flex items-center justify-between flex-wrap gap-2">
+            <span className="text-[11px] text-slate-500">
+              Repayment: 60% annualized repayment scheduled during November–December mandi procurement payouts.
+            </span>
+            <button
+              type="button"
+              onClick={() =>
+                openInCockpit({
+                  applicant_name: 'Rajeshwar Sahu',
+                  district: 'Raipur',
+                  village: 'Abhanpur',
+                  khasra_no: '142/1',
+                  land_acres: 4.5,
+                  crop_type: 'PADDY_KHARIF',
+                  requested_amount_inr: 340000,
+                  requested_loan_amount_inr: 340000,
+                  requested_tenure_months: 36,
+                  bureau_cibil_score: 742,
+                  annual_banking_turnover_inr: 480000,
+                  underwriting_verdict: 'APPROVE',
+                  max_sanction_amount_inr: 340000,
+                  underwriting_decision: 'APPROVE',
+                })
+              }
+              className="portal-btn primary py-1.5 px-3.5 text-xs flex items-center gap-1.5 cursor-pointer"
+            >
+              <span>Review in Sanction Cockpit</span>
+              <ArrowUpRight size={13} />
+            </button>
+          </div>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 shadow-xs" />
+          <span>Cadastral Spatial Fraud Lockout: Durg High-Density Collision</span>
+          <span className="ml-auto text-[10px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+            Resolution 8–9 · Collateral Lockout Active
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            Two-tier spatial containment detected 28.4% geometric polygon collision against previously pledged survey parcel <strong className="text-slate-800">89/2</strong>. Autonomous engine engaged a hard fraud lockout, preventing duplicate collateral drawdown across overlapping titles.
+          </p>
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-between text-xs text-slate-700 flex-wrap gap-2">
+            <span>Durg &amp; Rajnandgaon Border: 0 unresolved collision alerts in the last 24 hours.</span>
+            <button
+              onClick={() => move('ews')}
+              className="text-[#0B2545] hover:underline font-semibold text-[11px] cursor-pointer inline-flex items-center gap-1"
+            >
+              <span>Inspect Early Warning Signals</span>
+              <ArrowRight size={12} />
+            </button>
+          </div>
+        </div>
+      ),
+    },
+    {
+      question: (
+        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 shadow-xs" />
+          <span>Pre-Harvest Cashflow Moratorium Directive: Sukhram Markam (Bastar)</span>
+          <span className="ml-auto text-[10px] font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+            Cashflow Synchronized · Kharif Sowing Window
+          </span>
+        </div>
+      ),
+      answer: (
+        <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
+          <p>
+            Repayment schedule mirrors Bastar agrarian cashflow: zero principal demands during high-input sowing periods (June–October), followed by structured balloon liquidation post-harvest upon government mandi procurement disbursement.
+          </p>
+          <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900">
+            <strong>Automatic 60-Day Climate Moratorium:</strong> Pre-authorized trigger when Sentinel-2 NDWI soil moisture indicates drought stress (&lt; -0.2) or excess monsoon inundation (&gt; 0.45).
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="portal-ui admin-shell min-h-screen bg-[#f3f4f8]">
       {menu && (
@@ -332,12 +445,6 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       {/* Sidebar Rail: Preserved exactly for full navigation */}
       <aside className={`admin-rail ${sidebarCollapsed ? 'collapsed ' : ''}${menu ? 'is-open' : ''}`}>
         <div className="rail-header">
-          <button className="portal-brand" onClick={onNavigateHome}>
-            <span className="portal-mark">
-              <Logo width={22} height={22} fill="#7451d1" />
-            </span>
-            <span>GEOKISAAN<small>AGRI INTELLIGENCE</small></span>
-          </button>
           <button
             className="rail-nav-toggle"
             onClick={toggleSidebar}
@@ -569,76 +676,36 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
                 </section>
               </div>
 
-              {/* Krishi Saathi Live Underwriting Copilot Stream with AIMessage */}
-              <section className="portal-card p-6 bg-gradient-to-br from-white via-slate-50/60 to-indigo-50/20 border border-slate-200/80 rounded-2xl shadow-xs mb-6">
+              {/* Underwriting Telemetry & Sanction Directives (MotionAccordion) */}
+              <section className="portal-card p-6 bg-white border border-slate-200/80 rounded-2xl shadow-xs mb-6">
                 <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 flex-wrap gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-[#0B2545] text-emerald-400 flex items-center justify-center shadow-xs">
-                      <Sparkles size={18} />
-                    </div>
-                    <div>
-                      <span className="portal-eyebrow mb-0">MULTIMODAL AI COPILOT</span>
-                      <h3 className="text-base font-bold text-[#0B2545]">Krishi Saathi Underwriting Intelligence Stream</h3>
-                    </div>
+                  <div>
+                    <span className="portal-eyebrow mb-0">AUTONOMOUS SANCTION DIRECTIVES</span>
+                    <h2 className="text-xl font-bold text-[#0B2545]">
+                      Underwriting Intelligence &amp; Telemetry Stream
+                    </h2>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Live Sentinel-2 spectral verification, cadastral anti-fraud spatial indexing, and harvest-synchronized credit directives.
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => ask('What is the current portfolio risk and recommended action for Bastar?')}
                       className="portal-btn secondary py-1.5 px-3 text-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      <span>Ask Bastar Risk</span>
+                      <span>Bastar Risk Summary</span>
                       <ArrowRight size={13} />
                     </button>
                     <button
                       onClick={() => ask('', true)}
-                      className="portal-btn primary py-1.5 px-3 text-xs flex items-center gap-1.5 cursor-pointer"
+                      className="portal-btn secondary py-1.5 px-3 text-xs flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Radio size={13} className="text-emerald-300 animate-pulse" />
-                      <span>1:1 Voice Consultation</span>
+                      <Radio size={13} className="text-emerald-600" />
+                      <span>Voice Consultation</span>
                     </button>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <AIMessage
-                    from="assistant"
-                    timestamp="Real-time Telemetry Advisory"
-                    copyText="Multi-satellite Sentinel-2 telemetry indicates 23.4% NDVI recovery post-inpainting across Durg and Raipur clusters. Recommend approving applicant Rajeshwar Sahu (₹3.4L sanction cap) with harvest-linked quarterly EMI schedule."
-                    source="Sentinel-2 Inpainting + CIBIL + GeoKisaan Decision Engine"
-                    evidence={[
-                      "NDVI 0.68 (+14% vs 5yr normal)",
-                      "CIBIL 742 (Prime Tier)",
-                      "H3 Hexagon 882681e031fffff Verified Unencumbered",
-                    ]}
-                    action={{
-                      type: 'NAVIGATE',
-                      target: '#underwriting',
-                      label: '⚡ Open & Review Rajeshwar Sahu in Sanction Cockpit',
-                      prefill: {
-                        applicant_name: 'Rajeshwar Sahu',
-                        district: 'Raipur',
-                        village: 'Abhanpur',
-                        khasra_no: '142/1',
-                        land_acres: 4.5,
-                        crop_type: 'PADDY_KHARIF',
-                        requested_amount_inr: 340000,
-                        requested_loan_amount_inr: 340000,
-                        requested_tenure_months: 36,
-                        bureau_cibil_score: 742,
-                        annual_banking_turnover_inr: 480000,
-                        underwriting_verdict: 'APPROVE',
-                      },
-                    }}
-                    onActionClick={(action) =>
-                      openInCockpit({
-                        ...action.prefill,
-                        max_sanction_amount_inr: 340000,
-                        underwriting_decision: 'APPROVE',
-                      })
-                    }
-                  >
-                    Multi-satellite Sentinel-2 telemetry indicates <strong className="text-emerald-800 font-semibold">23.4% NDVI recovery</strong> post-inpainting across Durg and Raipur clusters. Recommend approving applicant <strong className="text-[#0B2545] font-semibold">Rajeshwar Sahu</strong> (₹3,40,000 sanction cap) with harvest-synchronized quarterly EMI schedule. Cadastral boundary anti-fraud checks confirm zero duplicate claims.
-                  </AIMessage>
-                </div>
+                <MotionAccordion items={underwritingAdvisoryItems} gap={10} />
               </section>
 
               {/* Recent Assessments Table */}
