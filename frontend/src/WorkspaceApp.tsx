@@ -3,6 +3,7 @@ import { Activity, ArrowDownToLine, ArrowLeft, ArrowUpRight, Bell, ChartNoAxesCo
 import { api, useResource } from './api';
 import { Overview, Portfolio, Underwriting, Alerts, StressTest, FarmerView, SignIn, PortfolioData } from './components/WorkspaceViews';
 import Assistant from './components/Assistant';
+import SidebarToggleIcon from './components/SidebarToggleIcon';
 
 const navigation = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -47,15 +48,44 @@ export default function App() {
     return () => { window.removeEventListener('hashchange', changed); controller.abort(); };
   }, []);
   useEffect(() => { document.title = titles[route] + ' · TVS Credit'; contentRef.current?.focus(); }, [route]);
-  const openAssistant = (query = '') => {
+  const [assistantVoice, setAssistantVoice] = useState(false);
+  const openAssistant = (query = '', voiceMode = false) => {
     opener.current = document.activeElement instanceof HTMLElement && document.activeElement !== document.body ? document.activeElement : null;
-    setAssistantDraft(query); setAssistantOpen(true);
+    setAssistantDraft(query);
+    setAssistantVoice(voiceMode);
+    setAssistantOpen(true);
   };
   const closeAssistant = () => { setAssistantOpen(false); window.setTimeout(() => { const target = opener.current?.isConnected ? opener.current : document.getElementById('saathi-launcher'); (target || contentRef.current)?.focus(); }); };
   useEffect(() => {
-    const handler = (e: Event) => openAssistant((e as CustomEvent).detail?.query || '');
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail || {};
+      openAssistant(detail.query || '', detail.voiceMode || false);
+    };
+    const navHandler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (!detail?.target) return;
+      const targetId = detail.target.replace('#', '');
+      if (detail.prefill) {
+        window.dispatchEvent(new CustomEvent('assistant-prefill-underwriting', { detail: detail.prefill }));
+      }
+      if (targetId === 'underwriting') {
+        navigate('underwriting');
+      } else if (targetId === 'farmer-documents' || targetId === 'farmer-faq' || targetId === 'farmer') {
+        navigate('farmer');
+      } else if (targetId === 'ews') {
+        navigate('ews');
+      } else if (targetId === 'stress-sim') {
+        navigate('stress-sim');
+      } else if (targetId === 'portfolio') {
+        navigate('portfolio');
+      }
+    };
     window.addEventListener('open-krishi-saathi', handler);
-    return () => window.removeEventListener('open-krishi-saathi', handler);
+    window.addEventListener('assistant-navigate', navHandler);
+    return () => {
+      window.removeEventListener('open-krishi-saathi', handler);
+      window.removeEventListener('assistant-navigate', navHandler);
+    };
   }, []);
   useEffect(() => {
     if (!assistantOpen) return;
@@ -106,7 +136,7 @@ export default function App() {
     </aside>
     <div className="workspace-body">
       <header className="topbar">
-        <div className="breadcrumbs"><button id="menu-toggle" className="icon-button mobile-toggle" aria-label="Open navigation" aria-expanded={mobile} onClick={() => setMobile(!mobile)}><Menu size={21} /></button><span>Workspace</span><ChevronRight size={14} /><b>{navigation.find(n => n.id === route)?.label || titles[route]}</b></div>
+        <div className="breadcrumbs"><button id="menu-toggle" className="icon-button mobile-toggle" aria-label="Open navigation" aria-expanded={mobile} onClick={() => setMobile(!mobile)}><SidebarToggleIcon isOpen={mobile} className="w-5 h-5 text-slate-700" /></button><span>Workspace</span><ChevronRight size={14} /><b>{navigation.find(n => n.id === route)?.label || titles[route]}</b></div>
         <div className="topbar-actions"><span className={'connection ' + health}><i />{health === 'online' ? 'API connected' : health === 'checking' ? 'Checking service' : 'API unavailable'}</span><button className="icon-button" title="Early warnings" aria-label="View early warnings" onClick={() => navigate('ews')}><Bell size={19} /></button><button className="avatar small" aria-label={user ? 'Account: ' + user.name : 'Sign in'} onClick={() => navigate('signin')}>{user?.name?.slice(0, 2).toUpperCase() || 'TV'}</button></div>
       </header>
       <main id="main-content" ref={contentRef} tabIndex={-1} className="main-content">
@@ -127,7 +157,7 @@ export default function App() {
     <div className={'assistant-layer ' + (assistantOpen ? 'visible' : '')} aria-hidden={!assistantOpen}>
       {assistantOpen && <button className="assistant-scrim" onClick={closeAssistant} aria-label="Dismiss assistant overlay" tabIndex={-1} />}
       <section ref={assistantRef} className="assistant-drawer" role="dialog" aria-modal={assistantOpen ? true : undefined} aria-label="Krishi Saathi assistant">
-        <Assistant context={context} draft={assistantDraft} visible={assistantOpen} onClose={closeAssistant} identity={user?.user_id || user?.email || 'guest'} />
+        <Assistant context={context} draft={assistantDraft} visible={assistantOpen} onClose={closeAssistant} identity={user?.user_id || user?.email || 'guest'} initialVoiceMode={assistantVoice} />
       </section>
     </div>
   </div>;

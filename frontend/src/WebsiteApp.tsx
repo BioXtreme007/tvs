@@ -79,18 +79,62 @@ export default function WebsiteApp() {
     } catch {}
     navigate('signin');
   };
-  const ask = (query = '') => { opener.current = document.activeElement as HTMLElement; setDraft(query); setAssistantOpen(true); };
+  const [initialVoice, setInitialVoice] = useState(false);
+  const ask = (query = '', voiceMode = false) => {
+    opener.current = document.activeElement as HTMLElement;
+    setDraft(query);
+    setInitialVoice(voiceMode);
+    setAssistantOpen(true);
+  };
   const closeAssistant = () => { setAssistantOpen(false); window.setTimeout(() => (opener.current?.isConnected ? opener.current : document.getElementById('saathi-launcher'))?.focus()); };
 
   useEffect(() => {
     const route = () => { setView(viewFromHash()); setMenu(false); setAssistantOpen(false); };
-    const open = (e: Event) => ask((e as CustomEvent).detail?.query || '');
+    const open = (e: Event) => {
+      const detail = (e as CustomEvent).detail || {};
+      ask(detail.query || '', detail.voiceMode || false);
+    };
     const auth = () => { try { const user = JSON.parse(localStorage.getItem('tvs_credit_user') || 'null'); setIdentity(user?.user_id || user?.email || 'guest'); } catch { setIdentity('guest'); } setContext(null); };
+    const handleAssistantNav = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (!detail?.target) return;
+      const targetId = detail.target.replace('#', '');
+      if (targetId === 'farmer-documents' || targetId === 'farmer-faq') {
+        if (view !== 'farmer') setView('farmer');
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('ring-4', 'ring-[#7342E2]', 'transition-all', 'duration-700');
+            setTimeout(() => el.classList.remove('ring-4', 'ring-[#7342E2]'), 3500);
+          }
+        }, 150);
+        return;
+      }
+      if (view !== 'home') {
+        setView('home');
+      }
+      setTimeout(() => {
+        const el = document.getElementById(targetId) ||
+          (targetId === 'underwriting' ? document.getElementById('underwriting') || document.getElementById('pipeline') : null);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          el.classList.add('ring-4', 'ring-[#0B2545]', 'transition-all', 'duration-700');
+          setTimeout(() => el.classList.remove('ring-4', 'ring-[#0B2545]'), 3500);
+        }
+      }, 150);
+    };
     window.addEventListener('hashchange', route);
     window.addEventListener('open-krishi-saathi', open);
     window.addEventListener('tvs-auth-change', auth);
-    return () => { window.removeEventListener('hashchange', route); window.removeEventListener('open-krishi-saathi', open); window.removeEventListener('tvs-auth-change', auth); };
-  }, []);
+    window.addEventListener('assistant-navigate', handleAssistantNav);
+    return () => {
+      window.removeEventListener('hashchange', route);
+      window.removeEventListener('open-krishi-saathi', open);
+      window.removeEventListener('tvs-auth-change', auth);
+      window.removeEventListener('assistant-navigate', handleAssistantNav);
+    };
+  }, [view]);
   useEffect(() => {
     document.title = (view === 'signin' ? 'Sign in' : view === 'farmer' ? 'Farmer portal' : view === 'precision-preview' ? 'PrecisionSection Preview' : 'Smart Agri-Lending') + ' · TVS Credit';
     const frame = requestAnimationFrame(() => {
@@ -201,7 +245,7 @@ export default function WebsiteApp() {
         <Reveal><PortfolioSection /></Reveal>
         <Reveal><WhatIfSection /></Reveal>
         <Reveal><EWSSection /></Reveal>
-        <Reveal><section id="krishi-saathi" className="website-saathi-section"><div className="website-saathi-card"><div><span className="website-kicker"><Sparkles size={16} /> TVS KRISHI SAATHI</span><h2>Your language.<br />A little more clarity.</h2><p>Understand your assessment, explore harvest-linked repayments, and ask your next question in one of eight languages.</p><button className="website-saathi-button" onClick={() => ask()}>Talk to Krishi Saathi <Sparkles size={17} /></button></div><div className="website-saathi-prompts"><span>START A CONVERSATION</span>{['What documents do I need?', 'How do harvest repayments work?', 'Explain my credit assessment'].map(query => <button key={query} onClick={() => ask(query)}>{query}<span>↗</span></button>)}<p>English · हिन्दी · छत्तीसगढ़ी · தமிழ்<br />తెలుగు · मराठी · ಕನ್ನಡ · বাংলা</p></div></div></section></Reveal>
+        <Reveal><section id="krishi-saathi" className="website-saathi-section"><div className="website-saathi-card"><div><span className="website-kicker"><Sparkles size={16} /> TVS KRISHI SAATHI</span><h2>Your language.<br />A little more clarity.</h2><p>Understand your assessment, explore harvest-linked repayments, and ask your next question in one of eight languages.</p><button className="website-saathi-button" onClick={() => ask('', true)}>Talk 1:1 with Krishi Saathi <Sparkles size={17} /></button></div><div className="website-saathi-prompts"><span>START A CONVERSATION</span>{['What documents do I need?', 'How do harvest repayments work?', 'Explain my credit assessment'].map(query => <button key={query} onClick={() => ask(query)}>{query}<span>↗</span></button>)}<p>English · हिन्दी · छत्तीसगढ़ी · தமிழ்<br />తెలుగు · मराठी · ಕನ್ನಡ · বাংলা</p></div></div></section></Reveal>
       </main>
       <Footer />
       <DeliberationModal isOpen={!!deliberation} onClose={() => setDeliberation(null)} resultData={deliberation} />
@@ -237,7 +281,7 @@ export default function WebsiteApp() {
     )}
     <div className={'assistant-layer ' + (assistantOpen ? 'visible' : '')} aria-hidden={!assistantOpen}>
       {assistantOpen && <button className="assistant-scrim" onClick={closeAssistant} aria-label="Dismiss assistant overlay" tabIndex={-1} />}
-      <section ref={panel} className="assistant-drawer" role="dialog" aria-modal={assistantOpen || undefined} aria-label="Krishi Saathi assistant"><Assistant context={context} draft={draft} visible={assistantOpen} onClose={closeAssistant} identity={identity} /></section>
+      <section ref={panel} className="assistant-drawer" role="dialog" aria-modal={assistantOpen || undefined} aria-label="Krishi Saathi assistant"><Assistant context={context} draft={draft} visible={assistantOpen} onClose={closeAssistant} identity={identity} initialVoiceMode={initialVoice} /></section>
     </div>
   </div></MotionConfig>;
 }

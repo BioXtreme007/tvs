@@ -12,11 +12,14 @@ import {
   ChevronDown,
   User,
   LogOut,
+  Mic,
+  Sparkles,
 } from 'lucide-react';
 import Logo from './Logo';
 import { UserProfileSidebar, NavItem } from './ui/menu';
 import { useResource, money, number } from '../api';
 import FarmerPortal from './FarmerPortal';
+import { MotionAccordion } from './MotionAccordion';
 import '../portals.css';
 
 interface Props {
@@ -24,8 +27,8 @@ interface Props {
   onOpenSignIn?: () => void;
 }
 
-const ask = (query = '') =>
-  window.dispatchEvent(new CustomEvent('open-krishi-saathi', { detail: { query } }));
+const ask = (query = '', voiceMode = false) =>
+  window.dispatchEvent(new CustomEvent('open-krishi-saathi', { detail: { query, voiceMode } }));
 
 const documents = [
   'Identity & address proof',
@@ -325,12 +328,23 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
             </p>
             <div className="portal-actions flex flex-wrap items-center gap-3">
               <button
-                className="portal-btn light cursor-pointer bg-[#0B2545] text-white hover:bg-[#133863] border-0 shadow-md flex items-center gap-2"
+                className="portal-btn light cursor-pointer bg-[#0B2545] text-white hover:bg-[#133863] border-0 shadow-md flex items-center gap-2 px-5 py-3 rounded-full font-bold transition-transform active:scale-95"
+                onClick={() => ask('', true)}
+              >
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <Mic size={18} className="text-emerald-300" />
+                <span>1:1 Live Spoken Talk</span>
+                <ArrowUpRight size={18} />
+              </button>
+              <button
+                className="portal-btn secondary cursor-pointer flex items-center gap-2 px-4 py-2.5 rounded-full border border-black/10 bg-white hover:bg-slate-50 text-[#0B2545] font-semibold"
                 onClick={() => ask()}
               >
-                <MessageCircle size={18} />
-                <span>Ask Krishi Saathi</span>
-                <ArrowUpRight size={18} />
+                <MessageCircle size={17} />
+                <span>Text Chat</span>
               </button>
               <span className="saathi-mode">
                 Voice &amp; Vernacular AI
@@ -541,28 +555,25 @@ export default function FarmerWorkspace({ onBackToCockpit, onOpenSignIn }: Props
               <br />
               Less back and forth.
             </h2>
-            {[
-              [
-                'Where can I see my loan balance?',
-                'A verified loan account must be connected before a balance or due date can be shown. Ask your lending officer for your current statement.',
-              ],
-              [
-                'Can I speak instead of typing?',
-                'Yes. Open Saathi, choose your language, and use the microphone to record a question. You can review the words before sending.',
-              ],
-              [
-                'Does an assessment approve my loan?',
-                'An assessment helps an officer review the application. Your lender confirms approval, final terms and the repayment schedule.',
-              ],
-            ].map(([q, a]) => (
-              <details key={q}>
-                <summary>
-                  <span>{q}</span>
-                  <ChevronDown size={17} />
-                </summary>
-                <p>{a}</p>
-              </details>
-            ))}
+            <MotionAccordion
+              items={[
+                {
+                  question: 'Where can I see my loan balance?',
+                  answer:
+                    'A verified loan account must be connected before a balance or due date can be shown. Ask your lending officer for your current statement.',
+                },
+                {
+                  question: 'Can I speak instead of typing?',
+                  answer:
+                    'Yes. Open Saathi, choose your language, and use the microphone to record a question. You can review the words before sending.',
+                },
+                {
+                  question: 'Does an assessment approve my loan?',
+                  answer:
+                    'An assessment helps an officer review the application. Your lender confirms approval, final terms and the repayment schedule.',
+                },
+              ]}
+            />
             <button
               className="portal-btn secondary cursor-pointer"
               onClick={() => ask('I need help understanding the next step in my loan journey.')}

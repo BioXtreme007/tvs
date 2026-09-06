@@ -62,6 +62,26 @@ export const UnderwritingSection: React.FC<UnderwritingSectionProps> = ({ onOpen
     setFormData(prev => ({ ...prev, applicantName: scenario.name, district: scenario.district, landAcres: scenario.acreage, cropType: scenario.crop.toUpperCase().includes('PADDY') ? 'PADDY_KHARIF' : prev.cropType }));
     setIsSample(true); onContext?.(null);
   }, [scenario]);
+
+  useEffect(() => {
+    const handlePrefill = (e: Event) => {
+      const p = (e as CustomEvent).detail || {};
+      active.current?.abort();
+      active.current = null;
+      setLoading(false);
+      setFormData(prev => ({
+        ...prev,
+        applicantName: p.applicant_name || prev.applicantName,
+        district: p.district || prev.district,
+        landAcres: p.land_acres !== undefined ? Number(p.land_acres) : prev.landAcres,
+        loanAmount: p.requested_amount_inr !== undefined ? Number(p.requested_amount_inr) : (p.land_acres ? Math.round(Number(p.land_acres) * 130000) : prev.loanAmount),
+      }));
+      setIsSample(true);
+      onContext?.(null);
+    };
+    window.addEventListener('assistant-prefill-underwriting', handlePrefill);
+    return () => window.removeEventListener('assistant-prefill-underwriting', handlePrefill);
+  }, []);
   const handleUnderwrite = async (e: React.FormEvent) => {
     e.preventDefault();
     if (active.current) return;

@@ -329,6 +329,18 @@ class KrishiSaathiAssistant:
                 application_id=app_id,
                 language=lang,
             )
+            # Infer interactive action if query relates to specific features or sections
+            action = None
+            q_low = (raw_msg or condensed_query).lower()
+            if any(k in q_low for k in ["document", "paper", "dastavej", "dastawez", "कागज", "दस्तावेज", "apply"]):
+                action = {"type": "NAVIGATE", "target": "#farmer-documents", "label": "Review Document Checklist"}
+            elif any(k in q_low for k in ["score", "eligib", "underwriting", "sanction", "cockpit", "khet", "acre", "एकड़", "tractor"]):
+                action = {"type": "NAVIGATE", "target": "#underwriting", "label": "Open Sanction Decision Cockpit"}
+            elif any(k in q_low for k in ["pipeline", "process", "autonomous", "3-minute", "3 minute"]):
+                action = {"type": "NAVIGATE", "target": "#pipeline", "label": "View 3-Minute Autonomous Pipeline"}
+            elif any(k in q_low for k in ["drought", "rain", "ews", "warning", "सूखा", "बारिश"]):
+                action = {"type": "NAVIGATE", "target": "#ews", "label": "View Early Warning Telemetry"}
+
             return {
                 "response": resp_text,
                 "language": lang,
@@ -343,10 +355,11 @@ class KrishiSaathiAssistant:
                 "hallucination_risk": "MINIMAL",
                 "session_id": sid,
                 "retrieved_context": [item.get("title", "") for item in retrieved_items],
+                "action": action,
             }
 
         # 5. High-IQ Vernacular Conversational Engine (Deterministic Zero-Hallucination Fallback)
-        response_text, intent, evidence, confidence, follow_ups = self._generate_conversational_response(
+        gen_res = self._generate_conversational_response(
             raw_msg=raw_msg,
             query=condensed_query.lower(),
             ctx=ctx,
@@ -354,6 +367,21 @@ class KrishiSaathiAssistant:
             retrieved=retrieved_items,
             history=history,
         )
+        action = None
+        if len(gen_res) == 6:
+            response_text, intent, evidence, confidence, follow_ups, action = gen_res
+        else:
+            response_text, intent, evidence, confidence, follow_ups = gen_res
+
+        if action is None:
+            if intent in ["DOCUMENTATION_REQUIREMENTS"]:
+                action = {"type": "NAVIGATE", "target": "#farmer-documents", "label": "Review Document Checklist"}
+            elif intent in ["LOAN_ELIGIBILITY", "DYNAMIC_LOAN_CALCULATION", "SCORECARD_TIER_EXPLANATION"]:
+                action = {"type": "NAVIGATE", "target": "#underwriting", "label": "Open Sanction Decision Cockpit"}
+            elif intent in ["SATELLITE_SOIL_HEALTH", "CLOUDGAP_INPAINTING"]:
+                action = {"type": "NAVIGATE", "target": "#underwriting", "label": "Inspect Sentinel-2 Crop Vigor"}
+            elif intent in ["DROUGHT_MORATORIUM", "LOAN_OVERDUE_SMA_STAGING"]:
+                action = {"type": "NAVIGATE", "target": "#ews", "label": "View Early Warning Restructuring"}
 
         self.memory.add_turn(
             session_id=sid,
@@ -390,6 +418,7 @@ class KrishiSaathiAssistant:
             "hallucination_risk": "MINIMAL" if is_grounded else "NOT_APPLICABLE",
             "session_id": sid,
             "retrieved_context": [item.get("title", "") for item in retrieved_items],
+            "action": action,
         }
 
     # -------------------------------------------------------------------------
@@ -410,6 +439,20 @@ class KrishiSaathiAssistant:
         except ImportError:
             return None
 
+        base_prompt = SYSTEM_PROMPTS.get(lang, SYSTEM_PROMPTS["ENGLISH"])
+        system_instruction = (
+            f"{base_prompt}\n\n"
+            "CRITICAL INSTRUCTIONS FOR TVS KRISHI SAATHI:\n"
+            "1. You are a warm, helpful rural lending expert for TVS Credit. Talk naturally and conversationally.\n"
+            "2. Whenever discussing loan amounts, interest rates, credit scores, or satellite metrics, extract numbers STRICTLY from <BORROWER_PROFILE>.\n"
+            "3. If <BORROWER_PROFILE> is empty or has no active application, DO NOT invent an applicant name, credit score, or loan amount. Politely explain that no application is selected and invite the user to check their eligibility in the Smart Sanction Cockpit.\n"
+            "4. Whenever discussing loan products, harvest EMIs, or cloud removal, rely on <VERIFIED_POLICY_KNOWLEDGE>.\n"
+            "5. Never invent or speculate on financial numbers. If info is missing, politely suggest speaking to the field officer.\n"
+            f"6. Respond in {lang}.\n\n"
+            f"<BORROWER_PROFILE>\n{json.dumps(ctx, indent=2, ensure_ascii=False)}\n</BORROWER_PROFILE>\n\n"
+            f"<VERIFIED_POLICY_KNOWLEDGE>\n{json.dumps([item.get('data', {}) for item in retrieved], indent=2, ensure_ascii=False)}\n</VERIFIED_POLICY_KNOWLEDGE>"
+        )
+
         providers = []
 
         # 1. Groq Cloud Key
@@ -422,16 +465,40 @@ class KrishiSaathiAssistant:
                 "model": "llama-3.3-70b-versatile",
             })
 
-        # 2. Google Gemini API
-        gemini_key = custom_api_key if (custom_api_key and custom_api_key.startswith("AIza")) else os.environ.get("GEMINI_API_KEY")
+        # 2. Google Gemini API (AI Studio & Vertex AI compatible)
+        gemini_key = custom_api_key if (custom_api_key and (custom_api_key.startswith("AIza") or "gemini" in str(custom_api_key).lower())) else os.environ.get("GEMINI_API_KEY")
         if gemini_key:
-            gemini_model = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
-            providers.append({
-                "name": f"GEMINI_{gemini_model.upper().replace('-', '_').replace('.', '_')}",
-                "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
-                "api_key": gemini_key,
-                "model": gemini_model,
-            })
+            candidate_models = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-pro"]
+            env_model = os.environ.get("GEMINI_MODEL")
+            if env_model:
+                if env_model in candidate_models:
+                    candidate_models.remove(env_model)
+                candidate_models.insert(0, env_model)
+
+            # Try native google.genai SDK directly across candidates
+            try:
+                from google import genai
+                g_client = genai.Client(api_key=gemini_key)
+                for gm in candidate_models:
+                    try:
+                        g_resp = g_client.models.generate_content(
+                            model=gm,
+                            contents=f"{system_instruction}\n\nUser Question:\n{condensed_query}",
+                        )
+                        if g_resp and g_resp.text and g_resp.text.strip():
+                            return g_resp.text.strip(), f"GEMINI_{gm.upper().replace('-', '_').replace('.', '_')}"
+                    except Exception:
+                        continue
+            except Exception:
+                pass
+
+            for gm in candidate_models:
+                providers.append({
+                    "name": f"GEMINI_{gm.upper().replace('-', '_').replace('.', '_')}",
+                    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+                    "api_key": gemini_key,
+                    "model": gm,
+                })
 
         # 3. Cerebras Cloud Key
         cerebras_key = custom_api_key if (custom_api_key and custom_api_key.startswith("csk-")) else os.environ.get("CEREBRAS_API_KEY")
@@ -1081,6 +1148,109 @@ class KrishiSaathiAssistant:
                 resp = f"According to 10m Sentinel-2 remote sensing, your farm exhibits strong vegetative vigor with an NDVI of {ndvi:.2f}. Your topsoil organic carbon (SOC) is healthy, supporting an estimated crop yield of {yield_tha} tonnes/ha. This verified land productivity is why your loan is approved up to ₹{amount:,}."
             conf = self._calculate_grounding_score(query, ctx, retrieved, ["satellite_ndvi", "estimated_yield_tha", "max_sanction_amount_inr"], 0.97)
             return resp, intent, evidence, conf, follow_ups
+
+        # ---------------------------------------------------------------------
+        # 7B. DYNAMIC PARAMETER REASONING & PERSONALIZED LOAN ESTIMATION
+        # Matches queries with specific farm acres, locations, down payment, or used/new tractor
+        # ---------------------------------------------------------------------
+        acre_match = re.search(r"(\d+(?:\.\d+)?)\s*(?:acres?|एकड़|एकड|हेक्टेयर|hectares?|bigha|बीघा)", query, re.IGNORECASE)
+        is_used_tractor = any(k in query for k in ["used tractor", "second hand", "पुराना ट्रैक्टर", "पुराना", "second-hand"])
+        is_down_payment = any(k in query for k in ["down payment", "margin", "मार्जिन", "कितना जमा", "कितना देना", "डाउन पेमेंट", "advance"])
+
+        extracted_acres = None
+        if acre_match:
+            try:
+                extracted_acres = float(acre_match.group(1))
+            except Exception:
+                extracted_acres = None
+
+        extracted_district = None
+        cg_districts = ["durg", "patan", "raipur", "bilaspur", "bastar", "rajnandgaon", "dhamtari", "janjgir", "mahasamund", "kawardha", "korba", "kanker", "balod", "bemetara"]
+        for dist in cg_districts:
+            if dist in query:
+                extracted_district = dist.capitalize()
+                break
+
+        if extracted_acres and (is_used_tractor or "tractor" in query or is_down_payment or "loan" in query or "पात्र" in query or "eligible" in query or "eligib" in query):
+            intent = "DYNAMIC_LOAN_CALCULATION"
+            base_rate_per_acre = 130000
+            est_capacity = int(extracted_acres * base_rate_per_acre)
+            est_capacity = max(250000, min(900000, est_capacity))
+
+            tractor_type = "Used Tractor" if is_used_tractor else "TVS Tractor"
+            roi_disp = "13.5%" if is_used_tractor else "10.5%"
+            down_pay_pct = "15% - 20%" if is_used_tractor else "10%"
+            down_pay_inr = int(est_capacity * (0.18 if is_used_tractor else 0.10))
+            loc_label = f"Patan ({extracted_district})" if (extracted_district == "Patan" or "patan" in query) else (extracted_district or "Chhattisgarh")
+
+            evidence = [
+                {"source": "Dynamic Land Capacity Model", "acres": extracted_acres, "district": extracted_district or "Durg", "est_sanction_inr": est_capacity},
+                {"source": "TVS Product Terms", "product": tractor_type, "roi": roi_disp, "down_payment": down_pay_pct, "est_down_payment_inr": down_pay_inr},
+                {"source": "Repayment Structure", "plan": "Seasonally-Aligned Harvest EMI", "sowing_fee_inr": 1500}
+            ]
+            action = {
+                "type": "NAVIGATE",
+                "target": "#underwriting",
+                "label": f"Review {extracted_acres} Acres in Sanction Cockpit",
+                "prefill": {
+                    "land_acres": extracted_acres,
+                    "district": extracted_district or "Durg",
+                    "product": "used_tractor" if is_used_tractor else "new_tractor",
+                    "loan_amount": est_capacity,
+                }
+            }
+            follow_ups = [
+                "TVS फसल कटाई (हार्वेस्ट) EMI कैसे काम करती है?",
+                "लोन के लिए क्या 4 दस्तावेज चाहिए?",
+                "स्मार्ट सैंक्शन कॉकपिट में आवेदन कैसे पूरा करें?"
+            ] if lang in ["HINDI", "CHHATTISGARHI", "HINGLISH"] else [
+                "How does the ₹1,500 sowing maintenance EMI work?",
+                "What 4 documents are needed for approval?",
+                "How do I complete my sanction in the Decision Cockpit?"
+            ]
+
+            if lang == "HINDI":
+                resp = (
+                    f"हाँ किसान भाई! {loc_label} में आपके पास {extracted_acres} एकड़ जमीन है, "
+                    f"तो आप टीवीएस { 'यूज्ड (पुराने) ट्रैक्टर' if is_used_tractor else 'ट्रैक्टर' } ऋण के लिए पूरी तरह पात्र हैं। "
+                    f"आपकी {extracted_acres} एकड़ जमीन की कृषि उत्पादकता के आधार पर आपको लगभग ₹{est_capacity:,} तक की ऋण स्वीकृति मिल सकती है। "
+                    f"{'पुराने ट्रैक्टर के लिए टीवीएस 80-85% तक ऑन-रोड फाइनेंस करता है, जिसमें केवल 15% से 20% (लगभग ₹' + f'{down_pay_inr:,}' + ') का डाउन पेमेंट देना होगा।' if is_used_tractor else 'नए ट्रैक्टर पर 90% तक फाइनेंस मिलता है और केवल 10% न्यूनतम डाउन पेमेंट लगता है।'} "
+                    f"ब्याज दर {roi_disp} प्रति वर्ष से शुरू होती है। साथ ही टीवीएस की 'हार्वेस्ट EMI' सुविधा के तहत बुआई के समय केवल ₹1,500/माह लगेगा और मुख्य किस्त दिसंबर में मंडी में धान बिकने के बाद चुकानी होगी। मैंने आपके लिए स्क्रीन पर सैंक्शन कॉकपिट तैयार कर दिया है!"
+                )
+            elif lang == "CHHATTISGARHI":
+                resp = (
+                    f"हव संगवारी! {loc_label} म तुंहर तीर {extracted_acres} एकड़ जमीन हे, "
+                    f"त तुमन टीवीएस { 'पुराना ट्रैक्टर' if is_used_tractor else 'ट्रैक्टर' } लोन बर पूरा पात्र हव। "
+                    f"{extracted_acres} एकड़ जमीन के आधार म तुमन ला लगभग ₹{est_capacity:,} तक के लोन मिल सकत हे। "
+                    f"{'पुराना ट्रैक्टर बर खाली 15% ले 20% (लगभग ₹' + f'{down_pay_inr:,}' + ') के डाउन पेमेंट जमा करे बर लगही, बाकी 80-85% टीवीएस फाइनेंस करही।' if is_used_tractor else 'नवा ट्रैक्टर बर 90% तक लोन मिलथे अउ खाली 10% डाउन पेमेंट लगथे।'} "
+                    f"बोआई के बेरा खाली ₹1,500/महिना के किस्त लगही, अउ बड़का किस्त धान बिकाए के बाद दिसंबर म भरे बर लगही। मैं तुंहर बर स्क्रीन म सैंक्शन कॉकपिट खोल दे हंव!"
+                )
+            elif lang == "TAMIL":
+                resp = (
+                    f"ஆம்! {loc_label} பகுதியில் {extracted_acres} ஏக்கர் நிலம் உள்ளதால், நீங்கள் TVS "
+                    f"{ 'பயன்படுத்திய டிராக்டர்' if is_used_tractor else 'புதிய டிராக்டர்' } கடனுக்கு முழு தகுதி பெற்றுள்ளீர்கள். "
+                    f"உங்கள் நிலத்தின் அடிப்படையில் சுமார் ₹{est_capacity:,} வரை கடன் அங்கீகரிக்கப்படலாம். "
+                    f"{'பயன்படுத்திய டிராக்டருக்கு 15% முதல் 20% வரை மட்டுமே முன்பணம் (சுமார் ₹' + f'{down_pay_inr:,}' + ') தேவைப்படும்.' if is_used_tractor else 'புதிய டிராக்டருக்கு 90% வரை நிதி உதவி கிடைக்கும், 10% மட்டுமே முன்பணம் தேவை.'} "
+                    f"விதைப்பு காலத்தில் மாதம் ₹1,500 மட்டுமே பராமரிப்பு தவணை, அறுவடைக்கு பிறகே முக்கிய தவணை செலுத்த வேண்டும்."
+                )
+            elif lang == "HINGLISH":
+                resp = (
+                    f"Haan kisan bhai! {loc_label} me aapke paas {extracted_acres} acres land hai, "
+                    f"to aap TVS { 'Used (second-hand) Tractor' if is_used_tractor else 'Tractor' } Loan ke liye fully eligible hain. "
+                    f"Aapki {extracted_acres} acres zameen ki productivity ke hisaab se aapko approx ₹{est_capacity:,} tak ka loan sanction mil sakta hai. "
+                    f"{'Used tractor ke liye TVS 80-85% tak on-road finance karta hai, jisme sirf 15% to 20% (approx ₹' + f'{down_pay_inr:,}' + ') ka down payment dena hoga.' if is_used_tractor else 'New tractor par 90% LTV financing milti hai (sirf 10% down payment).' } "
+                    f"Interest rate {roi_disp} p.a. se shuru hoti hai. Aur TVS ki 'Harvest EMI' suvidha ke tehat buwai ke dauran sirf ~₹1,500/month lagega, aur main installment December me mandi me dhaan bikne ke baad schedule hogi. Maine aapke liye screen par Sanction Cockpit pre-fill kar diya hai!"
+                )
+            else:
+                resp = (
+                    f"Yes! With {extracted_acres} acres of agricultural land in {loc_label}, "
+                    f"you comfortably qualify for a TVS {tractor_type} Loan. "
+                    f"Based on your farm size and soil productivity, you are estimated for up to ₹{est_capacity:,} in sanctioned credit. "
+                    f"{'For a used tractor, TVS finances up to 80%–85% on-road, requiring only a 15% to 20% down payment (approx. ₹' + f'{down_pay_inr:,}' + ').' if is_used_tractor else 'For a new tractor, TVS finances up to 90% on-road (only 10% down payment required).' } "
+                    f"Rates start from {roi_disp} p.a. Under our Seasonally-Aligned Harvest EMI, you only pay ~₹1,500/month during sowing, with the primary bullet installment due post-harvest after Mandi sales. I have guided your screen to the Decision Cockpit below!"
+                )
+            conf = self._calculate_grounding_score(query, ctx, retrieved, [], 0.98)
+            return resp, intent, evidence, conf, follow_ups, action
 
         # ---------------------------------------------------------------------
         # 8. Credit Score & Eligibility
