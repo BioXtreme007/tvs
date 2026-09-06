@@ -215,10 +215,11 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
   const cockpitGovernanceItems: MotionAccordionItem[] = [
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 shadow-xs" />
-          <span>Sentinel-2 Kharif Monsoon CloudGap Inpainting &amp; Spectral Telemetry</span>
-          <span className="ml-auto text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            Sentinel-2 Kharif Monsoon CloudGap Inpainting &amp; Spectral Telemetry
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
             Active Telemetry · 10m Ground Res
           </span>
         </div>
@@ -247,11 +248,12 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 shadow-xs" />
-          <span>Two-Tier H3 Hexagonal Cadastral Anti-Fraud &amp; Overlap Lockout</span>
-          <span className="ml-auto text-[10px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-            Resolution 8–9 · Zero Collateral Overlap
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            Two-Tier H3 Hexagonal Cadastral Anti-Fraud &amp; Overlap Lockout
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
+            Resolution 8–9 · Zero Overlap
           </span>
         </div>
       ),
@@ -269,10 +271,11 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-purple-500 shrink-0 shadow-xs" />
-          <span>SHAP Multi-Factor Credit Attribution &amp; Model Explainability</span>
-          <span className="ml-auto text-[10px] font-mono text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            SHAP Multi-Factor Credit Attribution &amp; Model Explainability
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
             Additive TreeSHAP · Verifiable Compliance
           </span>
         </div>
@@ -290,11 +293,12 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 shadow-xs" />
-          <span>Seasonally Aligned Harvest-Linked Repayment &amp; Climate Moratoriums</span>
-          <span className="ml-auto text-[10px] font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-            Cashflow Synchronized · Kharif / Rabi Cycles
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            Seasonally Aligned Harvest-Linked Repayment &amp; Climate Moratoriums
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
+            Cashflow Synchronized · Kharif / Rabi
           </span>
         </div>
       ),
@@ -304,13 +308,13 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
             Traditional monthly EMI structures lead to seasonal default in agrarian communities where cashflows materialize exclusively post-harvest. The engine dynamically configures balloon schedules:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
-            <div className="bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/80">
-              <strong className="text-amber-900 block text-xs font-bold">Growing Season Moratorium</strong>
-              <span className="text-[11px] text-amber-700">June–October: Zero principal servicing during high-outlay sowing and fertilizing.</span>
+            <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+              <strong className="text-slate-900 block text-xs font-bold">Growing Season Moratorium</strong>
+              <span className="text-[11px] text-slate-600">June–October: Zero principal servicing during high-outlay sowing and fertilizing.</span>
             </div>
-            <div className="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-200/80">
-              <strong className="text-emerald-900 block text-xs font-bold">Post-Harvest Mandi Liquidation</strong>
-              <span className="text-[11px] text-emerald-700">November–December: 60% annualized repayment matching mandi procurement payouts.</span>
+            <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200/70">
+              <strong className="text-slate-900 block text-xs font-bold">Post-Harvest Mandi Liquidation</strong>
+              <span className="text-[11px] text-slate-600">November–December: 60% annualized repayment matching mandi procurement payouts.</span>
             </div>
           </div>
         </div>
@@ -321,10 +325,11 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
   const underwritingAdvisoryItems: MotionAccordionItem[] = [
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 shadow-xs" />
-          <span>Sentinel-2 Spectral Sanction Advisory: Rajeshwar Sahu (Raipur)</span>
-          <span className="ml-auto text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            Sentinel-2 Spectral Sanction Advisory: Rajeshwar Sahu (Raipur)
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
             Sanction Cap: ₹3,40,000 · Prime Tier
           </span>
         </div>
@@ -332,7 +337,7 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
       answer: (
         <div className="text-xs text-slate-600 space-y-2.5 pt-2 border-t border-slate-100">
           <p>
-            Multi-satellite Sentinel-2 spectral telemetry indicates <strong className="text-emerald-800 font-semibold">23.4% NDVI vegetation recovery</strong> post-cloud inpainting across Raipur and Durg agricultural tracts. Cadastral boundary anti-fraud verification confirms zero overlap against adjacent survey tracts.
+            Multi-satellite Sentinel-2 spectral telemetry indicates <strong className="text-slate-900 font-semibold">23.4% NDVI vegetation recovery</strong> post-cloud inpainting across Raipur and Durg agricultural tracts. Cadastral boundary anti-fraud verification confirms zero overlap against adjacent survey tracts.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mt-2 bg-slate-50 p-3 rounded-xl border border-slate-200/70">
             <div>
@@ -383,11 +388,12 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 shadow-xs" />
-          <span>Cadastral Spatial Fraud Lockout: Durg High-Density Collision</span>
-          <span className="ml-auto text-[10px] font-mono text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-            Resolution 8–9 · Collateral Lockout Active
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            Cadastral Spatial Fraud Lockout: Durg High-Density Collision
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
+            Resolution 8–9 · Lockout Active
           </span>
         </div>
       ),
@@ -411,10 +417,11 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
     },
     {
       question: (
-        <div className="flex items-center gap-2.5 text-xs font-bold text-slate-800">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 shadow-xs" />
-          <span>Pre-Harvest Cashflow Moratorium Directive: Sukhram Markam (Bastar)</span>
-          <span className="ml-auto text-[10px] font-mono text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+        <div className="flex items-center justify-between gap-4 w-full pr-2">
+          <span className="text-sm font-semibold text-slate-900 tracking-tight">
+            Pre-Harvest Cashflow Moratorium Directive: Sukhram Markam (Bastar)
+          </span>
+          <span className="text-xs font-mono text-slate-500 font-normal shrink-0">
             Cashflow Synchronized · Kharif Sowing Window
           </span>
         </div>
@@ -424,8 +431,8 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
           <p>
             Repayment schedule mirrors Bastar agrarian cashflow: zero principal demands during high-input sowing periods (June–October), followed by structured balloon liquidation post-harvest upon government mandi procurement disbursement.
           </p>
-          <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 text-xs text-amber-900">
-            <strong>Automatic 60-Day Climate Moratorium:</strong> Pre-authorized trigger when Sentinel-2 NDWI soil moisture indicates drought stress (&lt; -0.2) or excess monsoon inundation (&gt; 0.45).
+          <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/70 text-xs text-slate-700">
+            <strong className="text-slate-900">Automatic 60-Day Climate Moratorium:</strong> Pre-authorized trigger when Sentinel-2 NDWI soil moisture indicates drought stress (&lt; -0.2) or excess monsoon inundation (&gt; 0.45).
           </div>
         </div>
       ),
@@ -453,10 +460,6 @@ export default function AdminCockpit({ user, onSignOut, onNavigateHome, onContex
           >
             <SidebarToggleIcon isOpen={true} className="w-5 h-5 text-slate-700" panelColor="#ffffff" />
           </button>
-        </div>
-        <div className="rail-workspace">
-          <span className="status-dot" />Decision cockpit
-          <small>{user.branch || 'Bhopal Central Hub'}</small>
         </div>
         <span className="rail-label">WORKSPACE</span>
         <nav aria-label="Cockpit navigation">
